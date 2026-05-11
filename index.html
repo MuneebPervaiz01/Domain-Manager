@@ -225,6 +225,7 @@ select.fi{cursor:pointer}
   </div>
   <div class="content" id="mainContent"></div>
 </main>
+
 <!-- ADD DOMAIN MODAL -->
 <div id="modal-addDomain" class="overlay hidden">
 <div class="modal">
@@ -254,7 +255,7 @@ select.fi{cursor:pointer}
       </div>
       <div style="height:13px"></div>
       <div class="fg">
-        <label>DNS Provider <span style="color:var(--text3);font-weight:400">(select manually — not auto-detected)</span></label>
+        <label>DNS Provider</label>
         <div class="dns-options" id="dns-options">
           <div class="dns-opt selected" onclick="selectDNS('cloudflare',this)" data-val="cloudflare">
             <div class="dns-opt-icon" style="background:var(--amberbg);color:var(--amber)"><i class="ti ti-cloud"></i></div>
@@ -295,10 +296,12 @@ select.fi{cursor:pointer}
       <div class="fg" style="margin-top:10px"><label>Notes (optional)</label><input class="fi" id="f-notes" placeholder="Any notes about this domain..."></div>
     </div>
     <div id="tab-api" class="hidden">
-      <div class="alert info"><i class="ti ti-info-circle"></i> Fetch domains via API. <strong>DNS will NOT be auto-set</strong> — you must assign it manually after import.</div>
+      <div class="alert info"><i class="ti ti-info-circle"></i> Fetch domains via API. <strong>DNS will NOT be auto-set</strong> — assign manually after import.</div>
       <div class="fg"><label>Select Registrar</label>
         <select class="fi" id="f-api-reg" onchange="checkApiStatus()">
-          <option value="godaddy">GoDaddy</option><option value="namecheap">Namecheap</option><option value="spaceship">Spaceship</option>
+          <option value="godaddy">GoDaddy</option>
+          <option value="namecheap">Namecheap</option>
+          <option value="spaceship">Spaceship</option>
         </select>
       </div>
       <div id="api-status" class="fhint" style="margin-bottom:12px"></div>
@@ -322,6 +325,8 @@ select.fi{cursor:pointer}
   </div>
   <div class="mb">
     <div class="alert info"><i class="ti ti-lock"></i> API keys are stored only in your browser (localStorage). They never leave your device.</div>
+
+    <!-- GoDaddy -->
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
       <div style="width:24px;height:24px;background:var(--greenbg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--green)"><i class="ti ti-building-store"></i></div>
       <strong style="font-size:13.5px">GoDaddy</strong>
@@ -337,6 +342,8 @@ select.fi{cursor:pointer}
     </div>
     <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="testAPI('godaddy')"><i class="ti ti-plug"></i> Test GoDaddy</button>
     <div class="divider"></div>
+
+    <!-- Namecheap -->
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
       <div style="width:24px;height:24px;background:var(--tealbg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--teal)"><i class="ti ti-tag"></i></div>
       <strong style="font-size:13.5px">Namecheap</strong>
@@ -344,7 +351,7 @@ select.fi{cursor:pointer}
     <div class="api-box">
       <div class="step"><div class="step-n">1</div><div>Login → Username (top right) → <strong>Profile</strong></div></div>
       <div class="step"><div class="step-n">2</div><div>Go to <strong>Tools</strong> tab → <strong>API Access</strong> → Enable it</div></div>
-      <div class="step"><div class="step-n">3</div><div><strong>Important:</strong> Whitelist your IP address — required for all API calls</div></div>
+      <div class="step"><div class="step-n">3</div><div><strong>Important:</strong> Whitelist your current IP address in Namecheap API settings</div></div>
     </div>
     <div class="fg-2">
       <div class="fg" style="margin-bottom:0"><label>Username</label><input class="fi" id="nc-user" placeholder="namecheap_username"></div>
@@ -352,16 +359,18 @@ select.fi{cursor:pointer}
     </div>
     <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="testAPI('namecheap')"><i class="ti ti-plug"></i> Test Namecheap</button>
     <div class="divider"></div>
+
+    <!-- Spaceship -->
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
       <div style="width:24px;height:24px;background:var(--accentbg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--accent2)"><i class="ti ti-rocket"></i></div>
       <strong style="font-size:13.5px">Spaceship</strong>
     </div>
     <div class="api-box">
       <div class="step"><div class="step-n">1</div><div>Login to <strong>Spaceship.com</strong> → Account → <strong>API</strong></div></div>
-      <div class="step"><div class="step-n">2</div><div>Click <strong>Generate API Key</strong> — copy Key and Secret</div></div>
+      <div class="step"><div class="step-n">2</div><div>Click <strong>Generate API Key</strong> — copy API Key and Secret</div></div>
     </div>
     <div class="fg-2">
-      <div class="fg" style="margin-bottom:0"><label>API Key</label><input class="fi" id="ss-key" placeholder="spaceship_key"></div>
+      <div class="fg" style="margin-bottom:0"><label>API Key</label><input class="fi" id="ss-key" placeholder="spaceship_api_key"></div>
       <div class="fg" style="margin-bottom:0"><label>API Secret</label><input class="fi" id="ss-sec" type="password" placeholder="••••••••"></div>
     </div>
     <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="testAPI('spaceship')"><i class="ti ti-plug"></i> Test Spaceship</button>
@@ -397,13 +406,21 @@ select.fi{cursor:pointer}
   </div>
 </div>
 </div>
+
 <script>
 const STORE_KEY='domainpro_v3';
 const API_KEY='domainpro_api_v2';
+
+// CORS Proxy — routes API calls through allorigins to bypass browser CORS block
+const PROXY = 'https://api.allorigins.win/raw?url=';
+
+function proxyUrl(url){ return PROXY + encodeURIComponent(url); }
+
 function loadDomains(){return JSON.parse(localStorage.getItem(STORE_KEY)||'[]')}
 function saveDomains(list){localStorage.setItem(STORE_KEY,JSON.stringify(list));updateCounts();updateStorageBadge();}
 function loadKeys(){return JSON.parse(localStorage.getItem(API_KEY)||'{}')}
 function saveKeys(k){localStorage.setItem(API_KEY,JSON.stringify(k))}
+
 let domains=loadDomains();
 let apiKeys=loadKeys();
 let curPage='dashboard';
@@ -463,7 +480,7 @@ function renderDashboard(){
     const rd=domains.filter(d=>d.reg===r);
     const rc=rd.reduce((s,d)=>s+(+d.cost||0),0);
     const re=rd.filter(d=>daysLeft(d.expiry)>=0&&daysLeft(d.expiry)<=30).length;
-    const hasApi=apiKeys[r+'_key']||apiKeys[r+'_api_key'];
+    const hasApi=(r==='godaddy'&&apiKeys.godaddy_key)||(r==='namecheap'&&apiKeys.namecheap_key)||(r==='spaceship'&&apiKeys.spaceship_key);
     const icons={spaceship:'ti-rocket',namecheap:'ti-tag',godaddy:'ti-building-store'};
     const colors={spaceship:'var(--accent)',namecheap:'var(--teal)',godaddy:'var(--green)'};
     const bgs={spaceship:'var(--accentbg)',namecheap:'var(--tealbg)',godaddy:'var(--greenbg)'};
@@ -515,7 +532,6 @@ function renderAllDomains(fixedList,title){
     else{av=daysLeft(a.expiry);bv=daysLeft(b.expiry);}
     return sortAsc?(av<bv?-1:av>bv?1:0):(av>bv?-1:av<bv?1:0);
   });
-  const arr=sortField==='expiry',arr2=sortField==='name',arr3=sortField==='cost';
   const sa=(f)=>sortField===f?(sortAsc?'↑':'↓'):'↕';
   const rows=data.length?data.map(d=>`<tr>
     <td><div class="dom-cell"><div class="dom-fav">${d.name.slice(0,2).toUpperCase()}</div><span class="dom-name" onclick="showDetail('${d.id}')">${domName(d)}</span></div></td>
@@ -587,7 +603,7 @@ function renderRegistrar(reg){
   const rd=domains.filter(d=>d.reg===reg);
   const rc=rd.reduce((s,d)=>s+(+d.cost||0),0);
   const re=rd.filter(d=>daysLeft(d.expiry)>=0&&daysLeft(d.expiry)<=30).length;
-  const hasApi=apiKeys[reg+'_key']||apiKeys[reg+'_api_key'];
+  const hasApi=(reg==='godaddy'&&apiKeys.godaddy_key)||(reg==='namecheap'&&apiKeys.namecheap_key)||(reg==='spaceship'&&apiKeys.spaceship_key);
   const colors={spaceship:'var(--accent)',namecheap:'var(--teal)',godaddy:'var(--green)'};
   return `
   <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
@@ -602,7 +618,7 @@ function renderRegistrar(reg){
     <span class="api-dot ${hasApi?'on':'off'}" style="margin-left:4px">${hasApi?'API Connected':'No API Key'}</span>
   </div>
   <div class="tcard"><div class="twrap"><table>
-    <thead><tr><th>Domain</th><th>Purchased</th><th>Expiry</th><th>DNS <span style="font-weight:400;color:var(--text3)">(manual)</span></th><th>Nameservers</th><th>Auto-Renew</th><th>Cost/yr</th><th>Status</th><th>Actions</th></tr></thead>
+    <thead><tr><th>Domain</th><th>Purchased</th><th>Expiry</th><th>DNS</th><th>Nameservers</th><th>Auto-Renew</th><th>Cost/yr</th><th>Status</th><th>Actions</th></tr></thead>
     <tbody>${rd.length?rd.map(d=>`<tr>
       <td><div class="dom-cell"><div class="dom-fav">${d.name.slice(0,2).toUpperCase()}</div><span class="dom-name" onclick="showDetail('${d.id}')">${domName(d)}</span></div></td>
       <td style="font-size:12px;color:var(--text3)">${d.purchased||'—'}</td>
@@ -649,7 +665,7 @@ function renderDNS(){
     <div class="stat"><div class="stat-ico" style="background:var(--bg4)"><i class="ti ti-building" style="color:var(--text3)"></i></div><div class="stat-lbl">Registrar DNS</div><div class="stat-val">${regD.length}</div></div>
     <div class="stat"><div class="stat-ico" style="background:var(--bluebg)"><i class="ti ti-dots-circle-horizontal" style="color:var(--blue)"></i></div><div class="stat-lbl">Other</div><div class="stat-val">${othD.length}</div></div>
   </div>
-  <div class="alert info" style="margin-bottom:18px"><i class="ti ti-info-circle"></i> DNS provider is <strong>manually assigned</strong> per domain. To change, click Edit DNS on any row.</div>
+  <div class="alert info" style="margin-bottom:18px"><i class="ti ti-info-circle"></i> DNS provider is <strong>manually assigned</strong> per domain. Click Edit DNS to change.</div>
   ${sec('Cloudflare CDN',cfD,`<div class="dns-pill dns-cf"><i class="ti ti-cloud"></i> Cloudflare</div>`)}
   ${sec('VPS Hosting',vpsD,`<div class="dns-pill dns-vps"><i class="ti ti-server"></i> VPS</div>`)}
   ${sec('Registrar DNS',regD,`<div class="dns-pill dns-reg"><i class="ti ti-building"></i> Registrar</div>`)}
@@ -729,7 +745,7 @@ function showDetail(id){
       <div class="detail-item"><div class="detail-key">Annual Cost</div><div class="detail-val" style="color:var(--teal)">$${(+d.cost||0).toFixed(2)}</div></div>
       <div class="detail-item"><div class="detail-key">Auto-Renew</div><div class="detail-val" style="color:${d.autorenew?'var(--green)':'var(--text3)'}">${d.autorenew?'Enabled':'Disabled'}</div></div>
       <div class="detail-item"><div class="detail-key">Domain Lock</div><div class="detail-val" style="color:${d.lock?'var(--accent2)':'var(--text3)'}">${d.lock?'Locked':'Unlocked'}</div></div>
-      <div class="detail-item" style="grid-column:1/-1"><div class="detail-key">DNS Provider <span style="font-weight:400;color:var(--text3)">(manually set)</span></div><div style="margin-top:6px">${dnsPill(d.dns)}</div></div>
+      <div class="detail-item" style="grid-column:1/-1"><div class="detail-key">DNS Provider</div><div style="margin-top:6px">${dnsPill(d.dns)}</div></div>
       <div class="detail-item" style="grid-column:1/-1"><div class="detail-key">Nameservers</div><div class="detail-val" style="font-family:monospace;font-size:13px;color:var(--text2)">${(d.ns||'—').split(',').map(n=>`<div>${n.trim()}</div>`).join('')}</div></div>
       ${d.ip?`<div class="detail-item" style="grid-column:1/-1"><div class="detail-key">IP Address</div><div class="detail-val" style="font-family:monospace">${d.ip}</div></div>`:''}
       ${d.notes?`<div class="detail-item" style="grid-column:1/-1;background:var(--bg4)"><div class="detail-key">Notes</div><div class="detail-val" style="font-size:13px;color:var(--text2)">${d.notes}</div></div>`:''}
@@ -832,36 +848,219 @@ function loadAPIToForm(){
   document.getElementById('ss-sec').value=apiKeys.spaceship_secret||'';
 }
 function saveAPIKeys(){
-  apiKeys={godaddy_key:document.getElementById('gd-key').value.trim(),godaddy_secret:document.getElementById('gd-sec').value.trim(),namecheap_user:document.getElementById('nc-user').value.trim(),namecheap_key:document.getElementById('nc-key').value.trim(),spaceship_key:document.getElementById('ss-key').value.trim(),spaceship_secret:document.getElementById('ss-sec').value.trim()};
-  saveKeys(apiKeys);closeModal('settings');toast('API keys saved in browser','suc');renderPage(curPage);
+  apiKeys={
+    godaddy_key:document.getElementById('gd-key').value.trim(),
+    godaddy_secret:document.getElementById('gd-sec').value.trim(),
+    namecheap_user:document.getElementById('nc-user').value.trim(),
+    namecheap_key:document.getElementById('nc-key').value.trim(),
+    spaceship_key:document.getElementById('ss-key').value.trim(),
+    spaceship_secret:document.getElementById('ss-sec').value.trim()
+  };
+  saveKeys(apiKeys);closeModal('settings');toast('API keys saved','suc');renderPage(curPage);
 }
+
 async function testAPI(reg){
-  if(reg==='godaddy'){const k=document.getElementById('gd-key').value,s=document.getElementById('gd-sec').value;if(!k||!s){toast('Enter GoDaddy Key & Secret','err');return}try{const r=await fetch('https://api.godaddy.com/v1/domains?limit=1',{headers:{'Authorization':`sso-key ${k}:${s}`}});r.ok?toast('GoDaddy connected!','suc'):toast('GoDaddy error: '+r.status,'err')}catch{toast('Connection failed','err')}}
-  else if(reg==='namecheap'){const u=document.getElementById('nc-user').value,k=document.getElementById('nc-key').value;if(!u||!k){toast('Enter Namecheap credentials','err');return}toast('Namecheap: IP whitelist required before live calls','inf')}
-  else{const k=document.getElementById('ss-key').value;if(!k){toast('Enter Spaceship key','err');return}toast('Spaceship: key saved','inf')}
+  if(reg==='godaddy'){
+    const k=document.getElementById('gd-key').value,s=document.getElementById('gd-sec').value;
+    if(!k||!s){toast('Enter GoDaddy Key & Secret','err');return}
+    try{
+      const r=await fetch(proxyUrl('https://api.godaddy.com/v1/domains?limit=1'),{headers:{'Authorization':`sso-key ${k}:${s}`,'Accept':'application/json'}});
+      r.ok?toast('GoDaddy connected!','suc'):toast('GoDaddy error: '+r.status,'err');
+    }catch(e){toast('Connection failed: '+e.message,'err')}
+  } else if(reg==='namecheap'){
+    const u=document.getElementById('nc-user').value,k=document.getElementById('nc-key').value;
+    if(!u||!k){toast('Enter Namecheap credentials','err');return}
+    try{
+      const url=`https://api.namecheap.com/xml.response?ApiUser=${u}&ApiKey=${k}&UserName=${u}&Command=namecheap.domains.getList&ClientIp=0.0.0.0&PageSize=1`;
+      const r=await fetch(proxyUrl(url));
+      const txt=await r.text();
+      txt.includes('Status="OK"')?toast('Namecheap connected!','suc'):toast('Namecheap error — check IP whitelist','err');
+    }catch(e){toast('Connection failed: '+e.message,'err')}
+  } else {
+    const k=document.getElementById('ss-key').value,s=document.getElementById('ss-sec').value;
+    if(!k||!s){toast('Enter Spaceship Key & Secret','err');return}
+    try{
+      const creds=btoa(k+':'+s);
+      const r=await fetch(proxyUrl('https://spaceship.dev/api/v1/domains?take=1'),{headers:{'Authorization':`Basic ${creds}`,'Accept':'application/json'}});
+      r.ok?toast('Spaceship connected!','suc'):toast('Spaceship error: '+r.status,'err');
+    }catch(e){toast('Connection failed: '+e.message,'err')}
+  }
 }
+
 function checkApiStatus(){
   const reg=document.getElementById('f-api-reg').value;
-  const has=reg==='godaddy'?(apiKeys.godaddy_key&&apiKeys.godaddy_secret):reg==='namecheap'?(apiKeys.namecheap_user&&apiKeys.namecheap_key):apiKeys.spaceship_key;
-  document.getElementById('api-status').innerHTML=has?`<span style="color:var(--green)"><i class="ti ti-check"></i> API key found for ${reg}</span>`:`<span style="color:var(--amber)"><i class="ti ti-alert-triangle"></i> No API key for ${reg} — <a onclick="openModal('settings')" style="color:var(--accent2);cursor:pointer">Add in Settings</a></span>`;
+  const has=(reg==='godaddy'&&apiKeys.godaddy_key)||(reg==='namecheap'&&apiKeys.namecheap_key)||(reg==='spaceship'&&apiKeys.spaceship_key);
+  document.getElementById('api-status').innerHTML=has
+    ?`<span style="color:var(--green)"><i class="ti ti-check"></i> API key found for ${reg}</span>`
+    :`<span style="color:var(--amber)"><i class="ti ti-alert-triangle"></i> No API key for ${reg} — <a onclick="openModal('settings')" style="color:var(--accent2);cursor:pointer">Add in Settings</a></span>`;
 }
+
+// ============================================================
+// MAIN FETCH FUNCTION — CORS Proxy used for all 3 registrars
+// ============================================================
 async function doAPIFetch(){
   const reg=document.getElementById('f-api-reg').value;
   const res=document.getElementById('api-result');
-  res.innerHTML=`<div class="alert info"><i class="ti ti-loader"></i> Fetching from ${reg}...</div>`;
-  if(reg==='godaddy'&&apiKeys.godaddy_key&&apiKeys.godaddy_secret){
-    try{
-      const r=await fetch('https://api.godaddy.com/v1/domains?limit=100&statuses=ACTIVE',{headers:{'Authorization':`sso-key ${apiKeys.godaddy_key}:${apiKeys.godaddy_secret}`}});
-      if(!r.ok){res.innerHTML=`<div class="alert warn"><i class="ti ti-x"></i> API Error ${r.status}</div>`;return}
-      const data=await r.json();let added=0;
-      data.forEach(d=>{if(!domains.find(x=>x.name===d.domain)){domains.push({id:uid(),name:d.domain,reg:'godaddy',status:d.status==='ACTIVE'?'active':'pending',purchased:d.createdAt?d.createdAt.split('T')[0]:'',expiry:d.expires?d.expires.split('T')[0]:'',dns:'registrar',ns:(d.nameServers||[]).join(', '),cost:0,autorenew:d.renewAuto,lock:false,ip:'',notes:'Imported via GoDaddy API',updatedAt:new Date().toISOString()});added++}});
+  res.innerHTML=`<div class="alert info"><i class="ti ti-loader"></i> Fetching from ${reg} via proxy...</div>`;
+
+  try{
+    // ---- GODADDY ----
+    if(reg==='godaddy'){
+      if(!apiKeys.godaddy_key||!apiKeys.godaddy_secret){
+        res.innerHTML=`<div class="alert warn"><i class="ti ti-alert-triangle"></i> No GoDaddy API key. <a onclick="openModal('settings');closeModal('addDomain')" style="color:var(--accent2);cursor:pointer">Add in Settings</a></div>`;
+        return;
+      }
+      const r=await fetch(
+        proxyUrl('https://api.godaddy.com/v1/domains?limit=100&statuses=ACTIVE'),
+        {headers:{'Authorization':`sso-key ${apiKeys.godaddy_key}:${apiKeys.godaddy_secret}`,'Accept':'application/json'}}
+      );
+      if(!r.ok){res.innerHTML=`<div class="alert warn"><i class="ti ti-x"></i> GoDaddy API Error: ${r.status} — check your key/secret</div>`;return}
+      const data=await r.json();
+      let added=0;
+      data.forEach(d=>{
+        if(!domains.find(x=>x.name===d.domain)){
+          domains.push({
+            id:uid(),name:d.domain,reg:'godaddy',
+            status:d.status==='ACTIVE'?'active':'pending',
+            purchased:d.createdAt?d.createdAt.split('T')[0]:'',
+            expiry:d.expires?d.expires.split('T')[0]:'',
+            dns:'registrar',ns:(d.nameServers||[]).join(', '),
+            cost:0,autorenew:d.renewAuto||false,lock:false,ip:'',
+            notes:'Imported via GoDaddy API',updatedAt:new Date().toISOString()
+          });
+          added++;
+        }
+      });
       saveDomains(domains);
-      res.innerHTML=`<div class="alert suc"><i class="ti ti-check"></i> ${added} domain(s) imported. <strong>DNS set to Registrar by default</strong> — assign manually.</div>`;
-      toast(`${added} domains imported`,'suc');renderPage(curPage);
-    }catch(e){res.innerHTML=`<div class="alert warn"><i class="ti ti-x"></i> ${e.message}</div>`}
-  }else{res.innerHTML=`<div class="alert warn"><i class="ti ti-alert-triangle"></i> No API key for ${reg}. <a onclick="openModal('settings');closeModal('addDomain')" style="color:var(--accent2);cursor:pointer">Add in Settings</a>.</div>`}
+      res.innerHTML=`<div class="alert suc"><i class="ti ti-check"></i> ${added} domain(s) imported from GoDaddy. DNS set to Registrar — assign manually.</div>`;
+      toast(`${added} domains imported from GoDaddy`,'suc');
+      renderPage(curPage);
+    }
+
+    // ---- NAMECHEAP ----
+    else if(reg==='namecheap'){
+      if(!apiKeys.namecheap_user||!apiKeys.namecheap_key){
+        res.innerHTML=`<div class="alert warn"><i class="ti ti-alert-triangle"></i> No Namecheap API key. <a onclick="openModal('settings');closeModal('addDomain')" style="color:var(--accent2);cursor:pointer">Add in Settings</a></div>`;
+        return;
+      }
+      const u=apiKeys.namecheap_user,k=apiKeys.namecheap_key;
+      // Fetch page 1 first to get total count
+      const url1=`https://api.namecheap.com/xml.response?ApiUser=${u}&ApiKey=${k}&UserName=${u}&Command=namecheap.domains.getList&ClientIp=0.0.0.0&PageSize=100&Page=1`;
+      const r1=await fetch(proxyUrl(url1));
+      const txt1=await r1.text();
+      if(!txt1.includes('Status="OK"')){
+        res.innerHTML=`<div class="alert warn"><i class="ti ti-x"></i> Namecheap error — make sure your IP is whitelisted in Namecheap API settings</div>`;
+        return;
+      }
+      const parser=new DOMParser();
+      const xml1=parser.parseFromString(txt1,'text/xml');
+      const total=parseInt(xml1.querySelector('Paging TotalItems')?.textContent||'0');
+      const pages=Math.ceil(total/100);
+      let allDomains=[];
+      // Parse page 1
+      xml1.querySelectorAll('Domain').forEach(d=>allDomains.push(d));
+      // Fetch remaining pages
+      for(let p=2;p<=pages;p++){
+        const urlP=`https://api.namecheap.com/xml.response?ApiUser=${u}&ApiKey=${k}&UserName=${u}&Command=namecheap.domains.getList&ClientIp=0.0.0.0&PageSize=100&Page=${p}`;
+        const rP=await fetch(proxyUrl(urlP));
+        const txtP=await rP.text();
+        const xmlP=parser.parseFromString(txtP,'text/xml');
+        xmlP.querySelectorAll('Domain').forEach(d=>allDomains.push(d));
+      }
+      let added=0;
+      allDomains.forEach(d=>{
+        const name=d.getAttribute('Name');
+        if(!name||domains.find(x=>x.name===name))return;
+        const exp=d.getAttribute('Expires')||'';
+        // Namecheap date format: 12/31/2025 → convert to 2025-12-31
+        let expiry='';
+        if(exp){const[m,day,yr]=exp.split('/');expiry=`${yr}-${m.padStart(2,'0')}-${day.padStart(2,'0')}`}
+        domains.push({
+          id:uid(),name,reg:'namecheap',
+          status:d.getAttribute('IsExpired')==='true'?'expired':'active',
+          purchased:'',expiry,
+          dns:'registrar',ns:'',
+          cost:0,
+          autorenew:d.getAttribute('AutoRenew')==='true',
+          lock:d.getAttribute('IsLocked')==='true',
+          ip:'',notes:'Imported via Namecheap API',
+          updatedAt:new Date().toISOString()
+        });
+        added++;
+      });
+      saveDomains(domains);
+      res.innerHTML=`<div class="alert suc"><i class="ti ti-check"></i> ${added} domain(s) imported from Namecheap (${total} total found). DNS set to Registrar — assign manually.</div>`;
+      toast(`${added} domains imported from Namecheap`,'suc');
+      renderPage(curPage);
+    }
+
+    // ---- SPACESHIP ----
+    else if(reg==='spaceship'){
+      if(!apiKeys.spaceship_key||!apiKeys.spaceship_secret){
+        res.innerHTML=`<div class="alert warn"><i class="ti ti-alert-triangle"></i> No Spaceship API key. <a onclick="openModal('settings');closeModal('addDomain')" style="color:var(--accent2);cursor:pointer">Add in Settings</a></div>`;
+        return;
+      }
+      const creds=btoa(apiKeys.spaceship_key+':'+apiKeys.spaceship_secret);
+      // Fetch first page
+      const r=await fetch(
+        proxyUrl('https://spaceship.dev/api/v1/domains?take=100&skip=0'),
+        {headers:{'Authorization':`Basic ${creds}`,'Accept':'application/json'}}
+      );
+      if(!r.ok){
+        res.innerHTML=`<div class="alert warn"><i class="ti ti-x"></i> Spaceship API Error: ${r.status} — check your API key and secret</div>`;
+        return;
+      }
+      const data=await r.json();
+      const items=data.items||data.data||data||[];
+      // Check if there are more pages
+      let allItems=[...items];
+      const totalCount=data.totalCount||data.total||items.length;
+      if(totalCount>100){
+        const morePagesCount=Math.ceil(totalCount/100)-1;
+        for(let p=1;p<=morePagesCount;p++){
+          const rP=await fetch(
+            proxyUrl(`https://spaceship.dev/api/v1/domains?take=100&skip=${p*100}`),
+            {headers:{'Authorization':`Basic ${creds}`,'Accept':'application/json'}}
+          );
+          if(rP.ok){const dp=await rP.json();allItems=[...allItems,...(dp.items||dp.data||[])]}
+        }
+      }
+      let added=0;
+      allItems.forEach(d=>{
+        const name=d.name||d.domain||d.domainName;
+        if(!name||domains.find(x=>x.name===name))return;
+        const exp=d.expiresAt||d.expiredAt||d.expiry||'';
+        const expiry=exp?exp.split('T')[0]:'';
+        const purchased=d.createdAt||d.registeredAt||'';
+        domains.push({
+          id:uid(),name,reg:'spaceship',
+          status:d.status==='ACTIVE'||d.active?'active':'pending',
+          purchased:purchased?purchased.split('T')[0]:'',
+          expiry,dns:'registrar',
+          ns:(d.nameservers||d.ns||[]).join(', '),
+          cost:0,
+          autorenew:d.autoRenew||d.autorenew||false,
+          lock:d.locked||false,
+          ip:'',notes:'Imported via Spaceship API',
+          updatedAt:new Date().toISOString()
+        });
+        added++;
+      });
+      saveDomains(domains);
+      res.innerHTML=`<div class="alert suc"><i class="ti ti-check"></i> ${added} domain(s) imported from Spaceship (${totalCount} total found). DNS set to Registrar — assign manually.</div>`;
+      toast(`${added} domains imported from Spaceship`,'suc');
+      renderPage(curPage);
+    }
+
+  } catch(e){
+    res.innerHTML=`<div class="alert warn"><i class="ti ti-x"></i> Error: ${e.message}</div>`;
+  }
 }
-async function syncReg(reg){if(reg==='godaddy')await doAPIFetch();else toast('Open Add Domain → Import via API tab','inf')}
+
+async function syncReg(reg){
+  document.getElementById('f-api-reg').value=reg;
+  await doAPIFetch();
+}
 
 function exportCSV(){
   const rows=[['Domain','Registrar','Status','Purchased','Expiry','DNS','Nameservers','IP','Auto-Renew','Lock','Cost/yr','Notes']];
