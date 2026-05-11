@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DomainPro Manager</title>
+<title>DomainPro Manager v2</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <style>
 :root{
@@ -16,12 +16,14 @@
   --amber:#f59e0b;--amberbg:rgba(245,158,11,0.08);
   --blue:#3b82f6;--bluebg:rgba(59,130,246,0.08);
   --teal:#14b8a6;--tealbg:rgba(20,184,166,0.08);
+  --pink:#ec4899;--pinkbg:rgba(236,72,153,0.08);
+  --orange:#f97316;--orangebg:rgba(249,115,22,0.08);
   --r:8px;--rlg:12px;--rxl:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,'SF Pro Display','Segoe UI',sans-serif;display:flex}
-.sb{width:218px;min-width:218px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh}
+.sb{width:222px;min-width:222px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh}
 .sb-logo{padding:16px 14px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px}
 .sb-icon{width:30px;height:30px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0}
 .sb-logo h1{font-size:14.5px;font-weight:700;letter-spacing:-.2px}
@@ -56,6 +58,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'SF Pro Di
 .stat-ico.am{background:var(--amberbg);color:var(--amber)}
 .stat-ico.t{background:var(--tealbg);color:var(--teal)}
 .stat-ico.r{background:var(--redbg);color:var(--red)}
+.stat-ico.p{background:var(--pinkbg);color:var(--pink)}
 .stat-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px}
 .stat-val{font-size:22px;font-weight:700;letter-spacing:-.4px}
 .stat-sub{font-size:11px;color:var(--text3);margin-top:2px}
@@ -108,6 +111,8 @@ tr:hover .row-acts{opacity:1}
 .badge.expiring{background:var(--amberbg);color:var(--amber);border:1px solid rgba(245,158,11,.15)}
 .badge.expired{background:var(--redbg);color:var(--red);border:1px solid rgba(239,68,68,.15)}
 .badge.pending{background:var(--bluebg);color:var(--blue);border:1px solid rgba(59,130,246,.15)}
+.badge.unused{background:var(--bg4);color:var(--text3);border:1px solid var(--border2)}
+.badge.redirect{background:var(--pinkbg);color:var(--pink);border:1px solid rgba(236,72,153,.15)}
 .dns-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:6px;font-size:11.5px;font-weight:500}
 .dns-cf{background:rgba(245,158,11,.07);color:#f0a500;border:1px solid rgba(245,158,11,.14)}
 .dns-vps{background:var(--accentbg);color:var(--accent2);border:1px solid rgba(112,85,255,.15)}
@@ -124,9 +129,24 @@ tr:hover .row-acts{opacity:1}
 .exp-bar{width:50px;height:2.5px;background:var(--bg5);border-radius:2px;flex-shrink:0}
 .exp-fill{height:100%;border-radius:2px}
 .exp-days{font-size:11px;color:var(--text3)}
+/* Team badges */
+.team-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600;white-space:nowrap}
+.team-Boss{background:rgba(250,204,21,.1);color:#facc15;border:1px solid rgba(250,204,21,.2)}
+.team-Jack{background:rgba(59,130,246,.1);color:var(--blue);border:1px solid rgba(59,130,246,.2)}
+.team-ALI{background:rgba(168,85,247,.1);color:#a855f7;border:1px solid rgba(168,85,247,.2)}
+.team-Justin{background:rgba(249,115,22,.1);color:var(--orange);border:1px solid rgba(249,115,22,.2)}
+.team-SV368{background:rgba(20,184,166,.1);color:var(--teal);border:1px solid rgba(20,184,166,.2)}
+.team-VN138{background:rgba(236,72,153,.1);color:var(--pink);border:1px solid rgba(236,72,153,.2)}
+.team-101{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.team-PH{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.team-BD{background:rgba(112,85,255,.1);color:var(--accent2);border:1px solid rgba(112,85,255,.2)}
+.team-none{background:var(--bg4);color:var(--text3);border:1px solid var(--border)}
+/* Hosting badge */
+.host-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:500;background:var(--bg4);color:var(--text2);border:1px solid var(--border2)}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rxl);width:100%;max-width:500px;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column}
-.modal.wide{max-width:660px}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rxl);width:100%;max-width:520px;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column}
+.modal.wide{max-width:720px}
+.modal.xwide{max-width:860px}
 .mh{padding:16px 20px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .mh h3{font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:7px}
 .mb{padding:16px 20px;flex:1}
@@ -140,6 +160,7 @@ tr:hover .row-acts{opacity:1}
 .fi::placeholder{color:var(--text3)}
 select.fi{cursor:pointer}
 .fg-2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.fg-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
 .fhint{font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5}
 .check-row{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer}
 .check-row input[type=checkbox]{width:15px;height:15px;accent-color:var(--accent);cursor:pointer}
@@ -180,6 +201,18 @@ select.fi{cursor:pointer}
 .cost-bar{width:100px;height:3.5px;background:var(--bg4);border-radius:2px}
 .cost-fill{height:100%;border-radius:2px}
 .storage-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text3);padding:3px 8px;border-radius:20px;border:1px solid var(--border);background:var(--bg3)}
+/* Server info section */
+.server-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:16px}
+.server-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px}
+.server-card-title{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--text3);margin-bottom:8px}
+/* Team grid on dashboard */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:18px}
+.team-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rlg);padding:13px;cursor:pointer;transition:.14s}
+.team-card:hover{border-color:var(--border3);transform:translateY(-1px)}
+.section-header{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--text3);margin-bottom:11px;display:flex;align-items:center;gap:7px}
+/* Month price highlight */
+.price-month{color:var(--teal);font-weight:600;font-size:12.5px}
+.price-renewal{color:var(--amber);font-size:11.5px}
 .hidden{display:none!important}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -192,21 +225,34 @@ select.fi{cursor:pointer}
 <aside class="sb">
   <div class="sb-logo">
     <div class="sb-icon"><i class="ti ti-world"></i></div>
-    <div><h1>DomainPro</h1><p>Manager</p></div>
+    <div><h1>DomainPro</h1><p>Manager v2</p></div>
   </div>
   <nav class="sb-nav">
     <div class="sb-sec">Overview</div>
     <div class="sb-item active" onclick="go('dashboard')" id="nav-dashboard"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
     <div class="sb-item" onclick="go('domains')" id="nav-domains"><i class="ti ti-world"></i> All Domains <span class="sb-cnt" id="cnt-all">0</span></div>
-    <div class="sb-item" onclick="go('costs')" id="nav-costs"><i class="ti ti-receipt"></i> Costs</div>
+    <div class="sb-item" onclick="go('costs')" id="nav-costs"><i class="ti ti-receipt"></i> Costs (This Month)</div>
     <div class="sb-item" onclick="go('dns')" id="nav-dns"><i class="ti ti-server"></i> DNS Overview</div>
+    <div class="sb-item" onclick="go('hosting')" id="nav-hosting"><i class="ti ti-server-2"></i> Hosting / Servers</div>
+    <div class="sb-sec">Domain Status</div>
+    <div class="sb-item" onclick="go('unused')" id="nav-unused"><i class="ti ti-circle-off" style="color:var(--text3)"></i> Unused Domains <span class="sb-cnt" id="cnt-unused">0</span></div>
+    <div class="sb-item" onclick="go('redirects')" id="nav-redirects"><i class="ti ti-arrow-right" style="color:var(--pink)"></i> 301 Redirects <span class="sb-cnt" id="cnt-redirect">0</span></div>
+    <div class="sb-item" onclick="go('expiring')" id="nav-expiring"><i class="ti ti-clock" style="color:var(--amber)"></i> Expiring Soon <span class="sb-cnt" id="cnt-exp">0</span></div>
+    <div class="sb-item" onclick="go('expired')" id="nav-expired"><i class="ti ti-alert-circle" style="color:var(--red)"></i> Expired <span class="sb-cnt" id="cnt-expired">0</span></div>
     <div class="sb-sec">Registrars</div>
     <div class="sb-item" onclick="go('spaceship')" id="nav-spaceship"><i class="ti ti-rocket"></i> Spaceship <span class="sb-cnt" id="cnt-spaceship">0</span></div>
     <div class="sb-item" onclick="go('namecheap')" id="nav-namecheap"><i class="ti ti-tag"></i> Namecheap <span class="sb-cnt" id="cnt-namecheap">0</span></div>
     <div class="sb-item" onclick="go('godaddy')" id="nav-godaddy"><i class="ti ti-building-store"></i> GoDaddy <span class="sb-cnt" id="cnt-godaddy">0</span></div>
-    <div class="sb-sec">Expiry</div>
-    <div class="sb-item" onclick="go('expiring')" id="nav-expiring"><i class="ti ti-clock" style="color:var(--amber)"></i> Expiring Soon <span class="sb-cnt" id="cnt-exp">0</span></div>
-    <div class="sb-item" onclick="go('expired')" id="nav-expired"><i class="ti ti-alert-circle" style="color:var(--red)"></i> Expired <span class="sb-cnt" id="cnt-expired">0</span></div>
+    <div class="sb-sec">Teams</div>
+    <div class="sb-item" onclick="go('team_Boss')" id="nav-team_Boss"><i class="ti ti-crown" style="color:#facc15"></i> Boss <span class="sb-cnt" id="cnt-Boss">0</span></div>
+    <div class="sb-item" onclick="go('team_Jack')" id="nav-team_Jack"><i class="ti ti-user" style="color:var(--blue)"></i> Jack <span class="sb-cnt" id="cnt-Jack">0</span></div>
+    <div class="sb-item" onclick="go('team_ALI')" id="nav-team_ALI"><i class="ti ti-user" style="color:#a855f7"></i> ALI <span class="sb-cnt" id="cnt-ALI">0</span></div>
+    <div class="sb-item" onclick="go('team_Justin')" id="nav-team_Justin"><i class="ti ti-user" style="color:var(--orange)"></i> Justin <span class="sb-cnt" id="cnt-Justin">0</span></div>
+    <div class="sb-item" onclick="go('team_SV368')" id="nav-team_SV368"><i class="ti ti-device-gamepad" style="color:var(--teal)"></i> SV368 <span class="sb-cnt" id="cnt-SV368">0</span></div>
+    <div class="sb-item" onclick="go('team_VN138')" id="nav-team_VN138"><i class="ti ti-device-gamepad" style="color:var(--pink)"></i> VN138 <span class="sb-cnt" id="cnt-VN138">0</span></div>
+    <div class="sb-item" onclick="go('team_101')" id="nav-team_101"><i class="ti ti-numbers" style="color:var(--green)"></i> 101 Team <span class="sb-cnt" id="cnt-101">0</span></div>
+    <div class="sb-item" onclick="go('team_PH')" id="nav-team_PH"><i class="ti ti-map-pin" style="color:var(--red)"></i> Philippines <span class="sb-cnt" id="cnt-PH">0</span></div>
+    <div class="sb-item" onclick="go('team_BD')" id="nav-team_BD"><i class="ti ti-map-pin" style="color:var(--accent2)"></i> Bangladesh <span class="sb-cnt" id="cnt-BD">0</span></div>
   </nav>
   <div class="sb-foot">
     <div class="sb-item" onclick="openModal('settings')"><i class="ti ti-settings"></i> API Settings</div>
@@ -228,7 +274,7 @@ select.fi{cursor:pointer}
 
 <!-- ADD DOMAIN MODAL -->
 <div id="modal-addDomain" class="overlay hidden">
-<div class="modal">
+<div class="modal xwide">
   <div class="mh">
     <h3><i class="ti ti-circle-plus" style="color:var(--accent)"></i> <span id="addModalTitle">Add Domain</span></h3>
     <button class="xbtn" onclick="closeModal('addDomain')"><i class="ti ti-x"></i></button>
@@ -239,21 +285,64 @@ select.fi{cursor:pointer}
       <div class="tab" id="tab-api-btn" onclick="switchTab('api')">Import via API</div>
     </div>
     <div id="tab-manual">
-      <div class="fg"><label>Domain Name *</label><input class="fi" id="f-domain" placeholder="example.com"></div>
-      <div class="fg-2">
+      <!-- Row 1 -->
+      <div class="fg-3">
+        <div class="fg" style="margin-bottom:0"><label>Domain Name *</label><input class="fi" id="f-domain" placeholder="example.com"></div>
         <div class="fg" style="margin-bottom:0"><label>Registrar *</label>
           <select class="fi" id="f-reg"><option value="spaceship">Spaceship</option><option value="namecheap">Namecheap</option><option value="godaddy">GoDaddy</option><option value="other">Other</option></select>
         </div>
         <div class="fg" style="margin-bottom:0"><label>Status</label>
-          <select class="fi" id="f-status"><option value="active">Active</option><option value="expiring">Expiring Soon</option><option value="expired">Expired</option><option value="pending">Pending</option></select>
+          <select class="fi" id="f-status"><option value="active">Active</option><option value="unused">Unused</option><option value="redirect">301 Redirect</option><option value="expiring">Expiring Soon</option><option value="expired">Expired</option><option value="pending">Pending</option></select>
         </div>
       </div>
       <div style="height:13px"></div>
-      <div class="fg-2">
+      <!-- Row 2: Dates -->
+      <div class="fg-3">
         <div class="fg" style="margin-bottom:0"><label>Purchase Date</label><input class="fi" id="f-purchased" type="date"></div>
         <div class="fg" style="margin-bottom:0"><label>Expiry Date *</label><input class="fi" id="f-expiry" type="date"></div>
+        <div class="fg" style="margin-bottom:0"><label>Next Renewal Date</label><input class="fi" id="f-renewal" type="date"></div>
       </div>
       <div style="height:13px"></div>
+      <!-- Row 3: Prices -->
+      <div class="fg-3">
+        <div class="fg" style="margin-bottom:0"><label>Purchase Price (USD)</label><input class="fi" id="f-purchase-price" type="number" step="0.01" placeholder="8.99"></div>
+        <div class="fg" style="margin-bottom:0"><label>Annual Renewal Price (USD)</label><input class="fi" id="f-cost" type="number" step="0.01" placeholder="12.99"></div>
+        <div class="fg" style="margin-bottom:0"><label>Next Renewal Price (USD)</label><input class="fi" id="f-next-renewal-price" type="number" step="0.01" placeholder="12.99"></div>
+      </div>
+      <div style="height:13px"></div>
+      <!-- Row 4: Team & Hosting -->
+      <div class="fg-2">
+        <div class="fg" style="margin-bottom:0"><label>Team / Owner</label>
+          <select class="fi" id="f-team">
+            <option value="">— No Team —</option>
+            <option value="Boss">Boss</option>
+            <option value="Jack">Jack</option>
+            <option value="ALI">ALI</option>
+            <option value="Justin">Justin</option>
+            <option value="SV368">SV368</option>
+            <option value="VN138">VN138</option>
+            <option value="101">101 Team</option>
+            <option value="PH">Philippines Market</option>
+            <option value="BD">Bangladesh Market</option>
+          </select>
+        </div>
+        <div class="fg" style="margin-bottom:0"><label>Hosting / Server</label>
+          <input class="fi" id="f-hosting" placeholder="e.g. DigitalOcean VPS #1, Cloudflare Pages"></div>
+      </div>
+      <div style="height:13px"></div>
+      <!-- Row 5: Server info -->
+      <div class="fg-3">
+        <div class="fg" style="margin-bottom:0"><label>Server IP / URL</label><input class="fi" id="f-ip" placeholder="123.45.67.89"></div>
+        <div class="fg" style="margin-bottom:0"><label>Server Location</label><input class="fi" id="f-server-location" placeholder="e.g. Singapore, US-East"></div>
+        <div class="fg" style="margin-bottom:0"><label>Server Provider</label><input class="fi" id="f-server-provider" placeholder="e.g. DigitalOcean, AWS"></div>
+      </div>
+      <div style="height:13px"></div>
+      <!-- Redirect target (shown only for 301) -->
+      <div class="fg" id="redirect-target-row" style="display:none">
+        <label>Redirect Target URL (301 points to)</label>
+        <input class="fi" id="f-redirect-target" placeholder="https://maindomain.com">
+      </div>
+      <!-- DNS -->
       <div class="fg">
         <label>DNS Provider</label>
         <div class="dns-options" id="dns-options">
@@ -281,22 +370,17 @@ select.fi{cursor:pointer}
         <input class="fi" id="f-ns" placeholder="ns1.cloudflare.com, ns2.cloudflare.com">
       </div>
       <div class="fg-2">
-        <div class="fg" style="margin-bottom:0"><label>Annual Cost (USD)</label><input class="fi" id="f-cost" type="number" step="0.01" placeholder="12.99"></div>
-        <div class="fg" style="margin-bottom:0"><label>IP Address (optional)</label><input class="fi" id="f-ip" placeholder="123.45.67.89"></div>
-      </div>
-      <div style="height:8px"></div>
-      <div class="check-row" onclick="document.getElementById('f-ar').click()">
-        <input type="checkbox" id="f-ar" checked>
-        <label>Auto-Renew Enabled</label>
-      </div>
-      <div class="check-row" onclick="document.getElementById('f-lock').click()">
-        <input type="checkbox" id="f-lock" checked>
-        <label>Domain Lock (Transfer Protection)</label>
+        <div class="check-row" onclick="document.getElementById('f-ar').click()">
+          <input type="checkbox" id="f-ar" checked><label>Auto-Renew Enabled</label>
+        </div>
+        <div class="check-row" onclick="document.getElementById('f-lock').click()">
+          <input type="checkbox" id="f-lock" checked><label>Domain Lock (Transfer Protection)</label>
+        </div>
       </div>
       <div class="fg" style="margin-top:10px"><label>Notes (optional)</label><input class="fi" id="f-notes" placeholder="Any notes about this domain..."></div>
     </div>
     <div id="tab-api" class="hidden">
-      <div class="alert info"><i class="ti ti-info-circle"></i> Fetch domains via API. <strong>DNS will NOT be auto-set</strong> — assign manually after import.</div>
+      <div class="alert info"><i class="ti ti-info-circle"></i> Fetch domains via API. DNS will NOT be auto-set — assign manually after import.</div>
       <div class="fg"><label>Select Registrar</label>
         <select class="fi" id="f-api-reg" onchange="checkApiStatus()">
           <option value="godaddy">GoDaddy</option>
@@ -325,7 +409,6 @@ select.fi{cursor:pointer}
   </div>
   <div class="mb">
     <div class="alert info"><i class="ti ti-lock"></i> API keys are stored only in your browser (localStorage). They never leave your device.</div>
-
     <!-- GoDaddy -->
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
       <div style="width:24px;height:24px;background:var(--greenbg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--green)"><i class="ti ti-building-store"></i></div>
@@ -342,7 +425,6 @@ select.fi{cursor:pointer}
     </div>
     <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="testAPI('godaddy')"><i class="ti ti-plug"></i> Test GoDaddy</button>
     <div class="divider"></div>
-
     <!-- Namecheap -->
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
       <div style="width:24px;height:24px;background:var(--tealbg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--teal)"><i class="ti ti-tag"></i></div>
@@ -359,15 +441,15 @@ select.fi{cursor:pointer}
     </div>
     <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="testAPI('namecheap')"><i class="ti ti-plug"></i> Test Namecheap</button>
     <div class="divider"></div>
-
     <!-- Spaceship -->
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
       <div style="width:24px;height:24px;background:var(--accentbg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--accent2)"><i class="ti ti-rocket"></i></div>
       <strong style="font-size:13.5px">Spaceship</strong>
     </div>
     <div class="api-box">
-      <div class="step"><div class="step-n">1</div><div>Login to <strong>Spaceship.com</strong> → Account → <strong>API</strong></div></div>
-      <div class="step"><div class="step-n">2</div><div>Click <strong>Generate API Key</strong> — copy API Key and Secret</div></div>
+      <div class="step"><div class="step-n">1</div><div>Login to <strong>Spaceship.com</strong> → Account → <strong>API Manager</strong></div></div>
+      <div class="step"><div class="step-n">2</div><div>Click <strong>New API Key</strong> — select scopes: domains:read, dnsrecords:read</div></div>
+      <div class="step"><div class="step-n">3</div><div>Copy <strong>API Key</strong> and <strong>API Secret</strong></div></div>
     </div>
     <div class="fg-2">
       <div class="fg" style="margin-bottom:0"><label>API Key</label><input class="fi" id="ss-key" placeholder="spaceship_api_key"></div>
@@ -384,7 +466,7 @@ select.fi{cursor:pointer}
 
 <!-- DETAIL MODAL -->
 <div id="modal-detail" class="overlay hidden">
-<div class="modal wide">
+<div class="modal xwide">
   <div class="mh"><h3 id="detail-h3"><i class="ti ti-world" style="color:var(--accent2)"></i> Domain Detail</h3><button class="xbtn" onclick="closeModal('detail')"><i class="ti ti-x"></i></button></div>
   <div class="mb" id="detail-body"></div>
   <div class="mf">
@@ -408,16 +490,15 @@ select.fi{cursor:pointer}
 </div>
 
 <script>
-const STORE_KEY='domainpro_v3';
+const STORE_KEY='domainpro_v4';
 const API_KEY='domainpro_api_v2';
+const PROXY='https://api.allorigins.win/raw?url=';
+const TEAMS=['Boss','Jack','ALI','Justin','SV368','VN138','101','PH','BD'];
+const TEAM_LABELS={Boss:'Boss',Jack:'Jack',ALI:'ALI',Justin:'Justin',SV368:'SV368',VN138:'VN138','101':'101 Team',PH:'Philippines',BD:'Bangladesh'};
 
-// CORS Proxy — routes API calls through allorigins to bypass browser CORS block
-const PROXY = 'https://api.allorigins.win/raw?url=';
-
-function proxyUrl(url){ return PROXY + encodeURIComponent(url); }
-
+function proxyUrl(url){return PROXY+encodeURIComponent(url)}
 function loadDomains(){return JSON.parse(localStorage.getItem(STORE_KEY)||'[]')}
-function saveDomains(list){localStorage.setItem(STORE_KEY,JSON.stringify(list));updateCounts();updateStorageBadge();}
+function saveDomains(list){localStorage.setItem(STORE_KEY,JSON.stringify(list));updateCounts();updateStorageBadge()}
 function loadKeys(){return JSON.parse(localStorage.getItem(API_KEY)||'{}')}
 function saveKeys(k){localStorage.setItem(API_KEY,JSON.stringify(k))}
 
@@ -427,7 +508,7 @@ let curPage='dashboard';
 let editingId=null;
 let selectedDNS='cloudflare';
 let sortField='expiry',sortAsc=true;
-let filterStatus='all',filterDNS='all',searchQ='';
+let filterStatus='all',filterDNS='all',searchQ='',filterTeam='all';
 
 function seedIfEmpty(){
   if(domains.length)return;
@@ -435,23 +516,39 @@ function seedIfEmpty(){
   const add=(n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().split('T')[0]};
   const sub=(n)=>{const x=new Date(d);x.setDate(x.getDate()-n);return x.toISOString().split('T')[0]};
   domains=[
-    {id:uid(),name:'mystore.com',reg:'godaddy',status:'active',purchased:'2023-03-12',expiry:add(240),dns:'cloudflare',ns:'ns1.cloudflare.com, ns2.cloudflare.com',cost:12.99,autorenew:true,lock:true,ip:'104.21.1.1',notes:'Main ecommerce site'},
-    {id:uid(),name:'techblog.net',reg:'namecheap',status:'active',purchased:'2022-07-01',expiry:add(18),dns:'cloudflare',ns:'ns1.cloudflare.com, ns2.cloudflare.com',cost:9.99,autorenew:false,lock:true,ip:'',notes:''},
-    {id:uid(),name:'portfolio.io',reg:'spaceship',status:'active',purchased:'2024-02-14',expiry:add(310),dns:'vps',ns:'ns1.myserver.com, ns2.myserver.com',cost:35.00,autorenew:true,lock:false,ip:'45.67.89.10',notes:'Personal portfolio'},
-    {id:uid(),name:'oldproject.org',reg:'godaddy',status:'expired',purchased:'2020-01-01',expiry:sub(12),dns:'registrar',ns:'ns1.godaddy.com, ns2.godaddy.com',cost:14.99,autorenew:false,lock:false,ip:'',notes:''},
-    {id:uid(),name:'startup.co',reg:'namecheap',status:'active',purchased:'2024-01-05',expiry:add(22),dns:'cloudflare',ns:'ns1.cloudflare.com, ns2.cloudflare.com',cost:29.99,autorenew:true,lock:true,ip:'172.67.2.3',notes:'Startup landing page'},
-    {id:uid(),name:'api-service.dev',reg:'spaceship',status:'active',purchased:'2023-12-01',expiry:add(195),dns:'vps',ns:'ns1.myserver.com, ns2.myserver.com',cost:18.00,autorenew:true,lock:true,ip:'45.67.89.11',notes:'Backend API'},
+    {id:uid(),name:'mystore.com',reg:'godaddy',status:'active',purchased:'2023-03-12',expiry:add(240),renewal:add(240),dns:'cloudflare',ns:'ns1.cloudflare.com, ns2.cloudflare.com',purchasePrice:8.99,cost:12.99,nextRenewalPrice:12.99,autorenew:true,lock:true,ip:'104.21.1.1',hosting:'Cloudflare Pages',serverLocation:'US-East',serverProvider:'Cloudflare',redirectTarget:'',notes:'Main ecommerce site',team:'Boss'},
+    {id:uid(),name:'techblog.net',reg:'namecheap',status:'active',purchased:'2022-07-01',expiry:add(18),renewal:add(18),dns:'cloudflare',ns:'ns1.cloudflare.com, ns2.cloudflare.com',purchasePrice:5.99,cost:9.99,nextRenewalPrice:9.99,autorenew:false,lock:true,ip:'',hosting:'DigitalOcean Droplet #2',serverLocation:'Singapore',serverProvider:'DigitalOcean',redirectTarget:'',notes:'',team:'Jack'},
+    {id:uid(),name:'portfolio.io',reg:'spaceship',status:'active',purchased:'2024-02-14',expiry:add(310),renewal:add(310),dns:'vps',ns:'ns1.myserver.com, ns2.myserver.com',purchasePrice:32.00,cost:35.00,nextRenewalPrice:38.00,autorenew:true,lock:false,ip:'45.67.89.10',hosting:'VPS Server #1',serverLocation:'Singapore',serverProvider:'Vultr',redirectTarget:'',notes:'Personal portfolio',team:'ALI'},
+    {id:uid(),name:'oldproject.org',reg:'godaddy',status:'expired',purchased:'2020-01-01',expiry:sub(12),renewal:sub(12),dns:'registrar',ns:'ns1.godaddy.com, ns2.godaddy.com',purchasePrice:14.99,cost:14.99,nextRenewalPrice:16.99,autorenew:false,lock:false,ip:'',hosting:'',serverLocation:'',serverProvider:'',redirectTarget:'',notes:'',team:'SV368'},
+    {id:uid(),name:'startup.co',reg:'namecheap',status:'active',purchased:'2024-01-05',expiry:add(22),renewal:add(22),dns:'cloudflare',ns:'ns1.cloudflare.com, ns2.cloudflare.com',purchasePrice:25.99,cost:29.99,nextRenewalPrice:29.99,autorenew:true,lock:true,ip:'172.67.2.3',hosting:'Cloudflare Pages',serverLocation:'US-West',serverProvider:'Cloudflare',redirectTarget:'',notes:'Startup landing page',team:'Justin'},
+    {id:uid(),name:'api-service.dev',reg:'spaceship',status:'active',purchased:'2023-12-01',expiry:add(195),renewal:add(195),dns:'vps',ns:'ns1.myserver.com, ns2.myserver.com',purchasePrice:16.00,cost:18.00,nextRenewalPrice:18.00,autorenew:true,lock:true,ip:'45.67.89.11',hosting:'AWS EC2',serverLocation:'Tokyo',serverProvider:'AWS',redirectTarget:'',notes:'Backend API',team:'VN138'},
+    {id:uid(),name:'parked-domain.com',reg:'namecheap',status:'unused',purchased:'2024-06-01',expiry:add(200),renewal:add(200),dns:'registrar',ns:'',purchasePrice:8.99,cost:8.99,nextRenewalPrice:8.99,autorenew:false,lock:false,ip:'',hosting:'',serverLocation:'',serverProvider:'',redirectTarget:'',notes:'Bought for future use',team:'PH'},
+    {id:uid(),name:'old-brand.net',reg:'godaddy',status:'redirect',purchased:'2022-01-01',expiry:add(120),renewal:add(120),dns:'cloudflare',ns:'ns1.cloudflare.com, ns2.cloudflare.com',purchasePrice:12.99,cost:12.99,nextRenewalPrice:14.99,autorenew:true,lock:true,ip:'',hosting:'Cloudflare',serverLocation:'',serverProvider:'Cloudflare',redirectTarget:'https://mystore.com',notes:'301 redirect to main store',team:'Boss'},
   ];
   saveDomains(domains);
 }
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 
+// ---- STATUS & DAYS ----
+function daysLeft(e){if(!e)return 9999;return Math.ceil((new Date(e)-new Date())/86400000)}
+function getStatus(d){
+  if(d.status==='unused')return'unused';
+  if(d.status==='redirect')return'redirect';
+  const dl=daysLeft(d.expiry);
+  if(d.status==='expired'||dl<0)return'expired';
+  if(dl<=30)return'expiring';
+  if(d.status==='pending')return'pending';
+  return'active';
+}
+
+// ---- NAVIGATION ----
 function go(page){
   curPage=page;
   document.querySelectorAll('.sb-item').forEach(el=>el.classList.remove('active'));
   const nav=document.getElementById('nav-'+page);
   if(nav)nav.classList.add('active');
-  const titles={dashboard:'Dashboard',domains:'All Domains',costs:'Cost Overview',dns:'DNS Overview',spaceship:'Spaceship',namecheap:'Namecheap',godaddy:'GoDaddy',expiring:'Expiring Soon',expired:'Expired Domains'};
+  const titles={dashboard:'Dashboard',domains:'All Domains',costs:'Cost Overview — This Month',dns:'DNS Overview',hosting:'Hosting & Servers',unused:'Unused Domains',redirects:'301 Redirect Domains',spaceship:'Spaceship',namecheap:'Namecheap',godaddy:'GoDaddy',expiring:'Expiring Soon',expired:'Expired Domains',
+    team_Boss:'Team: Boss',team_Jack:'Team: Jack',team_ALI:'Team: ALI',team_Justin:'Team: Justin',team_SV368:'Team: SV368',team_VN138:'Team: VN138',team_101:'Team: 101',team_PH:'Philippines Market',team_BD:'Bangladesh Market'};
   document.getElementById('pageTitle').textContent=titles[page]||page;
   renderPage(page);
 }
@@ -461,30 +558,50 @@ function renderPage(p){
   else if(p==='domains')c.innerHTML=renderAllDomains(null,'');
   else if(p==='costs')c.innerHTML=renderCosts();
   else if(p==='dns')c.innerHTML=renderDNS();
+  else if(p==='hosting')c.innerHTML=renderHosting();
+  else if(p==='unused')c.innerHTML=renderAllDomains(domains.filter(d=>d.status==='unused'),'Unused Domains');
+  else if(p==='redirects')c.innerHTML=renderAllDomains(domains.filter(d=>d.status==='redirect'),'301 Redirect Domains');
   else if(['spaceship','namecheap','godaddy'].includes(p))c.innerHTML=renderRegistrar(p);
-  else if(p==='expiring')c.innerHTML=renderAllDomains(domains.filter(d=>daysLeft(d.expiry)>=0&&daysLeft(d.expiry)<=30),'Expiring Soon');
-  else if(p==='expired')c.innerHTML=renderAllDomains(domains.filter(d=>daysLeft(d.expiry)<0||d.status==='expired'),'Expired Domains');
+  else if(p==='expiring')c.innerHTML=renderAllDomains(domains.filter(d=>getStatus(d)==='expiring'),'Expiring Soon');
+  else if(p==='expired')c.innerHTML=renderAllDomains(domains.filter(d=>getStatus(d)==='expired'),'Expired Domains');
+  else if(p.startsWith('team_')){const t=p.replace('team_','');c.innerHTML=renderAllDomains(domains.filter(d=>d.team===t),TEAM_LABELS[t]||t);}
 }
 function refreshAll(){domains=loadDomains();renderPage(curPage);updateCounts();toast('Data refreshed','suc')}
 
+// ---- CURRENT MONTH COSTS ----
+function thisMonthRenewals(){
+  const now=new Date(),m=now.getMonth(),y=now.getFullYear();
+  return domains.filter(d=>{
+    if(!d.renewal)return false;
+    const rd=new Date(d.renewal);
+    return rd.getMonth()===m&&rd.getFullYear()===y;
+  });
+}
+
+// ---- DASHBOARD ----
 function renderDashboard(){
   const total=domains.length;
-  const active=domains.filter(d=>daysLeft(d.expiry)>30&&d.status!=='expired').length;
-  const exp30=domains.filter(d=>daysLeft(d.expiry)>=0&&daysLeft(d.expiry)<=30).length;
-  const expired=domains.filter(d=>daysLeft(d.expiry)<0||d.status==='expired').length;
-  const cost=domains.reduce((s,d)=>s+(+d.cost||0),0);
-  const cfC=domains.filter(d=>d.dns==='cloudflare').length;
-  const vpsC=domains.filter(d=>d.dns==='vps').length;
-  const alert=exp30>0?`<div class="alert warn"><i class="ti ti-alert-triangle"></i> <strong>${exp30} domain(s)</strong> expiring within 30 days!</div>`:'';
+  const active=domains.filter(d=>getStatus(d)==='active').length;
+  const exp30=domains.filter(d=>getStatus(d)==='expiring').length;
+  const expired=domains.filter(d=>getStatus(d)==='expired').length;
+  const unused=domains.filter(d=>d.status==='unused').length;
+  const redirects=domains.filter(d=>d.status==='redirect').length;
+  const monthRen=thisMonthRenewals();
+  const monthCost=monthRen.reduce((s,d)=>s+(+d.nextRenewalPrice||+d.cost||0),0);
+  const totalCost=domains.reduce((s,d)=>s+(+d.cost||0),0);
+
+  const alertHtml=exp30>0?`<div class="alert warn"><i class="ti ti-alert-triangle"></i> <strong>${exp30} domain(s)</strong> expiring within 30 days!</div>`:'';
+  const monthAlertHtml=monthRen.length>0?`<div class="alert info"><i class="ti ti-calendar"></i> <strong>${monthRen.length} renewal(s)</strong> due this month — total <strong>$${monthCost.toFixed(2)}</strong></div>`:'';
+
   const regCards=['spaceship','namecheap','godaddy'].map(r=>{
     const rd=domains.filter(d=>d.reg===r);
     const rc=rd.reduce((s,d)=>s+(+d.cost||0),0);
-    const re=rd.filter(d=>daysLeft(d.expiry)>=0&&daysLeft(d.expiry)<=30).length;
+    const re=rd.filter(d=>getStatus(d)==='expiring').length;
     const hasApi=(r==='godaddy'&&apiKeys.godaddy_key)||(r==='namecheap'&&apiKeys.namecheap_key)||(r==='spaceship'&&apiKeys.spaceship_key);
     const icons={spaceship:'ti-rocket',namecheap:'ti-tag',godaddy:'ti-building-store'};
     const colors={spaceship:'var(--accent)',namecheap:'var(--teal)',godaddy:'var(--green)'};
     const bgs={spaceship:'var(--accentbg)',namecheap:'var(--tealbg)',godaddy:'var(--greenbg)'};
-    return `<div class="reg-card" onclick="go('${r}')">
+    return`<div class="reg-card" onclick="go('${r}')">
       <div class="rc-top">
         <div class="rc-ico" style="background:${bgs[r]};color:${colors[r]}"><i class="ti ${icons[r]}"></i></div>
         ${re>0?`<span class="badge expiring"><i class="ti ti-clock" style="font-size:10px"></i> ${re} exp</span>`:''}
@@ -495,86 +612,97 @@ function renderDashboard(){
       <span class="api-dot ${hasApi?'on':'off'}">${hasApi?'API on':'No API'}</span></div>
     </div>`;
   }).join('');
+
+  // Team overview
+  const teamCards=TEAMS.map(t=>{
+    const td=domains.filter(d=>d.team===t);
+    const tc=td.reduce((s,d)=>s+(+d.cost||0),0);
+    const te=td.filter(d=>getStatus(d)==='expiring').length;
+    return`<div class="team-card" onclick="go('team_${t}')">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        ${teamBadge(t)}
+        ${te>0?`<span class="badge expiring" style="font-size:10px"><i class="ti ti-clock" style="font-size:9px"></i> ${te}</span>`:''}
+      </div>
+      <div style="font-size:20px;font-weight:700">${td.length}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:2px">$${tc.toFixed(2)}/yr</div>
+    </div>`;
+  }).join('');
+
   const recent=[...domains].sort((a,b)=>daysLeft(a.expiry)-daysLeft(b.expiry)).slice(0,6);
-  return `${alert}
+  return`${alertHtml}${monthAlertHtml}
   <div class="stats-grid">
-    <div class="stat accent"><div class="stat-ico a"><i class="ti ti-world"></i></div><div class="stat-lbl">Total</div><div class="stat-val">${total}</div><div class="stat-sub">all registrars</div></div>
-    <div class="stat green"><div class="stat-ico g"><i class="ti ti-check"></i></div><div class="stat-lbl">Active</div><div class="stat-val">${active}</div><div class="stat-sub">live domains</div></div>
-    <div class="stat am"><div class="stat-ico am"><i class="ti ti-clock"></i></div><div class="stat-lbl">Expiring ≤30d</div><div class="stat-val">${exp30}</div><div class="stat-sub">need renewal</div></div>
-    <div class="stat r"><div class="stat-ico r"><i class="ti ti-alert-circle"></i></div><div class="stat-lbl">Expired</div><div class="stat-val">${expired}</div><div class="stat-sub">need action</div></div>
-    <div class="stat t"><div class="stat-ico t"><i class="ti ti-receipt"></i></div><div class="stat-lbl">Annual Cost</div><div class="stat-val" style="font-size:18px">$${cost.toFixed(2)}</div><div class="stat-sub">$${(cost/12).toFixed(2)}/mo</div></div>
-    <div class="stat"><div class="stat-ico am"><i class="ti ti-cloud"></i></div><div class="stat-lbl">Cloudflare</div><div class="stat-val">${cfC}</div><div class="stat-sub">${vpsC} on VPS</div></div>
+    <div class="stat"><div class="stat-ico a"><i class="ti ti-world"></i></div><div class="stat-lbl">Total</div><div class="stat-val">${total}</div></div>
+    <div class="stat"><div class="stat-ico g"><i class="ti ti-check"></i></div><div class="stat-lbl">Active</div><div class="stat-val">${active}</div></div>
+    <div class="stat"><div class="stat-ico am"><i class="ti ti-clock"></i></div><div class="stat-lbl">Expiring ≤30d</div><div class="stat-val">${exp30}</div></div>
+    <div class="stat"><div class="stat-ico r"><i class="ti ti-alert-circle"></i></div><div class="stat-lbl">Expired</div><div class="stat-val">${expired}</div></div>
+    <div class="stat"><div class="stat-ico" style="background:var(--bg4)"><i class="ti ti-circle-off" style="color:var(--text3)"></i></div><div class="stat-lbl">Unused</div><div class="stat-val">${unused}</div></div>
+    <div class="stat"><div class="stat-ico p"><i class="ti ti-arrow-right"></i></div><div class="stat-lbl">301 Redirects</div><div class="stat-val">${redirects}</div></div>
+    <div class="stat"><div class="stat-ico t"><i class="ti ti-receipt"></i></div><div class="stat-lbl">Annual Cost</div><div class="stat-val" style="font-size:18px">$${totalCost.toFixed(2)}</div></div>
+    <div class="stat"><div class="stat-ico am"><i class="ti ti-calendar-event"></i></div><div class="stat-lbl">This Month Due</div><div class="stat-val" style="font-size:18px;color:var(--amber)">$${monthCost.toFixed(2)}</div><div class="stat-sub">${monthRen.length} renewal(s)</div></div>
   </div>
+  <div class="section-header"><i class="ti ti-rocket"></i> Registrars</div>
   <div class="reg-grid">${regCards}</div>
-  <div style="font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--text3);margin-bottom:11px">Closest Expiring</div>
+  <div class="section-header"><i class="ti ti-users"></i> Teams</div>
+  <div class="team-grid">${teamCards}</div>
+  <div class="section-header"><i class="ti ti-clock"></i> Closest Expiring</div>
   <div class="tcard"><div class="twrap"><table>
-    <thead><tr><th>Domain</th><th>Registrar</th><th>Status</th><th>Expires</th><th>DNS</th></tr></thead>
+    <thead><tr><th>Domain</th><th>Team</th><th>Registrar</th><th>Status</th><th>Expires</th><th>Next Renewal $</th><th>Hosting</th></tr></thead>
     <tbody>${recent.map(d=>`<tr>
       <td><span class="dom-name" onclick="showDetail('${d.id}')">${domName(d)}</span></td>
-      <td>${regTag(d.reg)}</td><td>${statusBadge(d)}</td><td>${expiryCell(d)}</td><td>${dnsPill(d.dns)}</td>
+      <td>${teamBadge(d.team)}</td>
+      <td>${regTag(d.reg)}</td><td>${statusBadge(d)}</td><td>${expiryCell(d)}</td>
+      <td><span class="price-renewal">$${(+d.nextRenewalPrice||+d.cost||0).toFixed(2)}</span></td>
+      <td><span style="font-size:12px;color:var(--text3)">${d.hosting||'—'}</span></td>
     </tr>`).join('')}</tbody>
   </table></div></div>`;
 }
 
+// ---- ALL DOMAINS TABLE ----
 function renderAllDomains(fixedList,title){
   let base=fixedList||domains;
   let data=[...base];
-  if(searchQ)data=data.filter(d=>d.name.toLowerCase().includes(searchQ.toLowerCase()));
-  if(filterStatus==='active')data=data.filter(d=>daysLeft(d.expiry)>30&&d.status!=='expired');
-  else if(filterStatus==='expiring')data=data.filter(d=>daysLeft(d.expiry)>=0&&daysLeft(d.expiry)<=30);
-  else if(filterStatus==='expired')data=data.filter(d=>daysLeft(d.expiry)<0||d.status==='expired');
+  if(searchQ)data=data.filter(d=>d.name.toLowerCase().includes(searchQ.toLowerCase())||((d.hosting||'').toLowerCase().includes(searchQ.toLowerCase()))||((d.team||'').toLowerCase().includes(searchQ.toLowerCase())));
+  if(filterStatus!=='all'){if(filterStatus==='active')data=data.filter(d=>getStatus(d)==='active');else if(filterStatus==='expiring')data=data.filter(d=>getStatus(d)==='expiring');else if(filterStatus==='expired')data=data.filter(d=>getStatus(d)==='expired');else if(filterStatus==='unused')data=data.filter(d=>d.status==='unused');else if(filterStatus==='redirect')data=data.filter(d=>d.status==='redirect');}
   if(filterDNS!=='all')data=data.filter(d=>d.dns===filterDNS);
-  data.sort((a,b)=>{
-    let av,bv;
-    if(sortField==='name'){av=a.name;bv=b.name;}
-    else if(sortField==='cost'){av=+a.cost||0;bv=+b.cost||0;}
-    else if(sortField==='reg'){av=a.reg;bv=b.reg;}
-    else{av=daysLeft(a.expiry);bv=daysLeft(b.expiry);}
-    return sortAsc?(av<bv?-1:av>bv?1:0):(av>bv?-1:av<bv?1:0);
-  });
+  if(filterTeam!=='all')data=data.filter(d=>d.team===filterTeam);
+  data.sort((a,b)=>{let av,bv;if(sortField==='name'){av=a.name;bv=b.name}else if(sortField==='cost'){av=+a.cost||0;bv=+b.cost||0}else if(sortField==='reg'){av=a.reg;bv=b.reg}else if(sortField==='team'){av=a.team||'';bv=b.team||''}else{av=daysLeft(a.expiry);bv=daysLeft(b.expiry)}return sortAsc?(av<bv?-1:av>bv?1:0):(av>bv?-1:av<bv?1:0)});
   const sa=(f)=>sortField===f?(sortAsc?'↑':'↓'):'↕';
   const rows=data.length?data.map(d=>`<tr>
     <td><div class="dom-cell"><div class="dom-fav">${d.name.slice(0,2).toUpperCase()}</div><span class="dom-name" onclick="showDetail('${d.id}')">${domName(d)}</span></div></td>
+    <td>${teamBadge(d.team)}</td>
     <td>${regTag(d.reg)}</td>
     <td style="font-size:12px;color:var(--text3)">${d.purchased||'—'}</td>
     <td>${expiryCell(d)}</td>
     <td>${dnsPill(d.dns)}</td>
-    <td style="font-family:monospace;font-size:11.5px;color:var(--text3);max-width:150px">${(d.ns||'—').split(',').map(n=>`<div>${n.trim()}</div>`).join('')}</td>
-    <td>${d.autorenew?'<span style="color:var(--green);font-size:12px"><i class="ti ti-check"></i> On</span>':'<span style="color:var(--text3);font-size:12px">Off</span>'}</td>
-    <td>${d.lock?'<i class="ti ti-lock" style="color:var(--accent2)"></i>':'<i class="ti ti-lock-open" style="color:var(--text3)"></i>'}</td>
-    <td style="color:var(--teal);font-weight:600">$${(+d.cost||0).toFixed(2)}</td>
+    <td style="font-size:11.5px;color:var(--text3);max-width:120px">${d.hosting?`<span class="host-pill"><i class="ti ti-server" style="font-size:11px"></i> ${d.hosting}</span>`:'—'}</td>
+    <td style="color:var(--text3);font-size:12px">${d.purchasePrice?'$'+(+d.purchasePrice).toFixed(2):'—'}</td>
+    <td><span class="price-month">$${(+d.cost||0).toFixed(2)}</span></td>
+    <td><span class="price-renewal">$${(+d.nextRenewalPrice||+d.cost||0).toFixed(2)}</span></td>
     <td>${statusBadge(d)}</td>
     <td><div class="row-acts">
       <button class="btn btn-ghost btn-xs btn-ico" onclick="showDetail('${d.id}')"><i class="ti ti-eye" style="font-size:13px"></i></button>
       <button class="btn btn-ghost btn-xs btn-ico" onclick="editDomain('${d.id}')"><i class="ti ti-edit" style="font-size:13px"></i></button>
       <button class="btn btn-danger btn-xs btn-ico" onclick="confirmDelete('${d.id}')"><i class="ti ti-trash" style="font-size:13px"></i></button>
     </div></td>
-  </tr>`).join(''):`<tr><td colspan="11"><div class="empty"><i class="ti ti-world-off"></i><h3>No domains found</h3><p>Try different filters or add a domain</p></div></td></tr>`;
-  return `
+  </tr>`).join(''):`<tr><td colspan="12"><div class="empty"><i class="ti ti-world-off"></i><h3>No domains found</h3><p>Try different filters or add a domain</p></div></td></tr>`;
+  return`
   ${title?`<div style="font-size:14px;font-weight:600;color:var(--text2);margin-bottom:14px">${title}</div>`:''}
   <div class="fbar">
-    <div class="fsearch"><i class="ti ti-search"></i><input placeholder="Search domains..." value="${searchQ}" oninput="onSearch(this.value)"></div>
+    <div class="fsearch"><i class="ti ti-search"></i><input placeholder="Search domain, hosting, team..." value="${searchQ}" oninput="onSearch(this.value)"></div>
     <div class="chip-row">
       <span style="font-size:11px;color:var(--text3)">Status:</span>
-      <div class="chip ${filterStatus==='all'?'on':''}" onclick="setFS('all')">All (${base.length})</div>
+      <div class="chip ${filterStatus==='all'?'on':''}" onclick="setFS('all')">All</div>
       <div class="chip ${filterStatus==='active'?'g':''}" onclick="setFS('active')">Active</div>
       <div class="chip ${filterStatus==='expiring'?'am':''}" onclick="setFS('expiring')">Expiring</div>
       <div class="chip ${filterStatus==='expired'?'r':''}" onclick="setFS('expired')">Expired</div>
+      <div class="chip ${filterStatus==='unused'?'on':''}" onclick="setFS('unused')">Unused</div>
+      <div class="chip ${filterStatus==='redirect'?'ss':''}" onclick="setFS('redirect')">Redirects</div>
     </div>
     <div class="fsep"></div>
     <div class="chip-row">
-      <span style="font-size:11px;color:var(--text3)">DNS:</span>
-      <div class="chip ${filterDNS==='all'?'on':''}" onclick="setFD('all')">All</div>
-      <div class="chip ${filterDNS==='cloudflare'?'am':''}" onclick="setFD('cloudflare')">Cloudflare</div>
-      <div class="chip ${filterDNS==='vps'?'ss':''}" onclick="setFD('vps')">VPS</div>
-      <div class="chip ${filterDNS==='registrar'?'on':''}" onclick="setFD('registrar')">Registrar</div>
-    </div>
-    <div class="fsep"></div>
-    <div class="chip-row">
-      <span style="font-size:11px;color:var(--text3)">Registrar:</span>
-      <div class="chip" onclick="filterByReg('spaceship')">Spaceship</div>
-      <div class="chip" onclick="filterByReg('namecheap')">Namecheap</div>
-      <div class="chip" onclick="filterByReg('godaddy')">GoDaddy</div>
+      <span style="font-size:11px;color:var(--text3)">Team:</span>
+      <div class="chip ${filterTeam==='all'?'on':''}" onclick="setFT('all')">All</div>
+      ${TEAMS.map(t=>`<div class="chip" onclick="setFT('${t}')">${TEAM_LABELS[t]}</div>`).join('')}
     </div>
     <div class="fbar-right">
       <select class="fsort" onchange="setSort(this.value)">
@@ -582,6 +710,7 @@ function renderAllDomains(fixedList,title){
         <option value="name" ${sortField==='name'?'selected':''}>Sort: Name</option>
         <option value="cost" ${sortField==='cost'?'selected':''}>Sort: Cost</option>
         <option value="reg" ${sortField==='reg'?'selected':''}>Sort: Registrar</option>
+        <option value="team" ${sortField==='team'?'selected':''}>Sort: Team</option>
       </select>
       <button class="btn btn-primary btn-sm" onclick="openModal('addDomain')"><i class="ti ti-plus"></i> Add</button>
     </div>
@@ -589,27 +718,141 @@ function renderAllDomains(fixedList,title){
   <div class="tcard"><div class="twrap"><table>
     <thead><tr>
       <th onclick="setSort('name')">Domain ${sa('name')}</th>
+      <th onclick="setSort('team')">Team ${sa('team')}</th>
       <th>Registrar</th><th>Purchased</th>
       <th onclick="setSort('expiry')">Expiry ${sa('expiry')}</th>
-      <th>DNS</th><th>Nameservers</th><th>Auto-Renew</th><th>Lock</th>
-      <th onclick="setSort('cost')">Cost/yr ${sa('cost')}</th>
+      <th>DNS</th><th>Hosting</th>
+      <th>Purchase $</th>
+      <th onclick="setSort('cost')">Renewal/yr ${sa('cost')}</th>
+      <th>Next Renewal $</th>
       <th>Status</th><th>Actions</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table></div></div>`;
 }
 
+// ---- COSTS (CURRENT MONTH) ----
+function renderCosts(){
+  const now=new Date();
+  const monthName=now.toLocaleString('default',{month:'long',year:'numeric'});
+  const monthRen=thisMonthRenewals();
+  const monthCost=monthRen.reduce((s,d)=>s+(+d.nextRenewalPrice||+d.cost||0),0);
+  const totalAnnual=domains.reduce((s,d)=>s+(+d.cost||0),0);
+  const due30=domains.filter(d=>daysLeft(d.renewal||d.expiry)>=0&&daysLeft(d.renewal||d.expiry)<=30).reduce((s,d)=>s+(+d.nextRenewalPrice||+d.cost||0),0);
+
+  const regs=['spaceship','namecheap','godaddy'];
+  const regColors={spaceship:'var(--accent)',namecheap:'var(--teal)',godaddy:'var(--green)'};
+  const teamBreakdown=TEAMS.map(t=>{
+    const td=domains.filter(d=>d.team===t);
+    const tc=td.reduce((s,d)=>s+(+d.cost||0),0);
+    const tmr=td.filter(d=>{if(!d.renewal)return false;const rd=new Date(d.renewal||d.expiry);return rd.getMonth()===now.getMonth()&&rd.getFullYear()===now.getFullYear()});
+    const tmc=tmr.reduce((s,d)=>s+(+d.nextRenewalPrice||+d.cost||0),0);
+    return{t,label:TEAM_LABELS[t],count:td.length,annual:tc,month:tmc,mcount:tmr.length};
+  });
+
+  const monthRows=monthRen.length?monthRen.map(d=>`<tr>
+    <td><span class="dom-name" onclick="showDetail('${d.id}')">${d.name}</span></td>
+    <td>${teamBadge(d.team)}</td>
+    <td>${regTag(d.reg)}</td>
+    <td style="font-size:12px;color:var(--text3)">${d.renewal||d.expiry||'—'}</td>
+    <td style="color:var(--text3);font-size:12px">${d.cost?'$'+(+d.cost).toFixed(2):'—'}</td>
+    <td><span class="price-month" style="font-size:13px">$${(+d.nextRenewalPrice||+d.cost||0).toFixed(2)}</span></td>
+  </tr>`).join(''):`<tr><td colspan="6"><div class="empty" style="padding:30px"><i class="ti ti-check"></i><h3>No renewals this month</h3></div></td></tr>`;
+
+  return`
+  <div class="stats-grid">
+    <div class="stat am"><div class="stat-ico am"><i class="ti ti-calendar-event"></i></div><div class="stat-lbl">${monthName}</div><div class="stat-val" style="font-size:18px;color:var(--amber)">$${monthCost.toFixed(2)}</div><div class="stat-sub">${monthRen.length} renewals due</div></div>
+    <div class="stat"><div class="stat-ico t"><i class="ti ti-clock"></i></div><div class="stat-lbl">Due in 30 Days</div><div class="stat-val" style="font-size:18px">$${due30.toFixed(2)}</div></div>
+    <div class="stat"><div class="stat-ico t"><i class="ti ti-receipt"></i></div><div class="stat-lbl">Annual Total</div><div class="stat-val" style="font-size:18px">$${totalAnnual.toFixed(2)}</div></div>
+    <div class="stat"><div class="stat-ico a"><i class="ti ti-calendar"></i></div><div class="stat-lbl">Monthly Avg</div><div class="stat-val" style="font-size:18px">$${(totalAnnual/12).toFixed(2)}</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1.8fr;gap:14px;margin-bottom:18px">
+    <div class="tcard" style="padding:16px 18px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);margin-bottom:12px">Cost by Team</div>
+      ${teamBreakdown.filter(t=>t.count>0).map(t=>`
+        <div class="cost-row">
+          <div style="display:flex;align-items:center;gap:8px;min-width:0">
+            ${teamBadge(t.t)}
+            <span style="font-size:11.5px;color:var(--text3)">${t.mcount>0?`<span style="color:var(--amber)">$${t.month.toFixed(2)} this mo</span>`:'no renewals'}</span>
+          </div>
+          <span style="color:var(--teal);font-weight:600;font-size:12.5px">$${t.annual.toFixed(2)}/yr</span>
+        </div>`).join('')}
+      <div class="cost-row"><span>Total</span><span style="color:var(--teal)">$${totalAnnual.toFixed(2)}</span></div>
+    </div>
+    <div class="tcard"><div class="twrap">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:7px"><i class="ti ti-calendar-event" style="color:var(--amber)"></i> Renewals Due — ${monthName}</div>
+      <table>
+        <thead><tr><th>Domain</th><th>Team</th><th>Registrar</th><th>Renewal Date</th><th>Original Price</th><th>Next Renewal Price</th></tr></thead>
+        <tbody>${monthRows}</tbody>
+      </table>
+    </div></div>
+  </div>`;
+}
+
+// ---- HOSTING & SERVERS ----
+function renderHosting(){
+  const hostsMap={};
+  domains.forEach(d=>{
+    if(!d.hosting)return;
+    if(!hostsMap[d.hosting])hostsMap[d.hosting]={domains:[],provider:d.serverProvider||'',location:d.serverLocation||'',ip:d.ip||''};
+    hostsMap[d.hosting].domains.push(d);
+  });
+  const unhosted=domains.filter(d=>!d.hosting);
+  const hostKeys=Object.keys(hostsMap);
+  const cards=hostKeys.length?hostKeys.map(h=>{
+    const info=hostsMap[h];
+    return`<div class="tcard" style="margin-bottom:14px">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:9px">
+          <div style="width:28px;height:28px;background:var(--accentbg);border-radius:7px;display:flex;align-items:center;justify-content:center"><i class="ti ti-server" style="color:var(--accent2);font-size:14px"></i></div>
+          <div>
+            <div style="font-size:13.5px;font-weight:600">${h}</div>
+            <div style="font-size:11px;color:var(--text3)">${info.provider?info.provider+' · ':''} ${info.location} ${info.ip?'· '+info.ip:''}</div>
+          </div>
+        </div>
+        <span style="font-size:12px;color:var(--text3)">${info.domains.length} domain(s)</span>
+      </div>
+      <div class="twrap"><table>
+        <thead><tr><th>Domain</th><th>Team</th><th>Status</th><th>DNS</th><th>Expiry</th></tr></thead>
+        <tbody>${info.domains.map(d=>`<tr>
+          <td><span class="dom-name" onclick="showDetail('${d.id}')">${domName(d)}</span></td>
+          <td>${teamBadge(d.team)}</td><td>${statusBadge(d)}</td><td>${dnsPill(d.dns)}</td><td>${expiryCell(d)}</td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>`;
+  }).join(''):``;
+
+  return`
+  <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="stat"><div class="stat-ico a"><i class="ti ti-server-2"></i></div><div class="stat-lbl">Hosting Groups</div><div class="stat-val">${hostKeys.length}</div></div>
+    <div class="stat"><div class="stat-ico g"><i class="ti ti-world"></i></div><div class="stat-lbl">Hosted Domains</div><div class="stat-val">${domains.length-unhosted.length}</div></div>
+    <div class="stat"><div class="stat-ico r"><i class="ti ti-circle-off"></i></div><div class="stat-lbl">No Hosting Set</div><div class="stat-val">${unhosted.length}</div></div>
+  </div>
+  ${hostKeys.length?cards:`<div class="empty"><i class="ti ti-server-off"></i><h3>No hosting info yet</h3><p>Add hosting info when adding or editing a domain</p></div>`}
+  ${unhosted.length?`
+  <div style="margin-top:4px">
+    <div class="section-header" style="margin-bottom:10px"><i class="ti ti-circle-off"></i> Domains without hosting info (${unhosted.length})</div>
+    <div class="tcard"><div class="twrap"><table>
+      <thead><tr><th>Domain</th><th>Team</th><th>Status</th><th>Registrar</th><th>Expiry</th></tr></thead>
+      <tbody>${unhosted.map(d=>`<tr>
+        <td><span class="dom-name" onclick="showDetail('${d.id}')">${domName(d)}</span></td>
+        <td>${teamBadge(d.team)}</td><td>${statusBadge(d)}</td><td>${regTag(d.reg)}</td><td>${expiryCell(d)}</td>
+      </tr>`).join('')}</tbody>
+    </table></div></div>
+  </div>`:''}`;
+}
+
+// ---- REGISTRAR PAGE ----
 function renderRegistrar(reg){
   const rd=domains.filter(d=>d.reg===reg);
   const rc=rd.reduce((s,d)=>s+(+d.cost||0),0);
-  const re=rd.filter(d=>daysLeft(d.expiry)>=0&&daysLeft(d.expiry)<=30).length;
+  const re=rd.filter(d=>getStatus(d)==='expiring').length;
   const hasApi=(reg==='godaddy'&&apiKeys.godaddy_key)||(reg==='namecheap'&&apiKeys.namecheap_key)||(reg==='spaceship'&&apiKeys.spaceship_key);
-  const colors={spaceship:'var(--accent)',namecheap:'var(--teal)',godaddy:'var(--green)'};
-  return `
+  return`
   <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
     <div class="stat"><div class="stat-ico a"><i class="ti ti-world"></i></div><div class="stat-lbl">Domains</div><div class="stat-val">${rd.length}</div></div>
     <div class="stat t"><div class="stat-ico t"><i class="ti ti-receipt"></i></div><div class="stat-lbl">Annual Cost</div><div class="stat-val" style="font-size:18px">$${rc.toFixed(2)}</div></div>
-    <div class="stat green"><div class="stat-ico g"><i class="ti ti-check"></i></div><div class="stat-lbl">Active</div><div class="stat-val">${rd.filter(d=>daysLeft(d.expiry)>30&&d.status!=='expired').length}</div></div>
+    <div class="stat green"><div class="stat-ico g"><i class="ti ti-check"></i></div><div class="stat-lbl">Active</div><div class="stat-val">${rd.filter(d=>getStatus(d)==='active').length}</div></div>
     <div class="stat am"><div class="stat-ico am"><i class="ti ti-clock"></i></div><div class="stat-lbl">Expiring ≤30d</div><div class="stat-val">${re}</div></div>
   </div>
   <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center">
@@ -618,25 +861,29 @@ function renderRegistrar(reg){
     <span class="api-dot ${hasApi?'on':'off'}" style="margin-left:4px">${hasApi?'API Connected':'No API Key'}</span>
   </div>
   <div class="tcard"><div class="twrap"><table>
-    <thead><tr><th>Domain</th><th>Purchased</th><th>Expiry</th><th>DNS</th><th>Nameservers</th><th>Auto-Renew</th><th>Cost/yr</th><th>Status</th><th>Actions</th></tr></thead>
+    <thead><tr><th>Domain</th><th>Team</th><th>Purchased</th><th>Expiry</th><th>DNS</th><th>Hosting</th><th>Purchase $</th><th>Renewal/yr</th><th>Next Renewal $</th><th>Auto-Renew</th><th>Status</th><th>Actions</th></tr></thead>
     <tbody>${rd.length?rd.map(d=>`<tr>
       <td><div class="dom-cell"><div class="dom-fav">${d.name.slice(0,2).toUpperCase()}</div><span class="dom-name" onclick="showDetail('${d.id}')">${domName(d)}</span></div></td>
+      <td>${teamBadge(d.team)}</td>
       <td style="font-size:12px;color:var(--text3)">${d.purchased||'—'}</td>
       <td>${expiryCell(d)}</td>
       <td>${dnsPill(d.dns)}</td>
-      <td style="font-size:11.5px;color:var(--text3);font-family:monospace;max-width:160px;word-break:break-all">${(d.ns||'—').split(',').map(n=>`<div>${n.trim()}</div>`).join('')}</td>
+      <td><span style="font-size:12px;color:var(--text3)">${d.hosting||'—'}</span></td>
+      <td style="color:var(--text3);font-size:12px">${d.purchasePrice?'$'+(+d.purchasePrice).toFixed(2):'—'}</td>
+      <td><span class="price-month">$${(+d.cost||0).toFixed(2)}</span></td>
+      <td><span class="price-renewal">$${(+d.nextRenewalPrice||+d.cost||0).toFixed(2)}</span></td>
       <td>${d.autorenew?'<span style="color:var(--green);font-size:12px"><i class="ti ti-check"></i> On</span>':'<span style="color:var(--text3);font-size:12px">Off</span>'}</td>
-      <td style="color:var(--teal);font-weight:600">$${(+d.cost||0).toFixed(2)}</td>
       <td>${statusBadge(d)}</td>
       <td><div class="row-acts">
         <button class="btn btn-ghost btn-xs btn-ico" onclick="showDetail('${d.id}')"><i class="ti ti-eye" style="font-size:13px"></i></button>
         <button class="btn btn-ghost btn-xs btn-ico" onclick="editDomain('${d.id}')"><i class="ti ti-edit" style="font-size:13px"></i></button>
         <button class="btn btn-danger btn-xs btn-ico" onclick="confirmDelete('${d.id}')"><i class="ti ti-trash" style="font-size:13px"></i></button>
       </div></td>
-    </tr>`).join(''):`<tr><td colspan="9"><div class="empty"><i class="ti ti-database-off"></i><h3>No domains from ${reg}</h3></div></td></tr>`}</tbody>
+    </tr>`).join(''):`<tr><td colspan="12"><div class="empty"><i class="ti ti-database-off"></i><h3>No domains from ${reg}</h3></div></td></tr>`}</tbody>
   </table></div></div>`;
 }
 
+// ---- DNS ----
 function renderDNS(){
   const cfD=domains.filter(d=>d.dns==='cloudflare');
   const vpsD=domains.filter(d=>d.dns==='vps');
@@ -647,85 +894,33 @@ function renderDNS(){
     return`<div style="margin-bottom:22px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">${pill}<span style="font-size:13px;font-weight:600">${title}</span><span style="font-size:11.5px;color:var(--text3)">${list.length} domain(s)</span></div>
       <div class="tcard"><div class="twrap"><table>
-        <thead><tr><th>Domain</th><th>Registrar</th><th>Nameservers</th><th>IP</th><th>Status</th><th>Action</th></tr></thead>
+        <thead><tr><th>Domain</th><th>Team</th><th>Registrar</th><th>Nameservers</th><th>IP</th><th>Hosting</th><th>Status</th><th>Action</th></tr></thead>
         <tbody>${list.map(d=>`<tr>
           <td><span class="dom-name" onclick="showDetail('${d.id}')">${domName(d)}</span></td>
+          <td>${teamBadge(d.team)}</td>
           <td>${regTag(d.reg)}</td>
           <td style="font-size:11.5px;color:var(--text3);font-family:monospace">${(d.ns||'—').split(',').map(n=>`<div>${n.trim()}</div>`).join('')}</td>
           <td style="font-size:12px;color:var(--text3);font-family:monospace">${d.ip||'—'}</td>
+          <td style="font-size:12px;color:var(--text3)">${d.hosting||'—'}</td>
           <td>${statusBadge(d)}</td>
-          <td><button class="btn btn-ghost btn-xs" onclick="editDomain('${d.id}')"><i class="ti ti-edit" style="font-size:12px"></i> Edit DNS</button></td>
+          <td><button class="btn btn-ghost btn-xs" onclick="editDomain('${d.id}')"><i class="ti ti-edit" style="font-size:12px"></i> Edit</button></td>
         </tr>`).join('')}</tbody>
       </table></div></div></div>`;
   };
   return`
-  <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
-    <div class="stat am"><div class="stat-ico am"><i class="ti ti-cloud"></i></div><div class="stat-lbl">Cloudflare CDN</div><div class="stat-val">${cfD.length}</div></div>
-    <div class="stat accent"><div class="stat-ico a"><i class="ti ti-server"></i></div><div class="stat-lbl">VPS Hosting</div><div class="stat-val">${vpsD.length}</div></div>
+  <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="stat am"><div class="stat-ico am"><i class="ti ti-cloud"></i></div><div class="stat-lbl">Cloudflare</div><div class="stat-val">${cfD.length}</div></div>
+    <div class="stat accent"><div class="stat-ico a"><i class="ti ti-server"></i></div><div class="stat-lbl">VPS</div><div class="stat-val">${vpsD.length}</div></div>
     <div class="stat"><div class="stat-ico" style="background:var(--bg4)"><i class="ti ti-building" style="color:var(--text3)"></i></div><div class="stat-lbl">Registrar DNS</div><div class="stat-val">${regD.length}</div></div>
     <div class="stat"><div class="stat-ico" style="background:var(--bluebg)"><i class="ti ti-dots-circle-horizontal" style="color:var(--blue)"></i></div><div class="stat-lbl">Other</div><div class="stat-val">${othD.length}</div></div>
   </div>
-  <div class="alert info" style="margin-bottom:18px"><i class="ti ti-info-circle"></i> DNS provider is <strong>manually assigned</strong> per domain. Click Edit DNS to change.</div>
   ${sec('Cloudflare CDN',cfD,`<div class="dns-pill dns-cf"><i class="ti ti-cloud"></i> Cloudflare</div>`)}
   ${sec('VPS Hosting',vpsD,`<div class="dns-pill dns-vps"><i class="ti ti-server"></i> VPS</div>`)}
   ${sec('Registrar DNS',regD,`<div class="dns-pill dns-reg"><i class="ti ti-building"></i> Registrar</div>`)}
-  ${sec('Other DNS',othD,`<div class="dns-pill dns-other"><i class="ti ti-dots-circle-horizontal"></i> Other</div>`)}
-  ${!domains.length?'<div class="empty"><i class="ti ti-server-off"></i><h3>No domains yet</h3></div>':''}`;
+  ${sec('Other DNS',othD,`<div class="dns-pill dns-other"><i class="ti ti-dots-circle-horizontal"></i> Other</div>`)}`;
 }
 
-function renderCosts(){
-  const total=domains.reduce((s,d)=>s+(+d.cost||0),0);
-  const due30=domains.filter(d=>daysLeft(d.expiry)>=0&&daysLeft(d.expiry)<=30).reduce((s,d)=>s+(+d.cost||0),0);
-  const due90=domains.filter(d=>daysLeft(d.expiry)>=0&&daysLeft(d.expiry)<=90).reduce((s,d)=>s+(+d.cost||0),0);
-  const regs=['spaceship','namecheap','godaddy'];
-  const regColors={spaceship:'var(--accent)',namecheap:'var(--teal)',godaddy:'var(--green)'};
-  const breakdown=regs.map(r=>{
-    const rc=domains.filter(d=>d.reg===r).reduce((s,d)=>s+(+d.cost||0),0);
-    const pct=total?((rc/total)*100).toFixed(1):0;
-    return`<div class="cost-row">
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="color:${regColors[r]};font-weight:600;min-width:80px">${r.charAt(0).toUpperCase()+r.slice(1)}</span>
-        <div class="cost-bar"><div class="cost-fill" style="width:${pct}%;background:${regColors[r]}"></div></div>
-        <span style="font-size:12px;color:var(--text3)">${pct}%</span>
-      </div>
-      <span style="color:var(--teal);font-weight:600">$${rc.toFixed(2)}</span>
-    </div>`;
-  }).join('');
-  const costList=[...domains].sort((a,b)=>(+b.cost||0)-(+a.cost||0));
-  return`
-  <div class="stats-grid">
-    <div class="stat t"><div class="stat-ico t"><i class="ti ti-receipt"></i></div><div class="stat-lbl">Annual Total</div><div class="stat-val" style="font-size:20px">$${total.toFixed(2)}</div></div>
-    <div class="stat"><div class="stat-ico a"><i class="ti ti-calendar"></i></div><div class="stat-lbl">Monthly Avg</div><div class="stat-val" style="font-size:20px">$${(total/12).toFixed(2)}</div></div>
-    <div class="stat am"><div class="stat-ico am"><i class="ti ti-clock"></i></div><div class="stat-lbl">Due in 30 Days</div><div class="stat-val" style="font-size:20px">$${due30.toFixed(2)}</div></div>
-    <div class="stat"><div class="stat-ico g"><i class="ti ti-calendar-stats"></i></div><div class="stat-lbl">Due in 90 Days</div><div class="stat-val" style="font-size:20px">$${due90.toFixed(2)}</div></div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1.6fr;gap:14px">
-    <div class="tcard" style="padding:16px 18px">
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);margin-bottom:14px">By Registrar</div>
-      ${breakdown}
-      <div class="cost-row"><span>Total Annual</span><span style="color:var(--teal)">$${total.toFixed(2)}</span></div>
-    </div>
-    <div class="tcard"><div class="twrap"><table>
-      <thead><tr><th>Domain</th><th>Registrar</th><th>Cost/yr</th><th>Expiry</th></tr></thead>
-      <tbody>${costList.map(d=>`<tr>
-        <td><span class="dom-name" onclick="showDetail('${d.id}')">${d.name}</span></td>
-        <td>${regTag(d.reg)}</td>
-        <td style="color:var(--teal);font-weight:600">$${(+d.cost||0).toFixed(2)}</td>
-        <td>${expiryCell(d)}</td>
-      </tr>`).join('')}</tbody>
-    </table></div></div>
-  </div>`;
-}
-
-// HELPERS
-function daysLeft(e){if(!e)return 9999;return Math.ceil((new Date(e)-new Date())/86400000)}
-function domName(d){const p=d.name.split('.');return`<span>${p[0]}</span><span class="dom-ext">.${p.slice(1).join('.')}</span>`}
-function statusBadge(d){const dl=daysLeft(d.expiry);if(d.status==='expired'||dl<0)return`<span class="badge expired"><i class="ti ti-x" style="font-size:10px"></i> Expired</span>`;if(dl<=30)return`<span class="badge expiring"><i class="ti ti-clock" style="font-size:10px"></i> ${dl}d</span>`;if(d.status==='pending')return`<span class="badge pending">Pending</span>`;return`<span class="badge active"><i class="ti ti-check" style="font-size:10px"></i> Active</span>`}
-function dnsPill(dns){if(dns==='cloudflare')return`<div class="dns-pill dns-cf"><i class="ti ti-cloud" style="font-size:12px"></i> Cloudflare</div>`;if(dns==='vps')return`<div class="dns-pill dns-vps"><i class="ti ti-server" style="font-size:12px"></i> VPS</div>`;if(dns==='registrar')return`<div class="dns-pill dns-reg"><i class="ti ti-building" style="font-size:12px"></i> Registrar</div>`;return`<div class="dns-pill dns-other"><i class="ti ti-dots-circle-horizontal" style="font-size:12px"></i> Other</div>`}
-function regTag(reg){const n={spaceship:'Spaceship',namecheap:'Namecheap',godaddy:'GoDaddy',other:'Other'};return`<span class="rtag ${reg||'other'}">${n[reg]||reg}</span>`}
-function expiryCell(d){const dl=daysLeft(d.expiry);const c=dl<0?'var(--red)':dl<=30?'var(--amber)':'var(--text2)';const bp=dl<0?100:Math.min(100,Math.max(0,(365-dl)/365*100));const bc=dl<0?'var(--red)':dl<=30?'var(--amber)':'var(--green)';return`<div class="exp-wrap"><span class="exp-date" style="color:${c}">${d.expiry||'—'}</span><div class="exp-bar-row"><div class="exp-bar"><div class="exp-fill" style="width:${bp}%;background:${bc}"></div></div><span class="exp-days">${dl<0?'expired':dl>365?'>1yr':dl+'d'}</span></div></div>`}
-
-// DOMAIN DETAIL
+// ---- DETAIL MODAL ----
 function showDetail(id){
   const d=domains.find(x=>x.id===id);if(!d)return;
   const dl=daysLeft(d.expiry);const ec=dl<0?'var(--red)':dl<=30?'var(--amber)':'var(--green)';
@@ -733,41 +928,65 @@ function showDetail(id){
   document.getElementById('det-del').onclick=()=>{closeModal('detail');confirmDelete(d.id)};
   document.getElementById('det-edit').onclick=()=>{closeModal('detail');editDomain(d.id)};
   document.getElementById('detail-body').innerHTML=`
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)">
-      <div style="width:40px;height:40px;background:var(--bg4);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--text3)">${d.name.slice(0,2).toUpperCase()}</div>
-      <div><div style="font-size:16px;font-weight:700;color:var(--accent2)">${d.name}</div>
-      <div style="display:flex;gap:7px;margin-top:4px">${regTag(d.reg)} ${statusBadge(d)} ${dnsPill(d.dns)}</div></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:40px;height:40px;background:var(--bg4);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--text3)">${d.name.slice(0,2).toUpperCase()}</div>
+        <div><div style="font-size:16px;font-weight:700;color:var(--accent2)">${d.name}</div>
+        <div style="display:flex;gap:7px;margin-top:4px;flex-wrap:wrap">${regTag(d.reg)} ${statusBadge(d)} ${dnsPill(d.dns)} ${teamBadge(d.team)}</div></div>
+      </div>
     </div>
     <div class="detail-grid">
       <div class="detail-item"><div class="detail-key">Purchased</div><div class="detail-val">${d.purchased||'—'}</div></div>
       <div class="detail-item"><div class="detail-key">Expiry Date</div><div class="detail-val" style="color:${ec}">${d.expiry||'—'}</div></div>
+      <div class="detail-item"><div class="detail-key">Next Renewal Date</div><div class="detail-val">${d.renewal||d.expiry||'—'}</div></div>
       <div class="detail-item"><div class="detail-key">Days Left</div><div class="detail-val" style="color:${ec}">${dl<0?'Expired':dl+' days'}</div></div>
-      <div class="detail-item"><div class="detail-key">Annual Cost</div><div class="detail-val" style="color:var(--teal)">$${(+d.cost||0).toFixed(2)}</div></div>
+      <div class="detail-item"><div class="detail-key">Purchase Price</div><div class="detail-val" style="color:var(--text2)">${d.purchasePrice?'$'+(+d.purchasePrice).toFixed(2):'—'}</div></div>
+      <div class="detail-item"><div class="detail-key">Annual Renewal Price</div><div class="detail-val" style="color:var(--teal)">$${(+d.cost||0).toFixed(2)}</div></div>
+      <div class="detail-item"><div class="detail-key">Next Renewal Price</div><div class="detail-val" style="color:var(--amber)">$${(+d.nextRenewalPrice||+d.cost||0).toFixed(2)}</div></div>
       <div class="detail-item"><div class="detail-key">Auto-Renew</div><div class="detail-val" style="color:${d.autorenew?'var(--green)':'var(--text3)'}">${d.autorenew?'Enabled':'Disabled'}</div></div>
       <div class="detail-item"><div class="detail-key">Domain Lock</div><div class="detail-val" style="color:${d.lock?'var(--accent2)':'var(--text3)'}">${d.lock?'Locked':'Unlocked'}</div></div>
+      <div class="detail-item"><div class="detail-key">Team / Owner</div><div class="detail-val" style="margin-top:4px">${teamBadge(d.team)}</div></div>
+    </div>
+    ${d.hosting||d.ip||d.serverProvider?`
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);margin-bottom:8px">Server / Hosting</div>
+    <div class="detail-grid">
+      ${d.hosting?`<div class="detail-item"><div class="detail-key">Hosting</div><div class="detail-val">${d.hosting}</div></div>`:''}
+      ${d.serverProvider?`<div class="detail-item"><div class="detail-key">Provider</div><div class="detail-val">${d.serverProvider}</div></div>`:''}
+      ${d.serverLocation?`<div class="detail-item"><div class="detail-key">Location</div><div class="detail-val">${d.serverLocation}</div></div>`:''}
+      ${d.ip?`<div class="detail-item"><div class="detail-key">IP Address</div><div class="detail-val" style="font-family:monospace">${d.ip}</div></div>`:''}
+    </div>`:''}
+    ${d.status==='redirect'&&d.redirectTarget?`<div class="alert info"><i class="ti ti-arrow-right"></i> 301 Redirect → <strong>${d.redirectTarget}</strong></div>`:''}
+    <div class="detail-grid">
       <div class="detail-item" style="grid-column:1/-1"><div class="detail-key">DNS Provider</div><div style="margin-top:6px">${dnsPill(d.dns)}</div></div>
       <div class="detail-item" style="grid-column:1/-1"><div class="detail-key">Nameservers</div><div class="detail-val" style="font-family:monospace;font-size:13px;color:var(--text2)">${(d.ns||'—').split(',').map(n=>`<div>${n.trim()}</div>`).join('')}</div></div>
-      ${d.ip?`<div class="detail-item" style="grid-column:1/-1"><div class="detail-key">IP Address</div><div class="detail-val" style="font-family:monospace">${d.ip}</div></div>`:''}
       ${d.notes?`<div class="detail-item" style="grid-column:1/-1;background:var(--bg4)"><div class="detail-key">Notes</div><div class="detail-val" style="font-size:13px;color:var(--text2)">${d.notes}</div></div>`:''}
     </div>`;
   openModal('detail');
 }
 
-// ADD/EDIT
+// ---- ADD/EDIT ----
+document.getElementById('f-status').addEventListener('change',function(){
+  const row=document.getElementById('redirect-target-row');
+  row.style.display=this.value==='redirect'?'block':'none';
+});
+
 function selectDNS(val,el){selectedDNS=val;document.getElementById('f-dns').value=val;document.querySelectorAll('.dns-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');const hints={cloudflare:'ns1.cloudflare.com, ns2.cloudflare.com',vps:'ns1.yourserver.com, ns2.yourserver.com',registrar:'',other:''};const ns=document.getElementById('f-ns');if(!ns.value)ns.placeholder=hints[val]||'';}
 
 function openAddModal(){
   editingId=null;
   document.getElementById('addModalTitle').textContent='Add Domain';
   document.getElementById('saveBtn').innerHTML='<i class="ti ti-check"></i> Save Domain';
-  ['f-domain','f-ns','f-notes','f-ip','f-cost'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  ['f-domain','f-ns','f-notes','f-ip','f-cost','f-purchase-price','f-next-renewal-price','f-hosting','f-server-location','f-server-provider','f-redirect-target'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   document.getElementById('f-reg').value='spaceship';
   document.getElementById('f-status').value='active';
+  document.getElementById('f-team').value='';
   document.getElementById('f-purchased').value='';
   document.getElementById('f-expiry').value='';
+  document.getElementById('f-renewal').value='';
   document.getElementById('f-ar').checked=true;
   document.getElementById('f-lock').checked=true;
   document.getElementById('f-dns').value='cloudflare';
+  document.getElementById('redirect-target-row').style.display='none';
   selectedDNS='cloudflare';
   document.querySelectorAll('.dns-opt').forEach(o=>o.classList.remove('selected'));
   document.querySelector('.dns-opt[data-val="cloudflare"]').classList.add('selected');
@@ -783,14 +1002,23 @@ function editDomain(id){
   document.getElementById('f-domain').value=d.name;
   document.getElementById('f-reg').value=d.reg||'spaceship';
   document.getElementById('f-status').value=d.status||'active';
+  document.getElementById('f-team').value=d.team||'';
   document.getElementById('f-purchased').value=d.purchased||'';
   document.getElementById('f-expiry').value=d.expiry||'';
+  document.getElementById('f-renewal').value=d.renewal||'';
   document.getElementById('f-ns').value=d.ns||'';
   document.getElementById('f-cost').value=d.cost||'';
+  document.getElementById('f-purchase-price').value=d.purchasePrice||'';
+  document.getElementById('f-next-renewal-price').value=d.nextRenewalPrice||'';
   document.getElementById('f-ip').value=d.ip||'';
+  document.getElementById('f-hosting').value=d.hosting||'';
+  document.getElementById('f-server-location').value=d.serverLocation||'';
+  document.getElementById('f-server-provider').value=d.serverProvider||'';
+  document.getElementById('f-redirect-target').value=d.redirectTarget||'';
   document.getElementById('f-notes').value=d.notes||'';
   document.getElementById('f-ar').checked=!!d.autorenew;
   document.getElementById('f-lock').checked=!!d.lock;
+  document.getElementById('redirect-target-row').style.display=d.status==='redirect'?'block':'none';
   const dv=d.dns||'cloudflare';
   document.getElementById('f-dns').value=dv;selectedDNS=dv;
   document.querySelectorAll('.dns-opt').forEach(o=>o.classList.remove('selected'));
@@ -808,18 +1036,26 @@ function saveDomain(){
     id:editingId||uid(),name,expiry,
     reg:document.getElementById('f-reg').value,
     status:document.getElementById('f-status').value,
+    team:document.getElementById('f-team').value,
     purchased:document.getElementById('f-purchased').value,
+    renewal:document.getElementById('f-renewal').value||expiry,
     dns:document.getElementById('f-dns').value||'cloudflare',
     ns:document.getElementById('f-ns').value,
+    purchasePrice:parseFloat(document.getElementById('f-purchase-price').value)||0,
     cost:parseFloat(document.getElementById('f-cost').value)||0,
+    nextRenewalPrice:parseFloat(document.getElementById('f-next-renewal-price').value)||parseFloat(document.getElementById('f-cost').value)||0,
     ip:document.getElementById('f-ip').value,
+    hosting:document.getElementById('f-hosting').value,
+    serverLocation:document.getElementById('f-server-location').value,
+    serverProvider:document.getElementById('f-server-provider').value,
+    redirectTarget:document.getElementById('f-redirect-target').value,
     notes:document.getElementById('f-notes').value,
     autorenew:document.getElementById('f-ar').checked,
     lock:document.getElementById('f-lock').checked,
     updatedAt:new Date().toISOString()
   };
   if(editingId){domains=domains.map(d=>d.id===editingId?obj:d);toast(name+' updated','suc')}
-  else{domains.push(obj);toast(name+' added successfully','suc')}
+  else{domains.push(obj);toast(name+' added','suc')}
   saveDomains(domains);closeModal('addDomain');editingId=null;renderPage(curPage);
 }
 
@@ -831,14 +1067,34 @@ function confirmDelete(id){
 }
 function doDelete(id){domains=domains.filter(x=>x.id!==id);saveDomains(domains);toast('Domain deleted','err');renderPage(curPage)}
 
-// FILTERS
+// ---- FILTERS ----
 function onSearch(v){searchQ=v;renderPage(curPage)}
 function setFS(v){filterStatus=v;renderPage(curPage)}
 function setFD(v){filterDNS=v;renderPage(curPage)}
-function filterByReg(r){go(r)}
+function setFT(v){filterTeam=v;renderPage(curPage)}
 function setSort(f){if(sortField===f)sortAsc=!sortAsc;else{sortField=f;sortAsc=true}renderPage(curPage)}
 
-// API KEYS
+// ---- HELPERS ----
+function domName(d){const p=d.name.split('.');return`<span>${p[0]}</span><span class="dom-ext">.${p.slice(1).join('.')}</span>`}
+function statusBadge(d){
+  const s=getStatus(d);const dl=daysLeft(d.expiry);
+  if(s==='unused')return`<span class="badge unused"><i class="ti ti-circle-off" style="font-size:10px"></i> Unused</span>`;
+  if(s==='redirect')return`<span class="badge redirect"><i class="ti ti-arrow-right" style="font-size:10px"></i> 301 Redirect</span>`;
+  if(s==='expired')return`<span class="badge expired"><i class="ti ti-x" style="font-size:10px"></i> Expired</span>`;
+  if(s==='expiring')return`<span class="badge expiring"><i class="ti ti-clock" style="font-size:10px"></i> ${dl}d</span>`;
+  if(s==='pending')return`<span class="badge pending">Pending</span>`;
+  return`<span class="badge active"><i class="ti ti-check" style="font-size:10px"></i> Active</span>`;
+}
+function dnsPill(dns){if(dns==='cloudflare')return`<div class="dns-pill dns-cf"><i class="ti ti-cloud" style="font-size:12px"></i> Cloudflare</div>`;if(dns==='vps')return`<div class="dns-pill dns-vps"><i class="ti ti-server" style="font-size:12px"></i> VPS</div>`;if(dns==='registrar')return`<div class="dns-pill dns-reg"><i class="ti ti-building" style="font-size:12px"></i> Registrar</div>`;return`<div class="dns-pill dns-other"><i class="ti ti-dots-circle-horizontal" style="font-size:12px"></i> Other</div>`}
+function regTag(reg){const n={spaceship:'Spaceship',namecheap:'Namecheap',godaddy:'GoDaddy',other:'Other'};return`<span class="rtag ${reg||'other'}">${n[reg]||reg}</span>`}
+function expiryCell(d){const dl=daysLeft(d.expiry);const c=dl<0?'var(--red)':dl<=30?'var(--amber)':'var(--text2)';const bp=dl<0?100:Math.min(100,Math.max(0,(365-dl)/365*100));const bc=dl<0?'var(--red)':dl<=30?'var(--amber)':'var(--green)';return`<div class="exp-wrap"><span class="exp-date" style="color:${c}">${d.expiry||'—'}</span><div class="exp-bar-row"><div class="exp-bar"><div class="exp-fill" style="width:${bp}%;background:${bc}"></div></div><span class="exp-days">${dl<0?'expired':dl>365?'>1yr':dl+'d'}</span></div></div>`}
+function teamBadge(team){
+  if(!team)return`<span class="team-badge team-none">—</span>`;
+  const labels={Boss:'Boss',Jack:'Jack',ALI:'ALI',Justin:'Justin',SV368:'SV368',VN138:'VN138','101':'101 Team',PH:'Philippines',BD:'Bangladesh'};
+  return`<span class="team-badge team-${team}">${labels[team]||team}</span>`;
+}
+
+// ---- API KEYS ----
 function loadAPIToForm(){
   document.getElementById('gd-key').value=apiKeys.godaddy_key||'';
   document.getElementById('gd-sec').value=apiKeys.godaddy_secret||'';
@@ -848,14 +1104,7 @@ function loadAPIToForm(){
   document.getElementById('ss-sec').value=apiKeys.spaceship_secret||'';
 }
 function saveAPIKeys(){
-  apiKeys={
-    godaddy_key:document.getElementById('gd-key').value.trim(),
-    godaddy_secret:document.getElementById('gd-sec').value.trim(),
-    namecheap_user:document.getElementById('nc-user').value.trim(),
-    namecheap_key:document.getElementById('nc-key').value.trim(),
-    spaceship_key:document.getElementById('ss-key').value.trim(),
-    spaceship_secret:document.getElementById('ss-sec').value.trim()
-  };
+  apiKeys={godaddy_key:document.getElementById('gd-key').value.trim(),godaddy_secret:document.getElementById('gd-sec').value.trim(),namecheap_user:document.getElementById('nc-user').value.trim(),namecheap_key:document.getElementById('nc-key').value.trim(),spaceship_key:document.getElementById('ss-key').value.trim(),spaceship_secret:document.getElementById('ss-sec').value.trim()};
   saveKeys(apiKeys);closeModal('settings');toast('API keys saved','suc');renderPage(curPage);
 }
 
@@ -863,226 +1112,70 @@ async function testAPI(reg){
   if(reg==='godaddy'){
     const k=document.getElementById('gd-key').value,s=document.getElementById('gd-sec').value;
     if(!k||!s){toast('Enter GoDaddy Key & Secret','err');return}
-    try{
-      const r=await fetch(proxyUrl('https://api.godaddy.com/v1/domains?limit=1'),{headers:{'Authorization':`sso-key ${k}:${s}`,'Accept':'application/json'}});
-      r.ok?toast('GoDaddy connected!','suc'):toast('GoDaddy error: '+r.status,'err');
-    }catch(e){toast('Connection failed: '+e.message,'err')}
-  } else if(reg==='namecheap'){
+    try{const r=await fetch(proxyUrl('https://api.godaddy.com/v1/domains?limit=1'),{headers:{'Authorization':`sso-key ${k}:${s}`,'Accept':'application/json'}});r.ok?toast('GoDaddy connected!','suc'):toast('GoDaddy error: '+r.status,'err')}catch(e){toast('Connection failed: '+e.message,'err')}
+  }else if(reg==='namecheap'){
     const u=document.getElementById('nc-user').value,k=document.getElementById('nc-key').value;
     if(!u||!k){toast('Enter Namecheap credentials','err');return}
-    try{
-      const url=`https://api.namecheap.com/xml.response?ApiUser=${u}&ApiKey=${k}&UserName=${u}&Command=namecheap.domains.getList&ClientIp=0.0.0.0&PageSize=1`;
-      const r=await fetch(proxyUrl(url));
-      const txt=await r.text();
-      txt.includes('Status="OK"')?toast('Namecheap connected!','suc'):toast('Namecheap error — check IP whitelist','err');
-    }catch(e){toast('Connection failed: '+e.message,'err')}
-  } else {
+    try{const url=`https://api.namecheap.com/xml.response?ApiUser=${u}&ApiKey=${k}&UserName=${u}&Command=namecheap.domains.getList&ClientIp=0.0.0.0&PageSize=1`;const r=await fetch(proxyUrl(url));const txt=await r.text();txt.includes('Status="OK"')?toast('Namecheap connected!','suc'):toast('Namecheap error — check IP whitelist','err')}catch(e){toast('Connection failed: '+e.message,'err')}
+  }else{
     const k=document.getElementById('ss-key').value,s=document.getElementById('ss-sec').value;
     if(!k||!s){toast('Enter Spaceship Key & Secret','err');return}
-    try{
-      const creds=btoa(k+':'+s);
-      const r=await fetch(proxyUrl('https://spaceship.dev/api/v1/domains?take=1'),{headers:{'Authorization':`Basic ${creds}`,'Accept':'application/json'}});
-      r.ok?toast('Spaceship connected!','suc'):toast('Spaceship error: '+r.status,'err');
-    }catch(e){toast('Connection failed: '+e.message,'err')}
+    try{const r=await fetch(proxyUrl('https://spaceship.dev/api/v1/domains?take=1&skip=0'),{headers:{'X-Api-Key':k,'X-Api-Secret':s,'Accept':'application/json'}});r.ok?toast('Spaceship connected!','suc'):toast('Spaceship error: '+r.status,'err')}catch(e){toast('Connection failed: '+e.message,'err')}
   }
 }
 
 function checkApiStatus(){
   const reg=document.getElementById('f-api-reg').value;
   const has=(reg==='godaddy'&&apiKeys.godaddy_key)||(reg==='namecheap'&&apiKeys.namecheap_key)||(reg==='spaceship'&&apiKeys.spaceship_key);
-  document.getElementById('api-status').innerHTML=has
-    ?`<span style="color:var(--green)"><i class="ti ti-check"></i> API key found for ${reg}</span>`
-    :`<span style="color:var(--amber)"><i class="ti ti-alert-triangle"></i> No API key for ${reg} — <a onclick="openModal('settings')" style="color:var(--accent2);cursor:pointer">Add in Settings</a></span>`;
+  document.getElementById('api-status').innerHTML=has?`<span style="color:var(--green)"><i class="ti ti-check"></i> API key found for ${reg}</span>`:`<span style="color:var(--amber)"><i class="ti ti-alert-triangle"></i> No API key for ${reg} — <a onclick="openModal('settings')" style="color:var(--accent2);cursor:pointer">Add in Settings</a></span>`;
 }
 
-// ============================================================
-// MAIN FETCH FUNCTION — CORS Proxy used for all 3 registrars
-// ============================================================
 async function doAPIFetch(){
   const reg=document.getElementById('f-api-reg').value;
   const res=document.getElementById('api-result');
-  res.innerHTML=`<div class="alert info"><i class="ti ti-loader"></i> Fetching from ${reg} via proxy...</div>`;
-
+  res.innerHTML=`<div class="alert info"><i class="ti ti-loader"></i> Fetching from ${reg}...</div>`;
   try{
-    // ---- GODADDY ----
     if(reg==='godaddy'){
-      if(!apiKeys.godaddy_key||!apiKeys.godaddy_secret){
-        res.innerHTML=`<div class="alert warn"><i class="ti ti-alert-triangle"></i> No GoDaddy API key. <a onclick="openModal('settings');closeModal('addDomain')" style="color:var(--accent2);cursor:pointer">Add in Settings</a></div>`;
-        return;
-      }
-      const r=await fetch(
-        proxyUrl('https://api.godaddy.com/v1/domains?limit=100&statuses=ACTIVE'),
-        {headers:{'Authorization':`sso-key ${apiKeys.godaddy_key}:${apiKeys.godaddy_secret}`,'Accept':'application/json'}}
-      );
-      if(!r.ok){res.innerHTML=`<div class="alert warn"><i class="ti ti-x"></i> GoDaddy API Error: ${r.status} — check your key/secret</div>`;return}
-      const data=await r.json();
-      let added=0;
-      data.forEach(d=>{
-        if(!domains.find(x=>x.name===d.domain)){
-          domains.push({
-            id:uid(),name:d.domain,reg:'godaddy',
-            status:d.status==='ACTIVE'?'active':'pending',
-            purchased:d.createdAt?d.createdAt.split('T')[0]:'',
-            expiry:d.expires?d.expires.split('T')[0]:'',
-            dns:'registrar',ns:(d.nameServers||[]).join(', '),
-            cost:0,autorenew:d.renewAuto||false,lock:false,ip:'',
-            notes:'Imported via GoDaddy API',updatedAt:new Date().toISOString()
-          });
-          added++;
-        }
-      });
-      saveDomains(domains);
-      res.innerHTML=`<div class="alert suc"><i class="ti ti-check"></i> ${added} domain(s) imported from GoDaddy. DNS set to Registrar — assign manually.</div>`;
-      toast(`${added} domains imported from GoDaddy`,'suc');
-      renderPage(curPage);
-    }
-
-    // ---- NAMECHEAP ----
-    else if(reg==='namecheap'){
-      if(!apiKeys.namecheap_user||!apiKeys.namecheap_key){
-        res.innerHTML=`<div class="alert warn"><i class="ti ti-alert-triangle"></i> No Namecheap API key. <a onclick="openModal('settings');closeModal('addDomain')" style="color:var(--accent2);cursor:pointer">Add in Settings</a></div>`;
-        return;
-      }
+      if(!apiKeys.godaddy_key||!apiKeys.godaddy_secret){res.innerHTML=`<div class="alert warn">No GoDaddy API key.</div>`;return}
+      const r=await fetch(proxyUrl('https://api.godaddy.com/v1/domains?limit=100&statuses=ACTIVE'),{headers:{'Authorization':`sso-key ${apiKeys.godaddy_key}:${apiKeys.godaddy_secret}`,'Accept':'application/json'}});
+      if(!r.ok){res.innerHTML=`<div class="alert warn">GoDaddy API Error: ${r.status}</div>`;return}
+      const data=await r.json();let added=0;
+      data.forEach(d=>{if(!domains.find(x=>x.name===d.domain)){domains.push({id:uid(),name:d.domain,reg:'godaddy',status:d.status==='ACTIVE'?'active':'pending',purchased:d.createdAt?d.createdAt.split('T')[0]:'',expiry:d.expires?d.expires.split('T')[0]:'',renewal:d.expires?d.expires.split('T')[0]:'',dns:'registrar',ns:(d.nameServers||[]).join(', '),purchasePrice:0,cost:0,nextRenewalPrice:0,autorenew:d.renewAuto||false,lock:false,ip:'',hosting:'',serverLocation:'',serverProvider:'',redirectTarget:'',notes:'Imported via GoDaddy API',team:'',updatedAt:new Date().toISOString()});added++}});
+      saveDomains(domains);res.innerHTML=`<div class="alert suc"><i class="ti ti-check"></i> ${added} domain(s) imported. Set team, hosting, and prices manually.</div>`;toast(`${added} domains imported from GoDaddy`,'suc');renderPage(curPage);
+    }else if(reg==='namecheap'){
+      if(!apiKeys.namecheap_user||!apiKeys.namecheap_key){res.innerHTML=`<div class="alert warn">No Namecheap API key.</div>`;return}
       const u=apiKeys.namecheap_user,k=apiKeys.namecheap_key;
-      // Fetch page 1 first to get total count
-      const url1=`https://api.namecheap.com/xml.response?ApiUser=${u}&ApiKey=${k}&UserName=${u}&Command=namecheap.domains.getList&ClientIp=0.0.0.0&PageSize=100&Page=1`;
-      const r1=await fetch(proxyUrl(url1));
+      const r1=await fetch(proxyUrl(`https://api.namecheap.com/xml.response?ApiUser=${u}&ApiKey=${k}&UserName=${u}&Command=namecheap.domains.getList&ClientIp=0.0.0.0&PageSize=100&Page=1`));
       const txt1=await r1.text();
-      if(!txt1.includes('Status="OK"')){
-        res.innerHTML=`<div class="alert warn"><i class="ti ti-x"></i> Namecheap error — make sure your IP is whitelisted in Namecheap API settings</div>`;
-        return;
-      }
-      const parser=new DOMParser();
-      const xml1=parser.parseFromString(txt1,'text/xml');
-      const total=parseInt(xml1.querySelector('Paging TotalItems')?.textContent||'0');
-      const pages=Math.ceil(total/100);
-      let allDomains=[];
-      // Parse page 1
-      xml1.querySelectorAll('Domain').forEach(d=>allDomains.push(d));
-      // Fetch remaining pages
-      for(let p=2;p<=pages;p++){
-        const urlP=`https://api.namecheap.com/xml.response?ApiUser=${u}&ApiKey=${k}&UserName=${u}&Command=namecheap.domains.getList&ClientIp=0.0.0.0&PageSize=100&Page=${p}`;
-        const rP=await fetch(proxyUrl(urlP));
-        const txtP=await rP.text();
-        const xmlP=parser.parseFromString(txtP,'text/xml');
-        xmlP.querySelectorAll('Domain').forEach(d=>allDomains.push(d));
-      }
+      if(!txt1.includes('Status="OK"')){res.innerHTML=`<div class="alert warn">Namecheap error — check IP whitelist</div>`;return}
+      const parser=new DOMParser();const xml1=parser.parseFromString(txt1,'text/xml');let allD=[];xml1.querySelectorAll('Domain').forEach(d=>allD.push(d));
       let added=0;
-      allDomains.forEach(d=>{
-        const name=d.getAttribute('Name');
-        if(!name||domains.find(x=>x.name===name))return;
-        const exp=d.getAttribute('Expires')||'';
-        // Namecheap date format: 12/31/2025 → convert to 2025-12-31
-        let expiry='';
-        if(exp){const[m,day,yr]=exp.split('/');expiry=`${yr}-${m.padStart(2,'0')}-${day.padStart(2,'0')}`}
-        domains.push({
-          id:uid(),name,reg:'namecheap',
-          status:d.getAttribute('IsExpired')==='true'?'expired':'active',
-          purchased:'',expiry,
-          dns:'registrar',ns:'',
-          cost:0,
-          autorenew:d.getAttribute('AutoRenew')==='true',
-          lock:d.getAttribute('IsLocked')==='true',
-          ip:'',notes:'Imported via Namecheap API',
-          updatedAt:new Date().toISOString()
-        });
-        added++;
-      });
-      saveDomains(domains);
-      res.innerHTML=`<div class="alert suc"><i class="ti ti-check"></i> ${added} domain(s) imported from Namecheap (${total} total found). DNS set to Registrar — assign manually.</div>`;
-      toast(`${added} domains imported from Namecheap`,'suc');
-      renderPage(curPage);
+      allD.forEach(d=>{const name=d.getAttribute('Name');if(!name||domains.find(x=>x.name===name))return;const exp=d.getAttribute('Expires')||'';let expiry='';if(exp){const[m,day,yr]=exp.split('/');expiry=`${yr}-${m.padStart(2,'0')}-${day.padStart(2,'0')}`}domains.push({id:uid(),name,reg:'namecheap',status:d.getAttribute('IsExpired')==='true'?'expired':'active',purchased:'',expiry,renewal:expiry,dns:'registrar',ns:'',purchasePrice:0,cost:0,nextRenewalPrice:0,autorenew:d.getAttribute('AutoRenew')==='true',lock:d.getAttribute('IsLocked')==='true',ip:'',hosting:'',serverLocation:'',serverProvider:'',redirectTarget:'',notes:'Imported via Namecheap API',team:'',updatedAt:new Date().toISOString()});added++});
+      saveDomains(domains);res.innerHTML=`<div class="alert suc"><i class="ti ti-check"></i> ${added} domain(s) imported. Set team, hosting, and prices manually.</div>`;toast(`${added} domains imported`,'suc');renderPage(curPage);
+    }else{
+      if(!apiKeys.spaceship_key||!apiKeys.spaceship_secret){res.innerHTML=`<div class="alert warn">No Spaceship API key.</div>`;return}
+      const r=await fetch(proxyUrl('https://spaceship.dev/api/v1/domains?take=100&skip=0'),{headers:{'X-Api-Key':apiKeys.spaceship_key,'X-Api-Secret':apiKeys.spaceship_secret,'Accept':'application/json'}});
+      if(!r.ok){res.innerHTML=`<div class="alert warn">Spaceship API Error: ${r.status}</div>`;return}
+      const data=await r.json();const items=data.items||data||[];let added=0;
+      items.forEach(d=>{const name=d.name||d.domain;if(!name||domains.find(x=>x.name===name))return;const expiry=(d.expirationDate||d.expiry||'').split('T')[0];const purchased=(d.registrationDate||d.createdAt||'').split('T')[0];domains.push({id:uid(),name,reg:'spaceship',status:'active',purchased,expiry,renewal:expiry,dns:'registrar',ns:(d.nameservers||[]).join(', '),purchasePrice:0,cost:0,nextRenewalPrice:0,autorenew:d.autoRenew||false,lock:false,ip:'',hosting:'',serverLocation:'',serverProvider:'',redirectTarget:'',notes:'Imported via Spaceship API',team:'',updatedAt:new Date().toISOString()});added++});
+      saveDomains(domains);res.innerHTML=`<div class="alert suc"><i class="ti ti-check"></i> ${added} domain(s) imported. Set team, hosting, and prices manually.</div>`;toast(`${added} domains imported from Spaceship`,'suc');renderPage(curPage);
     }
-
-    // ---- SPACESHIP ----
-    else if(reg==='spaceship'){
-      if(!apiKeys.spaceship_key||!apiKeys.spaceship_secret){
-        res.innerHTML=`<div class="alert warn"><i class="ti ti-alert-triangle"></i> No Spaceship API key. <a onclick="openModal('settings');closeModal('addDomain')" style="color:var(--accent2);cursor:pointer">Add in Settings</a></div>`;
-        return;
-      }
-      const creds=btoa(apiKeys.spaceship_key+':'+apiKeys.spaceship_secret);
-      // Fetch first page
-      const r=await fetch(
-        proxyUrl('https://spaceship.dev/api/v1/domains?take=100&skip=0'),
-        {headers:{'Authorization':`Basic ${creds}`,'Accept':'application/json'}}
-      );
-      if(!r.ok){
-        res.innerHTML=`<div class="alert warn"><i class="ti ti-x"></i> Spaceship API Error: ${r.status} — check your API key and secret</div>`;
-        return;
-      }
-      const data=await r.json();
-      const items=data.items||data.data||data||[];
-      // Check if there are more pages
-      let allItems=[...items];
-      const totalCount=data.totalCount||data.total||items.length;
-      if(totalCount>100){
-        const morePagesCount=Math.ceil(totalCount/100)-1;
-        for(let p=1;p<=morePagesCount;p++){
-          const rP=await fetch(
-            proxyUrl(`https://spaceship.dev/api/v1/domains?take=100&skip=${p*100}`),
-            {headers:{'Authorization':`Basic ${creds}`,'Accept':'application/json'}}
-          );
-          if(rP.ok){const dp=await rP.json();allItems=[...allItems,...(dp.items||dp.data||[])]}
-        }
-      }
-      let added=0;
-      allItems.forEach(d=>{
-        const name=d.name||d.domain||d.domainName;
-        if(!name||domains.find(x=>x.name===name))return;
-        const exp=d.expiresAt||d.expiredAt||d.expiry||'';
-        const expiry=exp?exp.split('T')[0]:'';
-        const purchased=d.createdAt||d.registeredAt||'';
-        domains.push({
-          id:uid(),name,reg:'spaceship',
-          status:d.status==='ACTIVE'||d.active?'active':'pending',
-          purchased:purchased?purchased.split('T')[0]:'',
-          expiry,dns:'registrar',
-          ns:(d.nameservers||d.ns||[]).join(', '),
-          cost:0,
-          autorenew:d.autoRenew||d.autorenew||false,
-          lock:d.locked||false,
-          ip:'',notes:'Imported via Spaceship API',
-          updatedAt:new Date().toISOString()
-        });
-        added++;
-      });
-      saveDomains(domains);
-      res.innerHTML=`<div class="alert suc"><i class="ti ti-check"></i> ${added} domain(s) imported from Spaceship (${totalCount} total found). DNS set to Registrar — assign manually.</div>`;
-      toast(`${added} domains imported from Spaceship`,'suc');
-      renderPage(curPage);
-    }
-
-  } catch(e){
-    res.innerHTML=`<div class="alert warn"><i class="ti ti-x"></i> Error: ${e.message}</div>`;
-  }
+  }catch(e){res.innerHTML=`<div class="alert warn">Error: ${e.message}</div>`}
 }
 
-async function syncReg(reg){
-  document.getElementById('f-api-reg').value=reg;
-  await doAPIFetch();
-}
+async function syncReg(reg){document.getElementById('f-api-reg').value=reg;await doAPIFetch()}
 
 function exportCSV(){
-  const rows=[['Domain','Registrar','Status','Purchased','Expiry','DNS','Nameservers','IP','Auto-Renew','Lock','Cost/yr','Notes']];
-  domains.forEach(d=>rows.push([d.name,d.reg,d.status,d.purchased||'',d.expiry||'',d.dns||'',d.ns||'',d.ip||'',d.autorenew?'Yes':'No',d.lock?'Yes':'No',d.cost||0,d.notes||'']));
+  const rows=[['Domain','Team','Registrar','Status','Purchased','Expiry','Next Renewal Date','DNS','Nameservers','Hosting','Server Provider','Server Location','IP','Purchase Price','Annual Renewal','Next Renewal Price','Auto-Renew','Lock','Redirect Target','Notes']];
+  domains.forEach(d=>rows.push([d.name,d.team||'',d.reg,getStatus(d),d.purchased||'',d.expiry||'',d.renewal||'',d.dns||'',d.ns||'',d.hosting||'',d.serverProvider||'',d.serverLocation||'',d.ip||'',d.purchasePrice||0,d.cost||0,d.nextRenewalPrice||0,d.autorenew?'Yes':'No',d.lock?'Yes':'No',d.redirectTarget||'',d.notes||'']));
   const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='domains_'+new Date().toISOString().split('T')[0]+'.csv';a.click();
   toast('CSV exported','suc');
 }
 
-function openModal(name){
-  document.getElementById('modal-'+name).classList.remove('hidden');
-  if(name==='settings')loadAPIToForm();
-  if(name==='addDomain'&&!editingId)openAddModal();
-}
+function openModal(name){document.getElementById('modal-'+name).classList.remove('hidden');if(name==='settings')loadAPIToForm();if(name==='addDomain'&&!editingId)openAddModal()}
 function closeModal(name){document.getElementById('modal-'+name).classList.add('hidden');if(name==='addDomain')editingId=null}
-function switchTab(t){
-  document.getElementById('tab-manual-btn').classList.toggle('on',t==='manual');
-  document.getElementById('tab-api-btn').classList.toggle('on',t==='api');
-  document.getElementById('tab-manual').classList.toggle('hidden',t!=='manual');
-  document.getElementById('tab-api').classList.toggle('hidden',t!=='api');
-  if(t==='api')checkApiStatus();
-}
+function switchTab(t){document.getElementById('tab-manual-btn').classList.toggle('on',t==='manual');document.getElementById('tab-api-btn').classList.toggle('on',t==='api');document.getElementById('tab-manual').classList.toggle('hidden',t!=='manual');document.getElementById('tab-api').classList.toggle('hidden',t!=='api');if(t==='api')checkApiStatus()}
 document.querySelectorAll('.overlay').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)el.classList.add('hidden')})});
 
 function updateCounts(){
@@ -1090,8 +1183,11 @@ function updateCounts(){
   document.getElementById('cnt-spaceship').textContent=domains.filter(d=>d.reg==='spaceship').length;
   document.getElementById('cnt-namecheap').textContent=domains.filter(d=>d.reg==='namecheap').length;
   document.getElementById('cnt-godaddy').textContent=domains.filter(d=>d.reg==='godaddy').length;
-  document.getElementById('cnt-exp').textContent=domains.filter(d=>daysLeft(d.expiry)>=0&&daysLeft(d.expiry)<=30).length;
-  document.getElementById('cnt-expired').textContent=domains.filter(d=>daysLeft(d.expiry)<0||d.status==='expired').length;
+  document.getElementById('cnt-exp').textContent=domains.filter(d=>getStatus(d)==='expiring').length;
+  document.getElementById('cnt-expired').textContent=domains.filter(d=>getStatus(d)==='expired').length;
+  document.getElementById('cnt-unused').textContent=domains.filter(d=>d.status==='unused').length;
+  document.getElementById('cnt-redirect').textContent=domains.filter(d=>d.status==='redirect').length;
+  TEAMS.forEach(t=>document.getElementById('cnt-'+t).textContent=domains.filter(d=>d.team===t).length);
 }
 function updateStorageBadge(){
   const bytes=new Blob([localStorage.getItem(STORE_KEY)||'']).size;
