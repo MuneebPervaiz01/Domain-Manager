@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domain Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b0c0f;
+  --bg2: #13151a;
+  --bg3: #1a1d24;
+  --bg4: #21252f;
+  --border: #2a2f3d;
+  --border2: #363c4e;
+  --text: #e8eaf0;
+  --text2: #8b90a0;
+  --text3: #555b6e;
+  --accent: #4f8ef7;
+  --accent2: #1a3a6e;
+  --green: #2ecc8a;
+  --green2: #0d3d27;
+  --amber: #f5a623;
+  --amber2: #3d2800;
+  --red: #f25c54;
+  --red2: #3d1210;
+  --purple: #9b7ff4;
+  --purple2: #26194a;
+  --teal: #2ec4b6;
+  --teal2: #0a2e2c;
+  --mono: 'DM Mono', monospace;
+  --sans: 'Syne', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* LAYOUT */
+.layout { display: flex; height: 100vh; overflow: hidden; }
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow-y: auto;
+}
+.main { flex: 1; overflow-y: auto; }
+
+/* SIDEBAR */
+.brand {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.brand-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.brand-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+.brand-sub { font-size: 11px; color: var(--text3); margin-top: 2px; font-family: var(--mono); }
+
+.nav { padding: 12px 10px; flex: 1; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .15s;
+  margin-bottom: 2px;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: var(--bg4); color: var(--text); }
+.nav-item svg { width: 16px; height: 16px; flex-shrink: 0; stroke: currentColor; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: var(--mono);
+  padding: 1px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+.nav-badge.amber { background: var(--amber); color: #000; }
+
+.sidebar-footer {
+  padding: 12px 10px;
+  border-top: 1px solid var(--border);
+}
+.registrar-list { padding: 0 10px 12px; }
+.reg-section-title { font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 10px 6px; }
+.reg-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text2);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  transition: all .15s;
+}
+.reg-item:hover { background: var(--bg3); color: var(--text); }
+.reg-item.active { color: var(--text); }
+.reg-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.reg-count { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--text3); }
+
+/* MAIN HEADER */
+.page-header {
+  padding: 20px 28px 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.page-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.page-title { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; }
+.header-actions { display: flex; gap: 8px; align-items: center; }
+
+/* BUTTONS */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--sans);
+  cursor: pointer;
+  border: 1px solid var(--border2);
+  background: var(--bg3);
+  color: var(--text);
+  transition: all .15s;
+}
+.btn:hover { background: var(--bg4); border-color: var(--border2); }
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.btn.primary:hover { background: #3a7ae0; }
+.btn.danger { background: var(--red2); border-color: var(--red); color: var(--red); }
+.btn.danger:hover { background: #5a1a18; }
+.btn svg { width: 14px; height: 14px; stroke: currentColor; }
+
+/* STATS ROW */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.stat-cell {
+  background: var(--bg2);
+  padding: 14px 20px;
+}
+.stat-label { font-size: 11px; color: var(--text3); font-family: var(--mono); letter-spacing: 0.04em; margin-bottom: 4px; }
+.stat-value { font-size: 22px; font-weight: 700; font-family: var(--mono); color: var(--text); }
+.stat-value.red { color: var(--red); }
+.stat-value.amber { color: var(--amber); }
+.stat-value.green { color: var(--green); }
+
+/* TOOLBAR */
+.toolbar {
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.search-wrap {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+.search-wrap svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  stroke: var(--text3);
+}
+.search-input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 10px 7px 32px;
+  font-size: 13px;
+  color: var(--text);
+  font-family: var(--sans);
+  outline: none;
+  transition: border .15s;
+}
+.search-input::placeholder { color: var(--text3); }
+.search-input:focus { border-color: var(--accent); }
+
+.sort-select {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 13px;
+  color: var(--text2);
+  font-family: var(--sans);
+  outline: none;
+  cursor: pointer;
+}
+
+/* DOMAIN TABLE */
+.table-wrap { padding: 0 28px 28px; }
+.domain-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+.domain-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0 12px 10px;
+  white-space: nowrap;
+}
+.domain-table td {
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  vertical-align: middle;
+}
+.domain-table tbody tr {
+  transition: background .1s;
+  cursor: pointer;
+}
+.domain-table tbody tr:hover td { background: var(--bg2); }
+.domain-table tbody tr.selected td { background: var(--bg3); }
+
+.domain-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  font-family: var(--mono);
+  letter-spacing: -0.2px;
+}
+.domain-tld { color: var(--accent); }
+.domain-ip {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--mono);
+  margin-top: 2px;
+}
+
+.reg-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--mono);
+  letter-spacing: 0.02em;
+}
+.reg-spaceship { background: var(--purple2); color: var(--purple); border: 1px solid #3d2e80; }
+.reg-namecheap { background: var(--teal2); color: var(--teal); border: 1px solid #1a4a47; }
+.reg-godaddy   { background: var(--amber2); color: var(--amber); border: 1px solid #5a3e00; }
+.reg-other     { background: var(--bg4); color: var(--text2); border: 1px solid var(--border2); }
+
+.dns-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--mono);
+}
+.dns-cloudflare { background: #2a1e0a; color: #f6921e; border: 1px solid #5a3e10; }
+.dns-own        { background: #0a1e2a; color: #4f8ef7; border: 1px solid #1a3e5a; }
+.dns-other      { background: var(--bg4); color: var(--text2); border: 1px solid var(--border2); }
+
+.expiry-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--mono);
+}
+.exp-safe   { background: var(--green2); color: var(--green); border: 1px solid #1a5a3a; }
+.exp-warn   { background: var(--amber2); color: var(--amber); border: 1px solid #5a3e00; }
+.exp-danger { background: var(--red2); color: var(--red); border: 1px solid #6a1a18; }
+
+.status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--mono);
+}
+.dot { width: 7px; height: 7px; border-radius: 50%; }
+.dot.green { background: var(--green); box-shadow: 0 0 5px var(--green); }
+.dot.red   { background: var(--red); }
+.dot.amber { background: var(--amber); }
+
+.auto-toggle {
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 18px;
+}
+.auto-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 12px; height: 12px;
+  left: 2px; top: 2px;
+  background: var(--text3);
+  border-radius: 50%;
+  transition: all .2s;
+}
+input:checked + .toggle-slider { background: var(--green2); border-color: var(--green); }
+input:checked + .toggle-slider::before { transform: translateX(16px); background: var(--green); }
+
+.row-actions { display: flex; gap: 4px; opacity: 0; transition: opacity .15s; }
+tr:hover .row-actions { opacity: 1; }
+.icon-btn {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s;
+}
+.icon-btn:hover { background: var(--bg4); color: var(--text); }
+.icon-btn.del:hover { background: var(--red2); border-color: var(--red); color: var(--red); }
+.icon-btn svg { width: 13px; height: 13px; stroke: currentColor; }
+
+/* DOMAIN DETAIL PANEL */
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+.detail-overlay.open { pointer-events: all; }
+.detail-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  opacity: 0;
+  transition: opacity .25s;
+}
+.detail-overlay.open .detail-backdrop { opacity: 1; }
+.detail-panel {
+  position: relative;
+  z-index: 1;
+  width: 480px;
+  max-width: 95vw;
+  background: var(--bg2);
+  border-left: 1px solid var(--border);
+  height: 100vh;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform .25s cubic-bezier(.4,0,.2,1);
+  display: flex;
+  flex-direction: column;
+}
+.detail-overlay.open .detail-panel { transform: translateX(0); }
+
+.detail-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg2);
+  z-index: 2;
+}
+.detail-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.detail-close:hover { background: var(--bg4); color: var(--text); }
+.detail-close svg { width: 14px; height: 14px; stroke: currentColor; }
+
+.detail-domain { font-size: 19px; font-weight: 700; font-family: var(--mono); letter-spacing: -0.3px; margin-bottom: 6px; }
+.detail-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.detail-body { padding: 16px 20px; flex: 1; }
+
+.info-section { margin-bottom: 20px; }
+.info-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.info-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.info-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.info-card.full { grid-column: 1 / -1; }
+.info-card-label { font-size: 10px; color: var(--text3); font-family: var(--mono); letter-spacing: 0.04em; margin-bottom: 3px; }
+.info-card-value { font-size: 13px; font-weight: 500; color: var(--text); font-family: var(--mono); word-break: break-all; }
+.info-card-value.accent { color: var(--accent); }
+.info-card-value.green  { color: var(--green); }
+.info-card-value.red    { color: var(--red); }
+.info-card-value.amber  { color: var(--amber); }
+
+/* DNS RECORDS TABLE in detail */
+.dns-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  font-family: var(--mono);
+}
+.dns-table th {
+  text-align: left;
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0 8px 6px;
+}
+.dns-table td {
+  padding: 7px 8px;
+  border-top: 1px solid var(--border);
+  color: var(--text2);
+  word-break: break-all;
+}
+.dns-type-chip {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.chip-A    { background: #0a1e2a; color: #4f8ef7; }
+.chip-AAAA { background: #0a1e2a; color: #7bb3f4; }
+.chip-CNAME{ background: var(--purple2); color: var(--purple); }
+.chip-MX   { background: #2a1e0a; color: var(--amber); }
+.chip-TXT  { background: var(--green2); color: var(--green); }
+.chip-NS   { background: var(--bg4); color: var(--text2); }
+.chip-SRV  { background: #2a0a1e; color: #f47bbb; }
+
+.notes-area {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 80px;
+  resize: vertical;
+  outline: none;
+  transition: border .15s;
+}
+.notes-area:focus { border-color: var(--accent); }
+.notes-save-row { display: flex; justify-content: flex-end; margin-top: 6px; }
+
+/* NS LIST */
+.ns-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--text2);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ns-item::before {
+  content: 'NS';
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text3);
+  background: var(--bg4);
+  padding: 1px 4px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  width: 600px;
+  max-width: 100%;
+  padding: 0;
+  overflow: hidden;
+  transform: translateY(20px);
+  transition: transform .2s;
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+
+.modal-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-title { font-size: 15px; font-weight: 700; }
+.modal-close {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-close svg { width: 14px; height: 14px; stroke: currentColor; }
+
+.modal-body { padding: 20px; }
+.modal-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* FORM */
+.form-section { margin-bottom: 20px; }
+.form-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-row { display: flex; flex-direction: column; gap: 4px; }
+.form-row.full { grid-column: 1 / -1; }
+.form-label { font-size: 12px; color: var(--text2); font-weight: 500; }
+.form-hint { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.form-input, .form-select {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 8px 11px;
+  font-size: 13px;
+  color: var(--text);
+  font-family: var(--sans);
+  outline: none;
+  transition: border .15s;
+  width: 100%;
+}
+.form-input:focus, .form-select:focus { border-color: var(--accent); }
+.form-input::placeholder { color: var(--text3); }
+.form-select option { background: var(--bg3); }
+
+/* DNS Records in form */
+.dns-records-list { display: flex; flex-direction: column; gap: 6px; }
+.dns-record-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr 70px 28px;
+  gap: 6px;
+  align-items: center;
+}
+.dns-rec-input {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: var(--text);
+  font-family: var(--mono);
+  outline: none;
+  transition: border .15s;
+  width: 100%;
+}
+.dns-rec-input:focus { border-color: var(--accent); }
+.dns-rec-select {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 4px;
+  font-size: 12px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-weight: 700;
+  outline: none;
+  width: 100%;
+}
+.dns-remove {
+  width: 26px; height: 26px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.dns-remove:hover { background: var(--red2); border-color: var(--red); color: var(--red); }
+.dns-remove svg { width: 12px; height: 12px; stroke: currentColor; }
+.dns-add-btn {
+  margin-top: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+  border: 1px dashed var(--border2);
+  background: none;
+  color: var(--text3);
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: all .15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.dns-add-btn:hover { border-color: var(--accent); color: var(--accent); }
+.dns-add-btn svg { width: 12px; height: 12px; stroke: currentColor; }
+
+/* NS Records in form */
+.ns-records-list { display: flex; flex-direction: column; gap: 6px; }
+.ns-record-row { display: grid; grid-template-columns: 1fr 28px; gap: 6px; align-items: center; }
+
+/* EMPTY STATE */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text3);
+}
+.empty-icon {
+  width: 48px; height: 48px;
+  margin: 0 auto 12px;
+  stroke: var(--text3);
+}
+.empty-title { font-size: 15px; font-weight: 600; color: var(--text2); margin-bottom: 6px; }
+.empty-sub { font-size: 13px; line-height: 1.6; }
+
+/* TOAST */
+.toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 100; display: flex; flex-direction: column; gap: 8px; }
+.toast {
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: toastIn .2s ease;
+  max-width: 280px;
+}
+.toast.success { border-left: 3px solid var(--green); }
+.toast.error   { border-left: 3px solid var(--red); }
+.toast.info    { border-left: 3px solid var(--accent); }
+@keyframes toastIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+  .sidebar { display: none; }
+  .stats-row { grid-template-columns: repeat(3, 1fr); }
+  .domain-table th:nth-child(n+4), .domain-table td:nth-child(n+4) { display: none; }
+  .detail-panel { width: 100vw; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-title">
+        <div class="brand-dot"></div>
+        Domain Manager
+      </div>
+      <div class="brand-sub">aapke sare domains</div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-item active" onclick="setView('all')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Sab Domains
+        <span class="nav-badge" id="badge-all">0</span>
+      </button>
+      <button class="nav-item" onclick="setView('expiring')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Expiring Soon
+        <span class="nav-badge" id="badge-exp">0</span>
+      </button>
+      <button class="nav-item" onclick="setView('noauto')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Auto-Renew Off
+        <span class="nav-badge amber" id="badge-noauto">0</span>
+      </button>
+      <button class="nav-item" onclick="setView('cloudflare')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+        Cloudflare DNS
+      </button>
+      <button class="nav-item" onclick="setView('own')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+        Own Server DNS
+      </button>
+    </nav>
+
+    <div class="registrar-list">
+      <div class="reg-section-title">Registrars</div>
+      <button class="reg-item" onclick="filterReg('spaceship')">
+        <div class="reg-dot" style="background:var(--purple)"></div>
+        Spaceship
+        <span class="reg-count" id="rc-spaceship">0</span>
+      </button>
+      <button class="reg-item" onclick="filterReg('namecheap')">
+        <div class="reg-dot" style="background:var(--teal)"></div>
+        Namecheap
+        <span class="reg-count" id="rc-namecheap">0</span>
+      </button>
+      <button class="reg-item" onclick="filterReg('godaddy')">
+        <div class="reg-dot" style="background:var(--amber)"></div>
+        GoDaddy
+        <span class="reg-count" id="rc-godaddy">0</span>
+      </button>
+      <button class="reg-item" onclick="filterReg('other')">
+        <div class="reg-dot" style="background:var(--text3)"></div>
+        Other
+        <span class="reg-count" id="rc-other">0</span>
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="btn primary" style="width:100%;justify-content:center" onclick="openAddModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Domain Add Karo
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- HEADER -->
+    <div class="page-header">
+      <div class="page-header-top">
+        <div class="page-title" id="page-title">Sab Domains</div>
+        <div class="header-actions">
+          <button class="btn" onclick="exportCSV()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+          <button class="btn primary" onclick="openAddModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Domain Add
+          </button>
+        </div>
+      </div>
+
+      <!-- STATS ROW -->
+      <div class="stats-row">
+        <div class="stat-cell">
+          <div class="stat-label">TOTAL DOMAINS</div>
+          <div class="stat-value" id="s-total">0</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">ACTIVE</div>
+          <div class="stat-value green" id="s-active">0</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">EXPIRING ≤30 DAYS</div>
+          <div class="stat-value red" id="s-exp30">0</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">EXPIRING ≤90 DAYS</div>
+          <div class="stat-value amber" id="s-exp90">0</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">AUTO-RENEW OFF</div>
+          <div class="stat-value amber" id="s-noauto">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="search-input" id="search-input" placeholder="Domain search karo..." oninput="renderTable()">
+      </div>
+      <select class="sort-select" id="sort-select" onchange="renderTable()">
+        <option value="name">Sort: Name</option>
+        <option value="expiry">Sort: Expiry</option>
+        <option value="purchase">Sort: Purchase Date</option>
+        <option value="reg">Sort: Registrar</option>
+      </select>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrap">
+      <table class="domain-table">
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th>Registrar</th>
+            <th>DNS Type</th>
+            <th>Purchase Date</th>
+            <th>Expiry</th>
+            <th>Auto-Renew</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="domain-tbody"></tbody>
+      </table>
+      <div id="empty-state" style="display:none">
+        <div class="empty-state">
+          <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <div class="empty-title">Koi domain nahi mila</div>
+          <div class="empty-sub">Upar "Domain Add Karo" button dabao<br>aur apna pehla domain add karo</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- DETAIL PANEL -->
+<div class="detail-overlay" id="detail-overlay">
+  <div class="detail-backdrop" onclick="closeDetail()"></div>
+  <div class="detail-panel" id="detail-panel">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Domain Add Karo</div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id">
+
+      <!-- BASIC INFO -->
+      <div class="form-section">
+        <div class="form-section-title">Basic Information</div>
+        <div class="form-grid">
+          <div class="form-row full">
+            <label class="form-label">Domain Name *</label>
+            <input class="form-input" id="f-name" placeholder="example.com" autocomplete="off">
+            <div class="form-hint">Sirf domain name — without http://</div>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Registrar *</label>
+            <select class="form-select" id="f-registrar">
+              <option value="spaceship">Spaceship</option>
+              <option value="namecheap">Namecheap</option>
+              <option value="godaddy">GoDaddy</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="f-status">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="parked">Parked</option>
+              <option value="transferred">Transferred</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Purchase Date *</label>
+            <input class="form-input" id="f-purchase" type="date">
+            <div class="form-hint">Registrar panel mein milegi</div>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Expiry Date *</label>
+            <input class="form-input" id="f-expiry" type="date">
+            <div class="form-hint">Registrar panel mein milegi</div>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Auto-Renew</label>
+            <select class="form-select" id="f-autorenew">
+              <option value="yes">On (Automatic)</option>
+              <option value="no">Off (Manual)</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Lock Status</label>
+            <select class="form-select" id="f-lock">
+              <option value="locked">Locked</option>
+              <option value="unlocked">Unlocked</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Privacy Protection</label>
+            <select class="form-select" id="f-privacy">
+              <option value="yes">On</option>
+              <option value="no">Off</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Registration Price ($/yr)</label>
+            <input class="form-input" id="f-price" type="number" placeholder="12.99" step="0.01">
+          </div>
+        </div>
+      </div>
+
+      <!-- DNS SETTINGS -->
+      <div class="form-section">
+        <div class="form-section-title">DNS Configuration</div>
+        <div class="form-grid">
+          <div class="form-row">
+            <label class="form-label">DNS Provider</label>
+            <select class="form-select" id="f-dns-provider" onchange="onDnsProviderChange()">
+              <option value="cloudflare">Cloudflare</option>
+              <option value="own">Apna Server (cPanel/VPS)</option>
+              <option value="registrar">Registrar Default</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Server / Hosting IP</label>
+            <input class="form-input" id="f-ip" placeholder="192.168.1.1" autocomplete="off">
+            <div class="form-hint">whoismydns.net ya cPanel mein milegi</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAMESERVERS -->
+      <div class="form-section">
+        <div class="form-section-title">Nameservers</div>
+        <div class="form-hint" style="margin-bottom:8px">Registrar panel > DNS / Nameservers mein milenge</div>
+        <div class="ns-records-list" id="ns-list"></div>
+        <button class="dns-add-btn" onclick="addNsRow()">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nameserver Add Karo
+        </button>
+      </div>
+
+      <!-- DNS RECORDS -->
+      <div class="form-section">
+        <div class="form-section-title">DNS Records</div>
+        <div class="form-hint" style="margin-bottom:8px">
+          whatsmydns.net ya dnschecker.org par domain type karke dekho
+        </div>
+        <div style="display:grid;grid-template-columns:80px 1fr 1fr 70px 28px;gap:6px;margin-bottom:4px;padding:0 2px">
+          <div style="font-size:10px;color:var(--text3);letter-spacing:0.04em;text-transform:uppercase">TYPE</div>
+          <div style="font-size:10px;color:var(--text3);letter-spacing:0.04em;text-transform:uppercase">HOST / NAME</div>
+          <div style="font-size:10px;color:var(--text3);letter-spacing:0.04em;text-transform:uppercase">VALUE / TARGET</div>
+          <div style="font-size:10px;color:var(--text3);letter-spacing:0.04em;text-transform:uppercase">TTL</div>
+          <div></div>
+        </div>
+        <div class="dns-records-list" id="dns-list"></div>
+        <button class="dns-add-btn" onclick="addDnsRow()">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          DNS Record Add Karo
+        </button>
+      </div>
+
+      <!-- NOTES -->
+      <div class="form-section">
+        <div class="form-section-title">Notes</div>
+        <textarea class="notes-area" id="f-notes" placeholder="Koi bhi notes — e.g. client ka domain hai, WordPress pe hai, mail ke liye use hota hai..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" onclick="saveDomain()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Save Karo
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+// ============================================================
+// DATA LAYER — localStorage mein save hota hai
+// ============================================================
+const STORAGE_KEY = 'domain_manager_v2';
+
+function loadDomains() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+function saveDomains(list) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+function genId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+
+let domains = loadDomains();
+let currentView = 'all';
+let currentRegFilter = null;
+let selectedId = null;
+
+// ============================================================
+// HELPERS
+// ============================================================
+function daysLeft(dateStr) {
+  if (!dateStr) return 9999;
+  const d = new Date(dateStr);
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  return Math.ceil((d - now) / (1000 * 60 * 60 * 24));
+}
+
+function fmtDate(dateStr) {
+  if (!dateStr) return '—';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-PK', { day:'numeric', month:'short', year:'numeric' });
+}
+
+function expiryBadge(dateStr) {
+  const d = daysLeft(dateStr);
+  const label = d <= 0 ? 'Expired' : d + ' din';
+  if (d <= 0)  return `<span class="expiry-badge exp-danger">Expired</span>`;
+  if (d <= 30) return `<span class="expiry-badge exp-danger">⚠ ${label}</span>`;
+  if (d <= 90) return `<span class="expiry-badge exp-warn">~ ${label}</span>`;
+  return `<span class="expiry-badge exp-safe">${fmtDate(dateStr)}</span>`;
+}
+
+function regBadge(reg) {
+  const map = {
+    spaceship: ['reg-spaceship','Spaceship'],
+    namecheap: ['reg-namecheap','Namecheap'],
+    godaddy:   ['reg-godaddy','GoDaddy'],
+    other:     ['reg-other','Other'],
+  };
+  const [cls, label] = map[reg] || map.other;
+  return `<span class="reg-badge ${cls}">${label}</span>`;
+}
+
+function dnsBadge(provider) {
+  if (provider === 'cloudflare') return `<span class="dns-badge dns-cloudflare">☁ Cloudflare</span>`;
+  if (provider === 'own')        return `<span class="dns-badge dns-own">⚙ Own Server</span>`;
+  if (provider === 'registrar')  return `<span class="dns-badge dns-other">Registrar</span>`;
+  return `<span class="dns-badge dns-other">${provider || 'Other'}</span>`;
+}
+
+function statusDot(status) {
+  const map = {
+    active:      ['green', 'Active'],
+    inactive:    ['red',   'Inactive'],
+    parked:      ['amber', 'Parked'],
+    transferred: ['amber', 'Transferred'],
+  };
+  const [color, label] = map[status] || ['red','Unknown'];
+  return `<span class="status-dot"><span class="dot ${color}"></span>${label}</span>`;
+}
+
+function getFiltered() {
+  let list = [...domains];
+
+  // view filter
+  if (currentView === 'expiring') list = list.filter(d => daysLeft(d.expiry) <= 90);
+  else if (currentView === 'noauto') list = list.filter(d => d.autorenew !== 'yes');
+  else if (currentView === 'cloudflare') list = list.filter(d => d.dnsProvider === 'cloudflare');
+  else if (currentView === 'own') list = list.filter(d => d.dnsProvider === 'own');
+
+  // registrar filter
+  if (currentRegFilter) list = list.filter(d => d.registrar === currentRegFilter);
+
+  // search
+  const q = document.getElementById('search-input')?.value?.toLowerCase() || '';
+  if (q) list = list.filter(d => d.name.toLowerCase().includes(q) || (d.notes||'').toLowerCase().includes(q));
+
+  // sort
+  const sort = document.getElementById('sort-select')?.value || 'name';
+  if (sort === 'name')     list.sort((a,b) => a.name.localeCompare(b.name));
+  if (sort === 'expiry')   list.sort((a,b) => daysLeft(a.expiry) - daysLeft(b.expiry));
+  if (sort === 'purchase') list.sort((a,b) => new Date(a.purchase||0) - new Date(b.purchase||0));
+  if (sort === 'reg')      list.sort((a,b) => a.registrar.localeCompare(b.registrar));
+
+  return list;
+}
+
+// ============================================================
+// RENDER TABLE
+// ============================================================
+function renderTable() {
+  const list = getFiltered();
+  const tbody = document.getElementById('domain-tbody');
+  const empty = document.getElementById('empty-state');
+
+  if (!list.length) {
+    tbody.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = list.map(d => {
+    const domainParts = d.name.split('.');
+    const tld = '.' + domainParts.slice(1).join('.');
+    const base = domainParts[0];
+
+    return `
+      <tr onclick="openDetail('${d.id}')" ${d.id === selectedId ? 'class="selected"' : ''}>
+        <td>
+          <div class="domain-name">${base}<span class="domain-tld">${tld}</span></div>
+          ${d.ip ? `<div class="domain-ip">${d.ip}</div>` : ''}
+        </td>
+        <td>${regBadge(d.registrar)}</td>
+        <td>${dnsBadge(d.dnsProvider)}</td>
+        <td style="font-size:12px;font-family:var(--mono);color:var(--text2)">${fmtDate(d.purchase)}</td>
+        <td>${expiryBadge(d.expiry)}</td>
+        <td>
+          <label class="auto-toggle" onclick="event.stopPropagation()">
+            <input type="checkbox" ${d.autorenew === 'yes' ? 'checked' : ''} onchange="toggleAutoRenew('${d.id}', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </td>
+        <td>${statusDot(d.status)}</td>
+        <td>
+          <div class="row-actions">
+            <button class="icon-btn" onclick="event.stopPropagation();openEditModal('${d.id}')" title="Edit">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="icon-btn del" onclick="event.stopPropagation();deleteDomain('${d.id}')" title="Delete">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  updateStats();
+  updateSidebar();
+}
+
+function updateStats() {
+  const all = domains;
+  document.getElementById('s-total').textContent  = all.length;
+  document.getElementById('s-active').textContent = all.filter(d => d.status === 'active').length;
+  document.getElementById('s-exp30').textContent  = all.filter(d => daysLeft(d.expiry) <= 30).length;
+  document.getElementById('s-exp90').textContent  = all.filter(d => daysLeft(d.expiry) <= 90 && daysLeft(d.expiry) > 30).length;
+  document.getElementById('s-noauto').textContent = all.filter(d => d.autorenew !== 'yes').length;
+
+  document.getElementById('badge-all').textContent   = all.length;
+  document.getElementById('badge-exp').textContent   = all.filter(d => daysLeft(d.expiry) <= 90).length;
+  document.getElementById('badge-noauto').textContent = all.filter(d => d.autorenew !== 'yes').length;
+}
+
+function updateSidebar() {
+  const regs = ['spaceship','namecheap','godaddy','other'];
+  regs.forEach(r => {
+    const el = document.getElementById('rc-' + r);
+    if (el) el.textContent = domains.filter(d => d.registrar === r).length;
+  });
+}
+
+// ============================================================
+// VIEWS & FILTERS
+// ============================================================
+function setView(view) {
+  currentView = view;
+  currentRegFilter = null;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const titles = {
+    all: 'Sab Domains',
+    expiring: 'Expiring Soon (90 Din)',
+    noauto: 'Auto-Renew Off Domains',
+    cloudflare: 'Cloudflare DNS Domains',
+    own: 'Own Server DNS Domains',
+  };
+  document.getElementById('page-title').textContent = titles[view] || 'Domains';
+  renderTable();
+}
+
+function filterReg(reg) {
+  currentRegFilter = currentRegFilter === reg ? null : reg;
+  renderTable();
+}
+
+// ============================================================
+// TOGGLE AUTO-RENEW
+// ============================================================
+function toggleAutoRenew(id, checked) {
+  const d = domains.find(x => x.id === id);
+  if (d) {
+    d.autorenew = checked ? 'yes' : 'no';
+    saveDomains(domains);
+    renderTable();
+    if (selectedId === id) openDetail(id);
+    toast(checked ? 'Auto-renew on kar diya' : 'Auto-renew off kar diya', 'info');
+  }
+}
+
+// ============================================================
+// DETAIL PANEL
+// ============================================================
+function openDetail(id) {
+  const d = domains.find(x => x.id === id);
+  if (!d) return;
+  selectedId = id;
+
+  const days = daysLeft(d.expiry);
+  const expiryColor = days <= 30 ? 'red' : days <= 90 ? 'amber' : 'green';
+
+  const dnsRows = (d.dnsRecords || []).map(r => `
+    <tr>
+      <td><span class="dns-type-chip chip-${r.type}">${r.type}</span></td>
+      <td>${r.host || '@'}</td>
+      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.value || ''}</td>
+      <td>${r.ttl || 'auto'}</td>
+    </tr>
+  `).join('');
+
+  const nsItems = (d.nameservers || []).filter(n => n).map(n =>
+    `<div class="ns-item">${n}</div>`
+  ).join('');
+
+  const panel = document.getElementById('detail-panel');
+  panel.innerHTML = `
+    <div class="detail-header">
+      <button class="detail-close" onclick="closeDetail()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="detail-domain">${d.name}</div>
+      <div class="detail-meta">
+        ${regBadge(d.registrar)}
+        ${dnsBadge(d.dnsProvider)}
+        ${statusDot(d.status)}
+      </div>
+    </div>
+    <div class="detail-body">
+
+      <div class="info-section">
+        <div class="info-section-title">Domain Info</div>
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-card-label">PURCHASE DATE</div>
+            <div class="info-card-value accent">${fmtDate(d.purchase)}</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-label">EXPIRY DATE</div>
+            <div class="info-card-value ${expiryColor}">${fmtDate(d.expiry)} (${days > 0 ? days + ' din baaki' : 'Expired'})</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-label">AUTO-RENEW</div>
+            <div class="info-card-value ${d.autorenew === 'yes' ? 'green' : 'red'}">${d.autorenew === 'yes' ? '✓ On' : '✗ Off'}</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-label">DOMAIN LOCK</div>
+            <div class="info-card-value ${d.lock === 'locked' ? 'green' : 'amber'}">${d.lock === 'locked' ? '🔒 Locked' : '🔓 Unlocked'}</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-label">WHOIS PRIVACY</div>
+            <div class="info-card-value">${d.privacy === 'yes' ? '✓ Protected' : '✗ Public'}</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-label">PRICE / YEAR</div>
+            <div class="info-card-value">${d.price ? '$' + parseFloat(d.price).toFixed(2) : '—'}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <div class="info-section-title">Server & DNS</div>
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-card-label">DNS PROVIDER</div>
+            <div class="info-card-value">${d.dnsProvider || '—'}</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-label">SERVER IP</div>
+            <div class="info-card-value accent">${d.ip || '—'}</div>
+          </div>
+        </div>
+      </div>
+
+      ${nsItems ? `
+      <div class="info-section">
+        <div class="info-section-title">Nameservers</div>
+        ${nsItems}
+      </div>` : ''}
+
+      ${d.dnsRecords && d.dnsRecords.length ? `
+      <div class="info-section">
+        <div class="info-section-title">DNS Records</div>
+        <table class="dns-table">
+          <thead><tr><th>Type</th><th>Host</th><th>Value</th><th>TTL</th></tr></thead>
+          <tbody>${dnsRows}</tbody>
+        </table>
+      </div>` : ''}
+
+      <div class="info-section">
+        <div class="info-section-title">Notes</div>
+        <textarea class="notes-area" id="detail-notes" placeholder="Koi notes nahi...">${d.notes || ''}</textarea>
+        <div class="notes-save-row">
+          <button class="btn" onclick="saveNotes('${d.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Save Notes
+          </button>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <div class="info-section-title">Actions</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn primary" onclick="openEditModal('${d.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit Domain
+          </button>
+          <button class="btn danger" onclick="deleteDomain('${d.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+            Delete
+          </button>
+        </div>
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById('detail-overlay').classList.add('open');
+  renderTable();
+}
+
+function closeDetail() {
+  document.getElementById('detail-overlay').classList.remove('open');
+  selectedId = null;
+  renderTable();
+}
+
+function saveNotes(id) {
+  const d = domains.find(x => x.id === id);
+  if (d) {
+    d.notes = document.getElementById('detail-notes').value;
+    saveDomains(domains);
+    toast('Notes save ho gaye', 'success');
+  }
+}
+
+// ============================================================
+// MODAL — ADD / EDIT
+// ============================================================
+function openAddModal() {
+  document.getElementById('modal-title').textContent = 'Naya Domain Add Karo';
+  document.getElementById('edit-id').value = '';
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-registrar').value = 'spaceship';
+  document.getElementById('f-status').value = 'active';
+  document.getElementById('f-purchase').value = '';
+  document.getElementById('f-expiry').value = '';
+  document.getElementById('f-autorenew').value = 'yes';
+  document.getElementById('f-lock').value = 'locked';
+  document.getElementById('f-privacy').value = 'yes';
+  document.getElementById('f-price').value = '';
+  document.getElementById('f-dns-provider').value = 'cloudflare';
+  document.getElementById('f-ip').value = '';
+  document.getElementById('f-notes').value = '';
+  buildNsList([]);
+  buildDnsList([]);
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function openEditModal(id) {
+  const d = domains.find(x => x.id === id);
+  if (!d) return;
+  document.getElementById('modal-title').textContent = 'Domain Edit Karo';
+  document.getElementById('edit-id').value = id;
+  document.getElementById('f-name').value = d.name;
+  document.getElementById('f-registrar').value = d.registrar || 'spaceship';
+  document.getElementById('f-status').value = d.status || 'active';
+  document.getElementById('f-purchase').value = d.purchase || '';
+  document.getElementById('f-expiry').value = d.expiry || '';
+  document.getElementById('f-autorenew').value = d.autorenew || 'yes';
+  document.getElementById('f-lock').value = d.lock || 'locked';
+  document.getElementById('f-privacy').value = d.privacy || 'yes';
+  document.getElementById('f-price').value = d.price || '';
+  document.getElementById('f-dns-provider').value = d.dnsProvider || 'cloudflare';
+  document.getElementById('f-ip').value = d.ip || '';
+  document.getElementById('f-notes').value = d.notes || '';
+  buildNsList(d.nameservers || []);
+  buildDnsList(d.dnsRecords || []);
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function saveDomain() {
+  const name = document.getElementById('f-name').value.trim().toLowerCase().replace(/^https?:\/\//, '');
+  if (!name) { toast('Domain name required hai', 'error'); return; }
+  const expiry = document.getElementById('f-expiry').value;
+  if (!expiry) { toast('Expiry date required hai', 'error'); return; }
+
+  const ns = collectNs();
+  const dns = collectDns();
+  const id = document.getElementById('edit-id').value || genId();
+
+  const obj = {
+    id,
+    name,
+    registrar:   document.getElementById('f-registrar').value,
+    status:      document.getElementById('f-status').value,
+    purchase:    document.getElementById('f-purchase').value,
+    expiry,
+    autorenew:   document.getElementById('f-autorenew').value,
+    lock:        document.getElementById('f-lock').value,
+    privacy:     document.getElementById('f-privacy').value,
+    price:       document.getElementById('f-price').value,
+    dnsProvider: document.getElementById('f-dns-provider').value,
+    ip:          document.getElementById('f-ip').value.trim(),
+    nameservers: ns,
+    dnsRecords:  dns,
+    notes:       document.getElementById('f-notes').value,
+  };
+
+  const existing = domains.findIndex(x => x.id === id);
+  if (existing >= 0) domains[existing] = obj;
+  else domains.push(obj);
+
+  saveDomains(domains);
+  closeModal();
+  renderTable();
+  toast(existing >= 0 ? 'Domain update ho gaya' : 'Domain add ho gaya!', 'success');
+  openDetail(id);
+}
+
+function deleteDomain(id) {
+  if (!confirm('Yeh domain delete karna chahte ho?')) return;
+  domains = domains.filter(x => x.id !== id);
+  saveDomains(domains);
+  if (selectedId === id) closeDetail();
+  renderTable();
+  toast('Domain delete ho gaya', 'info');
+}
+
+// ============================================================
+// NS & DNS FORM BUILDERS
+// ============================================================
+function buildNsList(items) {
+  const container = document.getElementById('ns-list');
+  container.innerHTML = '';
+  const list = items.length ? items : [''];
+  list.forEach(ns => addNsRow(ns));
+}
+
+function addNsRow(val='') {
+  const container = document.getElementById('ns-list');
+  const div = document.createElement('div');
+  div.className = 'ns-record-row';
+  div.innerHTML = `
+    <input class="dns-rec-input ns-input" placeholder="ns1.cloudflare.com" value="${val}">
+    <button class="dns-remove" onclick="this.parentElement.remove()">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  `;
+  container.appendChild(div);
+}
+
+function collectNs() {
+  return [...document.querySelectorAll('.ns-input')].map(i => i.value.trim()).filter(Boolean);
+}
+
+function buildDnsList(items) {
+  const container = document.getElementById('dns-list');
+  container.innerHTML = '';
+  items.forEach(r => addDnsRow(r));
+}
+
+function addDnsRow(preset={}) {
+  const container = document.getElementById('dns-list');
+  const types = ['A','AAAA','CNAME','MX','TXT','NS','SRV'];
+  const div = document.createElement('div');
+  div.className = 'dns-record-row';
+  div.innerHTML = `
+    <select class="dns-rec-select dns-type-sel">
+      ${types.map(t => `<option value="${t}" ${t===preset.type?'selected':''}>${t}</option>`).join('')}
+    </select>
+    <input class="dns-rec-input dns-host" placeholder="@ ya www" value="${preset.host||''}">
+    <input class="dns-rec-input dns-value" placeholder="IP ya target" value="${preset.value||''}">
+    <input class="dns-rec-input dns-ttl" placeholder="auto" value="${preset.ttl||''}">
+    <button class="dns-remove" onclick="this.parentElement.remove()">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  `;
+  container.appendChild(div);
+}
+
+function collectDns() {
+  const rows = document.querySelectorAll('.dns-record-row');
+  return [...rows].map(row => ({
+    type:  row.querySelector('.dns-type-sel')?.value || 'A',
+    host:  row.querySelector('.dns-host')?.value?.trim() || '',
+    value: row.querySelector('.dns-value')?.value?.trim() || '',
+    ttl:   row.querySelector('.dns-ttl')?.value?.trim() || 'auto',
+  })).filter(r => r.value);
+}
+
+function onDnsProviderChange() {
+  const prov = document.getElementById('f-dns-provider').value;
+  const nsList = document.getElementById('ns-list');
+  if (prov === 'cloudflare' && nsList.querySelectorAll('.ns-input').length === 0) {
+    addNsRow('dana.ns.cloudflare.com');
+    addNsRow('tim.ns.cloudflare.com');
+  }
+}
+
+// ============================================================
+// EXPORT CSV
+// ============================================================
+function exportCSV() {
+  if (!domains.length) { toast('Pehle domains add karo', 'error'); return; }
+  const headers = ['Domain','Registrar','DNS Provider','IP','Purchase Date','Expiry Date','Auto-Renew','Status','Price','Notes'];
+  const rows = domains.map(d => [
+    d.name, d.registrar, d.dnsProvider, d.ip||'',
+    d.purchase, d.expiry, d.autorenew, d.status,
+    d.price||'', (d.notes||'').replace(/,/g,' ')
+  ]);
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'domains.csv'; a.click();
+  toast('CSV download ho rahi hai', 'success');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function toast(msg, type='info') {
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ============================================================
+// KEYBOARD
+// ============================================================
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('modal-overlay').classList.contains('open')) closeModal();
+    else closeDetail();
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('search-input').focus();
+  }
+});
+
+// ============================================================
+// INIT
+// ============================================================
+renderTable();
+</script>
+</body>
+</html>
