@@ -3,1077 +3,397 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Domain Manager Pro</title>
+<title>DomainPro Manager</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <style>
-  :root {
-    --bg: #0d0f14;
-    --bg2: #13161e;
-    --bg3: #1a1d27;
-    --bg4: #222535;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.13);
-    --text: #e8eaf0;
-    --text2: #9499b0;
-    --text3: #5a5f7a;
-    --accent: #6c63ff;
-    --accent2: #8b83ff;
-    --green: #22c55e;
-    --red: #ef4444;
-    --amber: #f59e0b;
-    --blue: #3b82f6;
-    --teal: #14b8a6;
-    --pink: #ec4899;
-    --radius: 10px;
-    --radius-lg: 14px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'SF Pro Display', -apple-system, 'Segoe UI', sans-serif; min-height: 100vh; }
-
-  /* SIDEBAR */
-  .layout { display: flex; min-height: 100vh; }
-  .sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 0; flex-shrink: 0; }
-  .sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid var(--border); }
-  .sidebar-logo h1 { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
-  .sidebar-logo span { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
-  .sidebar-nav { flex: 1; padding: 12px 10px; }
-  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; color: var(--text2); transition: all 0.15s; margin-bottom: 2px; }
-  .nav-item:hover { background: var(--bg3); color: var(--text); }
-  .nav-item.active { background: var(--accent); color: #fff; }
-  .nav-item i { font-size: 17px; }
-  .nav-section { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text3); padding: 14px 12px 6px; }
-  .sidebar-footer { padding: 14px 10px; border-top: 1px solid var(--border); }
-
-  /* MAIN */
-  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-  .topbar { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
-  .topbar-title { font-size: 18px; font-weight: 600; }
-  .topbar-actions { display: flex; gap: 10px; align-items: center; }
-  .content { flex: 1; overflow-y: auto; padding: 24px; }
-
-  /* BUTTONS */
-  .btn { display: inline-flex; align-items: center; gap: 7px; padding: 8px 16px; border-radius: 8px; font-size: 13.5px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { background: var(--accent2); }
-  .btn-secondary { background: var(--bg3); color: var(--text); border: 1px solid var(--border2); }
-  .btn-secondary:hover { background: var(--bg4); }
-  .btn-danger { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
-  .btn-danger:hover { background: rgba(239,68,68,0.25); }
-  .btn-success { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
-  .btn-sm { padding: 5px 10px; font-size: 12px; }
-  .btn-icon { padding: 7px; border-radius: 7px; }
-
-  /* STAT CARDS */
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
-  .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; }
-  .stat-label { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-  .stat-value { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
-  .stat-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
-
-  /* REGISTRAR CARDS */
-  .registrar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 24px; }
-  .registrar-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; }
-  .registrar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .registrar-name { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; }
-  .registrar-badge { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; }
-  .registrar-stats { display: flex; gap: 16px; }
-  .registrar-stat { font-size: 12px; color: var(--text3); }
-  .registrar-stat strong { display: block; font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 1px; }
-
-  /* DOMAIN TABLE */
-  .table-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
-  .table-toolbar { padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); gap: 12px; flex-wrap: wrap; }
-  .search-box { display: flex; align-items: center; gap: 8px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; padding: 7px 12px; flex: 1; max-width: 320px; }
-  .search-box input { background: none; border: none; outline: none; color: var(--text); font-size: 13.5px; width: 100%; }
-  .search-box i { color: var(--text3); font-size: 16px; }
-  .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
-  .filter-btn { padding: 5px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; border: 1px solid var(--border2); background: var(--bg3); color: var(--text2); transition: all 0.15s; }
-  .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-  th { background: var(--bg3); color: var(--text3); font-weight: 500; text-transform: uppercase; font-size: 11px; letter-spacing: 0.8px; padding: 10px 16px; text-align: left; white-space: nowrap; }
-  td { padding: 13px 16px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(255,255,255,0.02); }
-  .domain-name { font-weight: 600; font-size: 14px; letter-spacing: -0.2px; }
-  .domain-tld { color: var(--accent2); }
-
-  /* BADGES */
-  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
-  .badge-active { background: rgba(34,197,94,0.12); color: #4ade80; }
-  .badge-expiring { background: rgba(245,158,11,0.12); color: #fbbf24; }
-  .badge-expired { background: rgba(239,68,68,0.12); color: #f87171; }
-  .badge-pending { background: rgba(59,130,246,0.12); color: #60a5fa; }
-
-  /* DNS BADGE */
-  .dns-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 500; }
-  .dns-cf { background: rgba(245,158,11,0.12); color: #fbbf24; }
-  .dns-own { background: rgba(108,99,255,0.12); color: #a5b4fc; }
-  .dns-reg { background: rgba(148,153,176,0.12); color: var(--text3); }
-
-  /* ACTIONS DROPDOWN */
-  .actions-wrap { position: relative; }
-  .actions-menu { position: absolute; right: 0; top: 100%; margin-top: 4px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 10px; padding: 6px; min-width: 160px; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
-  .actions-menu a { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 6px; font-size: 13px; color: var(--text2); cursor: pointer; text-decoration: none; transition: all 0.1s; }
-  .actions-menu a:hover { background: var(--bg4); color: var(--text); }
-  .actions-menu .divider { height: 1px; background: var(--border); margin: 4px 0; }
-  .actions-menu .danger { color: #f87171; }
-
-  /* MODALS */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
-  .modal { background: var(--bg2); border: 1px solid var(--border2); border-radius: 16px; width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto; }
-  .modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-  .modal-header h3 { font-size: 16px; font-weight: 600; }
-  .modal-body { padding: 20px 24px; }
-  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
-  .close-btn { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 20px; line-height: 1; padding: 2px; }
-
-  /* FORMS */
-  .form-group { margin-bottom: 16px; }
-  .form-label { font-size: 12.5px; color: var(--text2); margin-bottom: 6px; display: block; font-weight: 500; }
-  .form-input { width: 100%; background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; padding: 9px 12px; color: var(--text); font-size: 13.5px; outline: none; transition: border 0.15s; }
-  .form-input:focus { border-color: var(--accent); }
-  .form-select { width: 100%; background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; padding: 9px 12px; color: var(--text); font-size: 13.5px; outline: none; cursor: pointer; }
-  .form-hint { font-size: 11.5px; color: var(--text3); margin-top: 5px; }
-  .tabs { display: flex; gap: 2px; background: var(--bg3); border-radius: 9px; padding: 3px; margin-bottom: 20px; }
-  .tab { flex: 1; text-align: center; padding: 8px; border-radius: 7px; font-size: 13px; cursor: pointer; color: var(--text2); transition: all 0.15s; }
-  .tab.active { background: var(--bg2); color: var(--text); font-weight: 500; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
-  .api-info { background: var(--bg3); border: 1px solid var(--border); border-radius: 9px; padding: 14px; margin-bottom: 16px; font-size: 12.5px; color: var(--text2); line-height: 1.7; }
-  .api-info strong { color: var(--text); }
-  .api-info a { color: var(--accent2); text-decoration: none; }
-  .api-info a:hover { text-decoration: underline; }
-  .api-step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
-  .step-num { width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-
-  /* DNS DETAIL */
-  .dns-table td { padding: 8px 12px; font-size: 12.5px; }
-  .dns-table th { font-size: 11px; }
-  .dns-table { font-family: monospace; }
-
-  /* ALERTS */
-  .alert { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 9px; font-size: 13px; margin-bottom: 16px; }
-  .alert-warning { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); color: #fbbf24; }
-  .alert-info { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); color: #60a5fa; }
-
-  /* EXPIRY BAR */
-  .expiry-bar { width: 80px; height: 4px; background: var(--bg4); border-radius: 2px; display: inline-block; vertical-align: middle; margin-left: 6px; }
-  .expiry-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
-
-  /* LOADING */
-  .loading { display: flex; align-items: center; gap: 10px; padding: 40px; justify-content: center; color: var(--text3); font-size: 14px; }
-  .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* EMPTY */
-  .empty-state { text-align: center; padding: 60px 20px; color: var(--text3); }
-  .empty-state i { font-size: 48px; margin-bottom: 14px; display: block; }
-  .empty-state h3 { font-size: 15px; font-weight: 500; color: var(--text2); margin-bottom: 6px; }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
-
-  /* TOAST */
-  .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
-  .toast { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; background: var(--bg3); border: 1px solid var(--border2); box-shadow: 0 8px 24px rgba(0,0,0,0.4); animation: slideIn 0.25s ease; min-width: 240px; }
-  .toast-success { border-left: 3px solid var(--green); }
-  .toast-error { border-left: 3px solid var(--red); }
-  .toast-info { border-left: 3px solid var(--blue); }
-  @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-  /* COST BREAKDOWN */
-  .cost-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
-  .cost-row:last-child { border-bottom: none; font-weight: 700; font-size: 15px; padding-top: 12px; }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .stats-grid { grid-template-columns: 1fr 1fr; }
-  }
-
-  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
-  .tag-spaceship { background: rgba(108,99,255,0.15); color: #a5b4fc; }
-  .tag-namecheap { background: rgba(20,184,166,0.15); color: #5eead4; }
-  .tag-godaddy { background: rgba(34,197,94,0.15); color: #4ade80; }
-
-  .section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text3); margin-bottom: 12px; }
-  .hidden { display: none !important; }
-  .api-connected { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--green); }
-  .api-connected::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); display: inline-block; }
+:root{
+  --bg:#07080d;--bg2:#0d0f16;--bg3:#13151f;--bg4:#191c29;--bg5:#20233a;
+  --border:rgba(255,255,255,0.055);--border2:rgba(255,255,255,0.1);--border3:rgba(255,255,255,0.16);
+  --text:#eceef6;--text2:#8b90aa;--text3:#484d6a;
+  --accent:#7055ff;--accent2:#9d8fff;--accentbg:rgba(112,85,255,0.1);
+  --green:#22c55e;--greenbg:rgba(34,197,94,0.08);
+  --red:#ef4444;--redbg:rgba(239,68,68,0.08);
+  --amber:#f59e0b;--amberbg:rgba(245,158,11,0.08);
+  --blue:#3b82f6;--bluebg:rgba(59,130,246,0.08);
+  --teal:#14b8a6;--tealbg:rgba(20,184,166,0.08);
+  --r:8px;--rlg:12px;--rxl:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'SF Pro Display','Segoe UI',sans-serif;display:flex}
+.sb{width:218px;min-width:218px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh}
+.sb-logo{padding:16px 14px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px}
+.sb-icon{width:30px;height:30px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0}
+.sb-logo h1{font-size:14.5px;font-weight:700;letter-spacing:-.2px}
+.sb-logo p{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px}
+.sb-nav{flex:1;padding:8px 6px;overflow-y:auto}
+.sb-sec{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);padding:12px 9px 5px}
+.sb-item{display:flex;align-items:center;gap:8px;padding:8px 9px;border-radius:var(--r);cursor:pointer;font-size:13.5px;color:var(--text2);transition:.12s;margin-bottom:1px}
+.sb-item:hover{background:var(--bg3);color:var(--text)}
+.sb-item.active{background:var(--accent);color:#fff}
+.sb-item i{font-size:15px;flex-shrink:0}
+.sb-cnt{margin-left:auto;background:var(--bg4);color:var(--text3);font-size:10.5px;padding:1px 6px;border-radius:20px;font-weight:500}
+.sb-item.active .sb-cnt{background:rgba(255,255,255,0.2);color:#fff}
+.sb-foot{padding:8px 6px;border-top:1px solid var(--border)}
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;min-width:0}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:11px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:10px}
+.tb-title{font-size:16px;font-weight:600}
+.tb-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.content{flex:1;overflow-y:auto;padding:20px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;border:none;transition:.12s;white-space:nowrap}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{opacity:.88}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}.btn-ghost:hover{background:var(--bg3);color:var(--text);border-color:var(--border3)}
+.btn-danger{background:var(--redbg);color:var(--red);border:1px solid rgba(239,68,68,.15)}.btn-danger:hover{background:rgba(239,68,68,.16)}
+.btn-teal{background:var(--tealbg);color:var(--teal);border:1px solid rgba(20,184,166,.15)}
+.btn-sm{padding:5px 10px;font-size:12px;gap:5px}
+.btn-xs{padding:3px 7px;font-size:11.5px;gap:4px;border-radius:6px}
+.btn-ico{padding:6px;border-radius:7px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:11px;margin-bottom:18px}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rlg);padding:13px 15px}
+.stat-ico{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;margin-bottom:9px}
+.stat-ico.a{background:var(--accentbg);color:var(--accent2)}
+.stat-ico.g{background:var(--greenbg);color:var(--green)}
+.stat-ico.am{background:var(--amberbg);color:var(--amber)}
+.stat-ico.t{background:var(--tealbg);color:var(--teal)}
+.stat-ico.r{background:var(--redbg);color:var(--red)}
+.stat-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px}
+.stat-val{font-size:22px;font-weight:700;letter-spacing:-.4px}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.reg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:11px;margin-bottom:18px}
+.reg-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rlg);padding:14px;cursor:pointer;transition:.14s}
+.reg-card:hover{border-color:var(--border3);transform:translateY(-1px)}
+.rc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.rc-ico{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.rc-big{font-size:24px;font-weight:700;margin-bottom:1px}
+.rc-name{font-size:13px;font-weight:600;color:var(--text)}
+.rc-sub{font-size:11.5px;color:var(--text3)}
+.rc-foot{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border);margin-top:10px}
+.api-dot{display:inline-flex;align-items:center;gap:4px;font-size:11px}
+.api-dot::before{content:'';width:5px;height:5px;border-radius:50%;display:inline-block}
+.api-dot.on{color:var(--green)}.api-dot.on::before{background:var(--green)}
+.api-dot.off{color:var(--text3)}.api-dot.off::before{background:var(--text3)}
+.fbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.fsearch{display:flex;align-items:center;gap:7px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:7px 11px;min-width:200px;flex:1;max-width:260px}
+.fsearch input{background:none;border:none;outline:none;color:var(--text);font-size:13px;width:100%}
+.fsearch i{color:var(--text3);font-size:14px;flex-shrink:0}
+.chip-row{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.chip{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text3);transition:.12s;white-space:nowrap}
+.chip:hover{color:var(--text2);border-color:var(--border3)}
+.chip.on{background:var(--accentbg);border-color:var(--accent);color:var(--accent2)}
+.chip.g{background:var(--greenbg);border-color:rgba(34,197,94,.25);color:var(--green)}
+.chip.am{background:var(--amberbg);border-color:rgba(245,158,11,.25);color:var(--amber)}
+.chip.r{background:var(--redbg);border-color:rgba(239,68,68,.25);color:var(--red)}
+.chip.ss{background:var(--accentbg);border-color:rgba(112,85,255,.25);color:var(--accent2)}
+.chip.nc{background:var(--tealbg);border-color:rgba(20,184,166,.25);color:var(--teal)}
+.fsep{width:1px;height:20px;background:var(--border2);flex-shrink:0}
+.fsort{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:6px 10px;color:var(--text2);font-size:12.5px;outline:none;cursor:pointer}
+.fbar-right{margin-left:auto;display:flex;gap:6px}
+.tcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rlg);overflow:hidden}
+.twrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--bg3);color:var(--text3);font-weight:500;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;padding:9px 13px;text-align:left;white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:var(--text2)}
+td{padding:10px 13px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.015)}
+.dom-cell{display:flex;align-items:center;gap:9px}
+.dom-fav{width:24px;height:24px;border-radius:6px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text3);font-weight:700;flex-shrink:0;text-transform:uppercase}
+.dom-name{font-weight:600;font-size:13.5px;cursor:pointer;color:var(--text);transition:.1s}
+.dom-name:hover{color:var(--accent2)}
+.dom-ext{color:var(--text3);font-weight:400}
+.row-acts{display:flex;gap:3px;opacity:0;transition:.1s}
+tr:hover .row-acts{opacity:1}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge.active{background:var(--greenbg);color:var(--green);border:1px solid rgba(34,197,94,.15)}
+.badge.expiring{background:var(--amberbg);color:var(--amber);border:1px solid rgba(245,158,11,.15)}
+.badge.expired{background:var(--redbg);color:var(--red);border:1px solid rgba(239,68,68,.15)}
+.badge.pending{background:var(--bluebg);color:var(--blue);border:1px solid rgba(59,130,246,.15)}
+.dns-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:6px;font-size:11.5px;font-weight:500}
+.dns-cf{background:rgba(245,158,11,.07);color:#f0a500;border:1px solid rgba(245,158,11,.14)}
+.dns-vps{background:var(--accentbg);color:var(--accent2);border:1px solid rgba(112,85,255,.15)}
+.dns-reg{background:var(--bg4);color:var(--text3);border:1px solid var(--border2)}
+.dns-other{background:var(--bluebg);color:var(--blue);border:1px solid rgba(59,130,246,.14)}
+.rtag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:5px;font-size:11.5px;font-weight:500}
+.rtag.spaceship{background:var(--accentbg);color:var(--accent2)}
+.rtag.namecheap{background:var(--tealbg);color:var(--teal)}
+.rtag.godaddy{background:var(--greenbg);color:var(--green)}
+.rtag.other{background:var(--bg4);color:var(--text3)}
+.exp-wrap{display:flex;flex-direction:column;gap:3px}
+.exp-date{font-size:12px}
+.exp-bar-row{display:flex;align-items:center;gap:6px}
+.exp-bar{width:50px;height:2.5px;background:var(--bg5);border-radius:2px;flex-shrink:0}
+.exp-fill{height:100%;border-radius:2px}
+.exp-days{font-size:11px;color:var(--text3)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rxl);width:100%;max-width:500px;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column}
+.modal.wide{max-width:660px}
+.mh{padding:16px 20px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.mh h3{font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:7px}
+.mb{padding:16px 20px;flex:1}
+.mf{padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:7px;flex-shrink:0}
+.xbtn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;line-height:1;padding:2px;border-radius:5px;transition:.1s}
+.xbtn:hover{color:var(--text);background:var(--bg4)}
+.fg{margin-bottom:13px}
+.fg label{display:block;font-size:12px;color:var(--text2);font-weight:500;margin-bottom:5px}
+.fi{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:8px 11px;color:var(--text);font-size:13px;outline:none;transition:.12s}
+.fi:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(112,85,255,.07)}
+.fi::placeholder{color:var(--text3)}
+select.fi{cursor:pointer}
+.fg-2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.fhint{font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5}
+.check-row{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer}
+.check-row input[type=checkbox]{width:15px;height:15px;accent-color:var(--accent);cursor:pointer}
+.check-row label{font-size:13px;color:var(--text2);cursor:pointer}
+.tabs{display:flex;gap:2px;background:var(--bg3);border-radius:9px;padding:3px;margin-bottom:16px}
+.tab{flex:1;text-align:center;padding:7px;border-radius:7px;font-size:13px;cursor:pointer;color:var(--text2);transition:.12s}
+.tab.on{background:var(--bg2);color:var(--text);font-weight:500;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.api-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:13px;font-size:12.5px;color:var(--text2);line-height:1.7}
+.api-box strong{color:var(--text)}
+.api-box a{color:var(--accent2);text-decoration:none}
+.step{display:flex;align-items:flex-start;gap:9px;margin-bottom:8px}
+.step-n{width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.divider{height:1px;background:var(--border);margin:14px 0}
+.dns-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.dns-opt{border:1.5px solid var(--border2);border-radius:var(--r);padding:10px 12px;cursor:pointer;transition:.12s;display:flex;align-items:center;gap:9px}
+.dns-opt:hover{border-color:var(--border3)}
+.dns-opt.selected{border-color:var(--accent);background:var(--accentbg)}
+.dns-opt-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.dns-opt-name{font-size:13px;font-weight:500;color:var(--text)}
+.dns-opt-sub{font-size:11px;color:var(--text3)}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.detail-item{background:var(--bg3);border-radius:var(--r);padding:11px 13px}
+.detail-key{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.detail-val{font-size:14px;font-weight:500}
+.alert{display:flex;align-items:flex-start;gap:9px;padding:11px 13px;border-radius:var(--r);font-size:12.5px;margin-bottom:13px;line-height:1.5}
+.alert.warn{background:var(--amberbg);border:1px solid rgba(245,158,11,.15);color:var(--amber)}
+.alert.info{background:var(--bluebg);border:1px solid rgba(59,130,246,.15);color:var(--blue)}
+.alert.suc{background:var(--greenbg);border:1px solid rgba(34,197,94,.15);color:var(--green)}
+.tc{position:fixed;top:18px;right:18px;z-index:9999;display:flex;flex-direction:column;gap:7px;pointer-events:none}
+.toast{display:flex;align-items:center;gap:9px;padding:11px 15px;border-radius:var(--rlg);font-size:13px;background:var(--bg3);border:1px solid var(--border2);box-shadow:0 8px 28px rgba(0,0,0,.5);animation:tIn .22s ease;min-width:230px;pointer-events:auto}
+.toast.suc{border-left:3px solid var(--green)}.toast.err{border-left:3px solid var(--red)}.toast.inf{border-left:3px solid var(--accent)}
+@keyframes tIn{from{transform:translateX(16px);opacity:0}to{transform:translateX(0);opacity:1}}
+.empty{text-align:center;padding:52px 20px;color:var(--text3)}
+.empty i{font-size:40px;margin-bottom:12px;display:block}
+.empty h3{font-size:14.5px;font-weight:500;color:var(--text2);margin-bottom:5px}
+.cost-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:13.5px}
+.cost-row:last-child{border-bottom:none;font-weight:700;font-size:15px;padding-top:11px}
+.cost-bar{width:100px;height:3.5px;background:var(--bg4);border-radius:2px}
+.cost-fill{height:100%;border-radius:2px}
+.storage-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text3);padding:3px 8px;border-radius:20px;border:1px solid var(--border);background:var(--bg3)}
+.hidden{display:none!important}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:3px}
+@media(max-width:760px){.sb{display:none}.stats-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-
-<div id="toastContainer" class="toast-container"></div>
-
-<div class="layout">
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <h1><i class="ti ti-world" style="color:var(--accent)"></i> DomainPro</h1>
-      <span>Manager v2.0</span>
-    </div>
-    <nav class="sidebar-nav">
-      <div class="nav-section">Overview</div>
-      <div class="nav-item active" onclick="showPage('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-      <div class="nav-item" onclick="showPage('domains')"><i class="ti ti-world"></i> All Domains</div>
-      <div class="nav-item" onclick="showPage('costs')"><i class="ti ti-currency-dollar"></i> Costs</div>
-
-      <div class="nav-section">Registrars</div>
-      <div class="nav-item" onclick="showPage('spaceship')"><i class="ti ti-rocket"></i> Spaceship</div>
-      <div class="nav-item" onclick="showPage('namecheap')"><i class="ti ti-tag"></i> Namecheap</div>
-      <div class="nav-item" onclick="showPage('godaddy')"><i class="ti ti-building-store"></i> GoDaddy</div>
-
-      <div class="nav-section">Tools</div>
-      <div class="nav-item" onclick="showPage('dns')"><i class="ti ti-server"></i> DNS Manager</div>
-      <div class="nav-item" onclick="openModal('addDomain')"><i class="ti ti-plus"></i> Add Domain</div>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="nav-item" onclick="openModal('settings')"><i class="ti ti-settings"></i> API Settings</div>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main">
-    <div class="topbar">
-      <div class="topbar-title" id="pageTitle">Dashboard</div>
-      <div class="topbar-actions">
-        <button class="btn btn-secondary btn-sm" onclick="refreshData()"><i class="ti ti-refresh"></i> Refresh</button>
-        <button class="btn btn-primary btn-sm" onclick="openModal('addDomain')"><i class="ti ti-plus"></i> Add Domain</button>
-        <button class="btn btn-secondary btn-sm" onclick="openModal('settings')"><i class="ti ti-settings"></i> APIs</button>
-      </div>
-    </div>
-
-    <div class="content">
-      <!-- DASHBOARD -->
-      <div id="page-dashboard">
-        <div class="alert alert-warning hidden" id="expiryAlert">
-          <i class="ti ti-alert-triangle"></i>
-          <span id="expiryAlertText"></span>
-        </div>
-
-        <div class="stats-grid" id="statsGrid">
-          <div class="stat-card">
-            <div class="stat-label"><i class="ti ti-world" style="font-size:14px"></i> Total Domains</div>
-            <div class="stat-value" id="statTotal">—</div>
-            <div class="stat-sub">Across all registrars</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label"><i class="ti ti-check" style="font-size:14px;color:var(--green)"></i> Active</div>
-            <div class="stat-value" style="color:var(--green)" id="statActive">—</div>
-            <div class="stat-sub">Registered & active</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label"><i class="ti ti-clock" style="font-size:14px;color:var(--amber)"></i> Expiring Soon</div>
-            <div class="stat-value" style="color:var(--amber)" id="statExpiring">—</div>
-            <div class="stat-sub">Within 30 days</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label"><i class="ti ti-currency-dollar" style="font-size:14px;color:var(--teal)"></i> Total Annual Cost</div>
-            <div class="stat-value" style="color:var(--teal)" id="statCost">—</div>
-            <div class="stat-sub">USD estimated</div>
-          </div>
-        </div>
-
-        <div class="registrar-grid" id="registrarGrid"></div>
-
-        <div class="section-title">Recent / Expiring Domains</div>
-        <div class="table-card">
-          <div class="table-wrap">
-            <table>
-              <thead><tr>
-                <th>Domain</th>
-                <th>Registrar</th>
-                <th>Status</th>
-                <th>Expires</th>
-                <th>DNS</th>
-              </tr></thead>
-              <tbody id="dashboardTable"><tr><td colspan="5" class="loading"><div class="spinner"></div> Loading...</td></tr></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- ALL DOMAINS -->
-      <div id="page-domains" class="hidden">
-        <div class="table-card">
-          <div class="table-toolbar">
-            <div class="search-box">
-              <i class="ti ti-search"></i>
-              <input type="text" id="domainSearch" placeholder="Search domains..." oninput="filterDomains()">
-            </div>
-            <div class="filter-group">
-              <div class="filter-btn active" onclick="setFilter('all',this)">All</div>
-              <div class="filter-btn" onclick="setFilter('active',this)">Active</div>
-              <div class="filter-btn" onclick="setFilter('expiring',this)">Expiring</div>
-              <div class="filter-btn" onclick="setFilter('expired',this)">Expired</div>
-            </div>
-            <div style="display:flex;gap:8px">
-              <button class="btn btn-secondary btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export CSV</button>
-              <button class="btn btn-primary btn-sm" onclick="openModal('addDomain')"><i class="ti ti-plus"></i> Add</button>
-            </div>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr>
-                <th>Domain</th>
-                <th>Registrar</th>
-                <th>Purchased</th>
-                <th>Expires</th>
-                <th>Auto-Renew</th>
-                <th>DNS</th>
-                <th>Status</th>
-                <th>Cost/yr</th>
-                <th>Actions</th>
-              </tr></thead>
-              <tbody id="allDomainsTable"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- COSTS -->
-      <div id="page-costs" class="hidden">
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-label">Annual Total</div>
-            <div class="stat-value" id="costTotal" style="color:var(--teal)">$0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Monthly Avg</div>
-            <div class="stat-value" id="costMonthly">$0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Due in 30 Days</div>
-            <div class="stat-value" id="costDue30" style="color:var(--amber)">$0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Due in 90 Days</div>
-            <div class="stat-value" id="costDue90">$0</div>
-          </div>
-        </div>
-        <div class="table-card" style="padding:20px 24px">
-          <div class="section-title" style="margin-bottom:16px">Cost Breakdown by Registrar</div>
-          <div id="costBreakdown"></div>
-        </div>
-      </div>
-
-      <!-- REGISTRAR PAGES -->
-      <div id="page-spaceship" class="hidden"><div id="content-spaceship"></div></div>
-      <div id="page-namecheap" class="hidden"><div id="content-namecheap"></div></div>
-      <div id="page-godaddy" class="hidden"><div id="content-godaddy"></div></div>
-
-      <!-- DNS -->
-      <div id="page-dns" class="hidden">
-        <div class="table-card">
-          <div class="table-toolbar">
-            <div class="search-box">
-              <i class="ti ti-search"></i>
-              <input type="text" id="dnsSearch" placeholder="Search domain..." oninput="filterDNS()">
-            </div>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr>
-                <th>Domain</th>
-                <th>DNS Provider</th>
-                <th>Nameservers</th>
-                <th>Registrar</th>
-                <th>Status</th>
-              </tr></thead>
-              <tbody id="dnsTable"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-</div>
-
-<!-- ===== MODAL: ADD DOMAIN ===== -->
-<div id="modal-addDomain" class="modal-overlay hidden">
-  <div class="modal">
-    <div class="modal-header">
-      <h3><i class="ti ti-plus"></i> Add Domain</h3>
-      <button class="close-btn" onclick="closeModal('addDomain')"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="tabs">
-        <div class="tab active" onclick="switchTab('manual')">Manual Entry</div>
-        <div class="tab" onclick="switchTab('api')">From API</div>
-      </div>
-      <div id="tab-manual">
-        <div class="form-group">
-          <label class="form-label">Domain Name</label>
-          <input class="form-input" id="f-domain" placeholder="example.com" />
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div class="form-group">
-            <label class="form-label">Registrar</label>
-            <select class="form-select" id="f-registrar">
-              <option value="spaceship">Spaceship</option>
-              <option value="namecheap">Namecheap</option>
-              <option value="godaddy">GoDaddy</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Status</label>
-            <select class="form-select" id="f-status">
-              <option value="active">Active</option>
-              <option value="expiring">Expiring Soon</option>
-              <option value="expired">Expired</option>
-              <option value="pending">Pending</option>
-            </select>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div class="form-group">
-            <label class="form-label">Purchase Date</label>
-            <input class="form-input" id="f-purchased" type="date" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Expiry Date</label>
-            <input class="form-input" id="f-expiry" type="date" />
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div class="form-group">
-            <label class="form-label">DNS Provider</label>
-            <select class="form-select" id="f-dns">
-              <option value="cloudflare">Cloudflare</option>
-              <option value="own">Own Server</option>
-              <option value="registrar">Registrar DNS</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Annual Cost (USD)</label>
-            <input class="form-input" id="f-cost" type="number" placeholder="12.99" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Nameservers (comma separated)</label>
-          <input class="form-input" id="f-ns" placeholder="ns1.cloudflare.com, ns2.cloudflare.com" />
-        </div>
-        <div class="form-group" style="display:flex;align-items:center;gap:10px">
-          <input type="checkbox" id="f-autorenew" style="width:16px;height:16px;accent-color:var(--accent)" checked>
-          <label class="form-label" style="margin:0;cursor:pointer" for="f-autorenew">Auto-Renew Enabled</label>
-        </div>
-      </div>
-      <div id="tab-api" class="hidden">
-        <div class="alert alert-info"><i class="ti ti-info-circle"></i> Select a registrar and fetch domains directly using your API keys.</div>
-        <div class="form-group">
-          <label class="form-label">Registrar</label>
-          <select class="form-select" id="f-api-registrar" onchange="updateApiStatus()">
-            <option value="spaceship">Spaceship</option>
-            <option value="namecheap">Namecheap</option>
-            <option value="godaddy">GoDaddy</option>
-          </select>
-        </div>
-        <div id="api-status-msg" class="form-hint"></div>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px" onclick="fetchFromAPI()">
-          <i class="ti ti-cloud-download"></i> Fetch Domains from API
-        </button>
-        <div id="api-fetch-result"></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('addDomain')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveDomain()"><i class="ti ti-check"></i> Save Domain</button>
-    </div>
+<div id="toastContainer" class="tc"></div>
+<aside class="sb">
+  <div class="sb-logo">
+    <div class="sb-icon"><i class="ti ti-world"></i></div>
+    <div><h1>DomainPro</h1><p>Manager</p></div>
   </div>
-</div>
-
-<!-- ===== MODAL: SETTINGS / API KEYS ===== -->
-<div id="modal-settings" class="modal-overlay hidden">
-  <div class="modal">
-    <div class="modal-header">
-      <h3><i class="ti ti-settings"></i> API Settings</h3>
-      <button class="close-btn" onclick="closeModal('settings')"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="modal-body">
-
-      <!-- SPACESHIP -->
-      <div class="section-title" style="margin-bottom:10px"><i class="ti ti-rocket" style="color:var(--accent)"></i> Spaceship API</div>
-      <div class="api-info">
-        <div class="api-step"><div class="step-num">1</div><div>Login to <strong>Spaceship.com</strong> → Account → API</div></div>
-        <div class="api-step"><div class="step-num">2</div><div>Click <strong>"Generate API Key"</strong> — copy your API Key & Secret</div></div>
-        <div class="api-step"><div class="step-num">3</div><div>Paste below. Base URL: <code style="color:var(--accent2)">https://api.spaceship.com/v1/</code></div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="form-group">
-          <label class="form-label">API Key</label>
-          <input class="form-input" id="ss-key" placeholder="ss_api_key_..." />
-        </div>
-        <div class="form-group">
-          <label class="form-label">API Secret</label>
-          <input class="form-input" id="ss-secret" type="password" placeholder="••••••••" />
-        </div>
-      </div>
-      <button class="btn btn-secondary btn-sm" onclick="testAPI('spaceship')" style="margin-bottom:20px"><i class="ti ti-plug"></i> Test Connection</button>
-
-      <!-- NAMECHEAP -->
-      <div class="section-title" style="margin-bottom:10px"><i class="ti ti-tag" style="color:var(--teal)"></i> Namecheap API</div>
-      <div class="api-info">
-        <div class="api-step"><div class="step-num">1</div><div>Login to <strong>Namecheap</strong> → Profile (top right) → Tools</div></div>
-        <div class="api-step"><div class="step-num">2</div><div>Find <strong>API Access</strong> → Enable API → Copy your API Key</div></div>
-        <div class="api-step"><div class="step-num">3</div><div>You also need to <strong>whitelist your IP</strong> in API settings (required!)</div></div>
-        <div class="api-step"><div class="step-num">4</div><div>API endpoint: <code style="color:var(--accent2)">https://api.namecheap.com/xml.response</code></div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="form-group">
-          <label class="form-label">Username</label>
-          <input class="form-input" id="nc-user" placeholder="your_username" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">API Key</label>
-          <input class="form-input" id="nc-key" type="password" placeholder="••••••••" />
-        </div>
-      </div>
-      <button class="btn btn-secondary btn-sm" onclick="testAPI('namecheap')" style="margin-bottom:20px"><i class="ti ti-plug"></i> Test Connection</button>
-
-      <!-- GODADDY -->
-      <div class="section-title" style="margin-bottom:10px"><i class="ti ti-building-store" style="color:var(--green)"></i> GoDaddy API</div>
-      <div class="api-info">
-        <div class="api-step"><div class="step-num">1</div><div>Go to <strong><a href="https://developer.godaddy.com" target="_blank">developer.godaddy.com</a></strong></div></div>
-        <div class="api-step"><div class="step-num">2</div><div>Click <strong>"API Keys"</strong> → Create New API Key → Select <em>Production</em></div></div>
-        <div class="api-step"><div class="step-num">3</div><div>Copy both <strong>Key</strong> and <strong>Secret</strong> shown once after creation</div></div>
-        <div class="api-step"><div class="step-num">4</div><div>API endpoint: <code style="color:var(--accent2)">https://api.godaddy.com/v1/domains</code></div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="form-group">
-          <label class="form-label">API Key</label>
-          <input class="form-input" id="gd-key" placeholder="gd_key_..." />
-        </div>
-        <div class="form-group">
-          <label class="form-label">API Secret</label>
-          <input class="form-input" id="gd-secret" type="password" placeholder="••••••••" />
-        </div>
-      </div>
-      <button class="btn btn-secondary btn-sm" onclick="testAPI('godaddy')"><i class="ti ti-plug"></i> Test Connection</button>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('settings')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveAPIKeys()"><i class="ti ti-device-floppy"></i> Save API Keys</button>
-    </div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Overview</div>
+    <div class="sb-item active" onclick="go('dashboard')" id="nav-dashboard"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+    <div class="sb-item" onclick="go('domains')" id="nav-domains"><i class="ti ti-world"></i> All Domains <span class="sb-cnt" id="cnt-all">0</span></div>
+    <div class="sb-item" onclick="go('costs')" id="nav-costs"><i class="ti ti-receipt"></i> Costs</div>
+    <div class="sb-item" onclick="go('dns')" id="nav-dns"><i class="ti ti-server"></i> DNS Overview</div>
+    <div class="sb-sec">Registrars</div>
+    <div class="sb-item" onclick="go('spaceship')" id="nav-spaceship"><i class="ti ti-rocket"></i> Spaceship <span class="sb-cnt" id="cnt-spaceship">0</span></div>
+    <div class="sb-item" onclick="go('namecheap')" id="nav-namecheap"><i class="ti ti-tag"></i> Namecheap <span class="sb-cnt" id="cnt-namecheap">0</span></div>
+    <div class="sb-item" onclick="go('godaddy')" id="nav-godaddy"><i class="ti ti-building-store"></i> GoDaddy <span class="sb-cnt" id="cnt-godaddy">0</span></div>
+    <div class="sb-sec">Expiry</div>
+    <div class="sb-item" onclick="go('expiring')" id="nav-expiring"><i class="ti ti-clock" style="color:var(--amber)"></i> Expiring Soon <span class="sb-cnt" id="cnt-exp">0</span></div>
+    <div class="sb-item" onclick="go('expired')" id="nav-expired"><i class="ti ti-alert-circle" style="color:var(--red)"></i> Expired <span class="sb-cnt" id="cnt-expired">0</span></div>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-item" onclick="openModal('settings')"><i class="ti ti-settings"></i> API Settings</div>
+    <div class="sb-item" onclick="openModal('addDomain')"><i class="ti ti-plus"></i> Add Domain</div>
   </div>
-</div>
-
-<!-- ===== MODAL: DOMAIN DETAIL ===== -->
-<div id="modal-domainDetail" class="modal-overlay hidden">
-  <div class="modal" style="max-width:620px">
-    <div class="modal-header">
-      <h3 id="detail-title">Domain Details</h3>
-      <button class="close-btn" onclick="closeModal('domainDetail')"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="modal-body" id="detail-body"></div>
-    <div class="modal-footer">
-      <button class="btn btn-danger btn-sm" id="detail-delete-btn"><i class="ti ti-trash"></i> Delete</button>
-      <button class="btn btn-secondary" onclick="closeModal('domainDetail')">Close</button>
-      <button class="btn btn-primary" id="detail-edit-btn"><i class="ti ti-edit"></i> Edit</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ===== DATA STORE =====
-let domains = JSON.parse(localStorage.getItem('dmDomains') || '[]');
-let apiKeys = JSON.parse(localStorage.getItem('dmAPIKeys') || '{}');
-let currentFilter = 'all';
-let currentPage = 'dashboard';
-let activeTab = 'manual';
-
-// ===== SAMPLE DATA (if empty) =====
-function loadSampleData() {
-  if (domains.length > 0) return;
-  const today = new Date();
-  domains = [
-    { id: genId(), name: 'mystore.com', registrar: 'godaddy', status: 'active', purchased: '2023-01-15', expiry: addDays(today, 245).toISOString().split('T')[0], dns: 'cloudflare', ns: 'ns1.cloudflare.com, ns2.cloudflare.com', cost: 12.99, autorenew: true },
-    { id: genId(), name: 'techblog.net', registrar: 'namecheap', status: 'active', purchased: '2022-06-01', expiry: addDays(today, 18).toISOString().split('T')[0], dns: 'cloudflare', ns: 'ns1.cloudflare.com, ns2.cloudflare.com', cost: 9.99, autorenew: false },
-    { id: genId(), name: 'portfolio.io', registrar: 'spaceship', status: 'active', purchased: '2024-03-10', expiry: addDays(today, 320).toISOString().split('T')[0], dns: 'own', ns: 'ns1.myserver.com, ns2.myserver.com', cost: 35.00, autorenew: true },
-    { id: genId(), name: 'oldproject.org', registrar: 'godaddy', status: 'expired', purchased: '2020-01-01', expiry: addDays(today, -10).toISOString().split('T')[0], dns: 'registrar', ns: 'ns1.godaddy.com, ns2.godaddy.com', cost: 14.99, autorenew: false },
-    { id: genId(), name: 'startup.co', registrar: 'namecheap', status: 'active', purchased: '2024-01-01', expiry: addDays(today, 25).toISOString().split('T')[0], dns: 'cloudflare', ns: 'ns1.cloudflare.com, ns2.cloudflare.com', cost: 29.99, autorenew: true },
-    { id: genId(), name: 'api-service.dev', registrar: 'spaceship', status: 'active', purchased: '2023-11-20', expiry: addDays(today, 190).toISOString().split('T')[0], dns: 'own', ns: 'ns1.myserver.com, ns2.myserver.com', cost: 18.00, autorenew: true },
-  ];
-  saveDomains();
-}
-
-function addDays(date, days) { const d = new Date(date); d.setDate(d.getDate() + days); return d; }
-function genId() { return Math.random().toString(36).slice(2,10); }
-function saveDomains() { localStorage.setItem('dmDomains', JSON.stringify(domains)); }
-
-// ===== NAVIGATION =====
-function showPage(page) {
-  document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('hidden'));
-  document.getElementById('page-'+page).classList.remove('hidden');
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  const titles = { dashboard:'Dashboard', domains:'All Domains', costs:'Cost Overview', spaceship:'Spaceship', namecheap:'Namecheap', godaddy:'GoDaddy', dns:'DNS Manager' };
-  document.getElementById('pageTitle').textContent = titles[page] || page;
-  currentPage = page;
-  renderPage(page);
-  document.querySelectorAll('.nav-item').forEach(el => {
-    if (el.getAttribute('onclick') && el.getAttribute('onclick').includes("'"+page+"'")) el.classList.add('active');
-  });
-}
-
-function renderPage(page) {
-  if (page === 'dashboard') renderDashboard();
-  else if (page === 'domains') renderAllDomains();
-  else if (page === 'costs') renderCosts();
-  else if (page === 'dns') renderDNS();
-  else if (['spaceship','namecheap','godaddy'].includes(page)) renderRegistrar(page);
-}
-
-// ===== RENDER DASHBOARD =====
-function renderDashboard() {
-  const total = domains.length;
-  const active = domains.filter(d=>d.status==='active').length;
-  const expiring = domains.filter(d=>daysLeft(d.expiry)<=30 && daysLeft(d.expiry)>=0).length;
-  const cost = domains.reduce((s,d)=>s+(parseFloat(d.cost)||0),0);
-
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statActive').textContent = active;
-  document.getElementById('statExpiring').textContent = expiring;
-  document.getElementById('statCost').textContent = '$'+cost.toFixed(2);
-
-  if (expiring > 0) {
-    document.getElementById('expiryAlert').classList.remove('hidden');
-    document.getElementById('expiryAlertText').textContent = expiring + ' domain(s) expiring within 30 days! Click "Expiring" filter to view.';
-  }
-
-  // Registrar cards
-  const regs = ['spaceship','namecheap','godaddy'];
-  const regColors = { spaceship:'var(--accent)', namecheap:'var(--teal)', godaddy:'var(--green)' };
-  const regIcons = { spaceship:'ti-rocket', namecheap:'ti-tag', godaddy:'ti-building-store' };
-  const regGrid = document.getElementById('registrarGrid');
-  regGrid.innerHTML = regs.map(r => {
-    const rDomains = domains.filter(d=>d.registrar===r);
-    const rCost = rDomains.reduce((s,d)=>s+(parseFloat(d.cost)||0),0);
-    const rExpiring = rDomains.filter(d=>daysLeft(d.expiry)<=30&&daysLeft(d.expiry)>=0).length;
-    const connected = apiKeys[r+'_key'] || apiKeys[r+'_api_key'] ? '<span class="api-connected">API Connected</span>' : '<span style="font-size:11.5px;color:var(--text3)">Manual only</span>';
-    return `<div class="registrar-card" style="cursor:pointer" onclick="showPage('${r}')">
-      <div class="registrar-header">
-        <div class="registrar-name">
-          <div class="registrar-badge" style="background:${regColors[r]}22;color:${regColors[r]}"><i class="ti ${regIcons[r]}"></i></div>
-          ${r.charAt(0).toUpperCase()+r.slice(1)}
-        </div>
-        ${connected}
-      </div>
-      <div class="registrar-stats">
-        <div class="registrar-stat"><strong>${rDomains.length}</strong>Domains</div>
-        <div class="registrar-stat"><strong>$${rCost.toFixed(2)}</strong>Annual</div>
-        ${rExpiring>0?`<div class="registrar-stat"><strong style="color:var(--amber)">${rExpiring}</strong>Expiring</div>`:''}
-      </div>
-    </div>`;
-  }).join('');
-
-  // Dashboard table — sort by days left
-  const sorted = [...domains].sort((a,b)=>daysLeft(a.expiry)-daysLeft(b.expiry)).slice(0,8);
-  const tbody = document.getElementById('dashboardTable');
-  tbody.innerHTML = sorted.map(d => `
-    <tr onclick="showDomainDetail('${d.id}')" style="cursor:pointer">
-      <td><span class="domain-name">${d.name.split('.')[0]}<span class="domain-tld">.${d.name.split('.').slice(1).join('.')}</span></span></td>
-      <td><span class="tag tag-${d.registrar}">${d.registrar}</span></td>
-      <td>${statusBadge(d)}</td>
-      <td>${formatExpiry(d.expiry)}</td>
-      <td>${dnsBadge(d.dns)}</td>
-    </tr>`).join('');
-}
-
-// ===== RENDER ALL DOMAINS =====
-function renderAllDomains(list) {
-  const data = list || getFilteredDomains();
-  const tbody = document.getElementById('allDomainsTable');
-  if (!data.length) {
-    tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><i class="ti ti-world-off"></i><h3>No domains found</h3><p>Add your first domain or connect an API</p></div></td></tr>';
-    return;
-  }
-  tbody.innerHTML = data.map(d => `
-    <tr>
-      <td><span class="domain-name" style="cursor:pointer;color:var(--accent2)" onclick="showDomainDetail('${d.id}')">${d.name.split('.')[0]}<span class="domain-tld">.${d.name.split('.').slice(1).join('.')}</span></span></td>
-      <td><span class="tag tag-${d.registrar}">${d.registrar}</span></td>
-      <td style="font-size:12px;color:var(--text3)">${d.purchased||'—'}</td>
-      <td>${formatExpiry(d.expiry)}</td>
-      <td>${d.autorenew?'<span style="color:var(--green);font-size:12px"><i class="ti ti-check"></i> On</span>':'<span style="color:var(--text3);font-size:12px"><i class="ti ti-x"></i> Off</span>'}</td>
-      <td>${dnsBadge(d.dns)}</td>
-      <td>${statusBadge(d)}</td>
-      <td style="font-size:13px;color:var(--teal)">$${(d.cost||0).toFixed(2)}</td>
-      <td>
-        <div style="display:flex;gap:6px">
-          <button class="btn btn-secondary btn-sm btn-icon" onclick="showDomainDetail('${d.id}')" title="Details"><i class="ti ti-eye" style="font-size:14px"></i></button>
-          <button class="btn btn-secondary btn-sm btn-icon" onclick="editDomain('${d.id}')" title="Edit"><i class="ti ti-edit" style="font-size:14px"></i></button>
-          <button class="btn btn-danger btn-sm btn-icon" onclick="deleteDomain('${d.id}')" title="Delete"><i class="ti ti-trash" style="font-size:14px"></i></button>
-        </div>
-      </td>
-    </tr>`).join('');
-}
-
-// ===== RENDER REGISTRAR PAGE =====
-function renderRegistrar(reg) {
-  const rDomains = domains.filter(d=>d.registrar===reg);
-  const el = document.getElementById('content-'+reg);
-  const rColors = { spaceship:'var(--accent)', namecheap:'var(--teal)', godaddy:'var(--green)' };
-  const rCost = rDomains.reduce((s,d)=>s+(parseFloat(d.cost)||0),0);
-  const rExpiring = rDomains.filter(d=>daysLeft(d.expiry)<=30&&daysLeft(d.expiry)>=0).length;
-  const hasAPI = apiKeys[reg+'_key'] || apiKeys[reg+'_api_key'];
-
-  el.innerHTML = `
-    <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
-      <div class="stat-card"><div class="stat-label">Domains</div><div class="stat-value">${rDomains.length}</div></div>
-      <div class="stat-card"><div class="stat-label">Annual Cost</div><div class="stat-value" style="color:var(--teal)">$${rCost.toFixed(2)}</div></div>
-      <div class="stat-card"><div class="stat-label">Active</div><div class="stat-value" style="color:var(--green)">${rDomains.filter(d=>d.status==='active').length}</div></div>
-      <div class="stat-card"><div class="stat-label">Expiring Soon</div><div class="stat-value" style="color:var(--amber)">${rExpiring}</div></div>
-    </div>
-    <div style="display:flex;gap:10px;margin-bottom:18px">
+</aside>
+<main class="main">
+  <div class="topbar">
+    <div class="tb-title" id="pageTitle">Dashboard</div>
+    <div class="tb-right">
+      <span class="storage-badge" id="storageBadge"><i class="ti ti-database"></i> 0 domains saved</span>
+      <button class="btn btn-ghost btn-sm" onclick="refreshAll()"><i class="ti ti-refresh"></i> Refresh</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export CSV</button>
       <button class="btn btn-primary btn-sm" onclick="openModal('addDomain')"><i class="ti ti-plus"></i> Add Domain</button>
-      ${hasAPI ? `<button class="btn btn-secondary btn-sm" onclick="fetchFromAPI()"><i class="ti ti-cloud-download"></i> Sync from API</button>` : `<button class="btn btn-secondary btn-sm" onclick="openModal('settings')"><i class="ti ti-plug"></i> Connect API</button>`}
     </div>
-    <div class="table-card">
-      <div class="table-wrap"><table>
-        <thead><tr><th>Domain</th><th>Purchased</th><th>Expires</th><th>DNS</th><th>Auto-Renew</th><th>Cost/yr</th><th>Status</th><th>Actions</th></tr></thead>
-        <tbody>${rDomains.length ? rDomains.map(d=>`<tr>
-          <td><span class="domain-name" style="cursor:pointer;color:var(--accent2)" onclick="showDomainDetail('${d.id}')">${d.name}</span></td>
-          <td style="font-size:12px;color:var(--text3)">${d.purchased||'—'}</td>
-          <td>${formatExpiry(d.expiry)}</td>
-          <td>${dnsBadge(d.dns)}</td>
-          <td>${d.autorenew?'<span style="color:var(--green);font-size:12px"><i class="ti ti-check"></i> On</span>':'<span style="color:var(--text3);font-size:12px">Off</span>'}</td>
-          <td style="color:var(--teal)">$${(d.cost||0).toFixed(2)}</td>
-          <td>${statusBadge(d)}</td>
-          <td><div style="display:flex;gap:6px">
-            <button class="btn btn-secondary btn-sm btn-icon" onclick="showDomainDetail('${d.id}')"><i class="ti ti-eye" style="font-size:14px"></i></button>
-            <button class="btn btn-danger btn-sm btn-icon" onclick="deleteDomain('${d.id}')"><i class="ti ti-trash" style="font-size:14px"></i></button>
-          </div></td>
-        </tr>`).join('') : '<tr><td colspan="8"><div class="empty-state"><i class="ti ti-database-off"></i><h3>No domains from '+reg+'</h3></div></td></tr>'}</tbody>
-      </table></div>
-    </div>`;
-}
-
-// ===== RENDER COSTS =====
-function renderCosts() {
-  const total = domains.reduce((s,d)=>s+(parseFloat(d.cost)||0),0);
-  const due30 = domains.filter(d=>daysLeft(d.expiry)<=30&&daysLeft(d.expiry)>=0).reduce((s,d)=>s+(parseFloat(d.cost)||0),0);
-  const due90 = domains.filter(d=>daysLeft(d.expiry)<=90&&daysLeft(d.expiry)>=0).reduce((s,d)=>s+(parseFloat(d.cost)||0),0);
-
-  document.getElementById('costTotal').textContent = '$'+total.toFixed(2);
-  document.getElementById('costMonthly').textContent = '$'+(total/12).toFixed(2);
-  document.getElementById('costDue30').textContent = '$'+due30.toFixed(2);
-  document.getElementById('costDue90').textContent = '$'+due90.toFixed(2);
-
-  const regs = ['spaceship','namecheap','godaddy'];
-  const regColors = { spaceship:'var(--accent)', namecheap:'var(--teal)', godaddy:'var(--green)' };
-  const breakdown = document.getElementById('costBreakdown');
-  breakdown.innerHTML = regs.map(r => {
-    const rDomains = domains.filter(d=>d.registrar===r);
-    const rCost = rDomains.reduce((s,d)=>s+(parseFloat(d.cost)||0),0);
-    const pct = total ? (rCost/total*100).toFixed(1) : 0;
-    return `<div class="cost-row">
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="color:${regColors[r]};font-weight:600">${r.charAt(0).toUpperCase()+r.slice(1)}</span>
-        <span style="font-size:12px;color:var(--text3)">${rDomains.length} domains</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:80px;height:4px;background:var(--bg4);border-radius:2px">
-          <div style="width:${pct}%;height:100%;background:${regColors[r]};border-radius:2px"></div>
+  </div>
+  <div class="content" id="mainContent"></div>
+</main>
+<!-- ADD DOMAIN MODAL -->
+<div id="modal-addDomain" class="overlay hidden">
+<div class="modal">
+  <div class="mh">
+    <h3><i class="ti ti-circle-plus" style="color:var(--accent)"></i> <span id="addModalTitle">Add Domain</span></h3>
+    <button class="xbtn" onclick="closeModal('addDomain')"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="mb">
+    <div class="tabs">
+      <div class="tab on" id="tab-manual-btn" onclick="switchTab('manual')">Manual Entry</div>
+      <div class="tab" id="tab-api-btn" onclick="switchTab('api')">Import via API</div>
+    </div>
+    <div id="tab-manual">
+      <div class="fg"><label>Domain Name *</label><input class="fi" id="f-domain" placeholder="example.com"></div>
+      <div class="fg-2">
+        <div class="fg" style="margin-bottom:0"><label>Registrar *</label>
+          <select class="fi" id="f-reg"><option value="spaceship">Spaceship</option><option value="namecheap">Namecheap</option><option value="godaddy">GoDaddy</option><option value="other">Other</option></select>
         </div>
-        <span style="color:var(--teal);font-weight:600;min-width:60px;text-align:right">$${rCost.toFixed(2)}</span>
+        <div class="fg" style="margin-bottom:0"><label>Status</label>
+          <select class="fi" id="f-status"><option value="active">Active</option><option value="expiring">Expiring Soon</option><option value="expired">Expired</option><option value="pending">Pending</option></select>
+        </div>
       </div>
-    </div>`;
-  }).concat([`<div class="cost-row"><span>Total Annual</span><span style="color:var(--teal)">$${total.toFixed(2)}</span></div>`]).join('');
-}
-
-// ===== RENDER DNS =====
-function renderDNS(list) {
-  const data = list || domains;
-  const tbody = document.getElementById('dnsTable');
-  tbody.innerHTML = data.map(d => `
-    <tr>
-      <td><span class="domain-name">${d.name}</span></td>
-      <td>${dnsBadge(d.dns)}</td>
-      <td style="font-size:12px;color:var(--text3);font-family:monospace">${(d.ns||'—').split(',').map(n=>`<div>${n.trim()}</div>`).join('')}</td>
-      <td><span class="tag tag-${d.registrar}">${d.registrar}</span></td>
-      <td>${statusBadge(d)}</td>
-    </tr>`).join('');
-  if (!data.length) tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><i class="ti ti-server-off"></i><h3>No domains</h3></div></td></tr>';
-}
-
-// ===== DOMAIN DETAIL MODAL =====
-function showDomainDetail(id) {
-  const d = domains.find(x=>x.id===id);
-  if (!d) return;
-  document.getElementById('detail-title').textContent = d.name;
-  document.getElementById('detail-edit-btn').onclick = () => { closeModal('domainDetail'); editDomain(id); };
-  document.getElementById('detail-delete-btn').onclick = () => { deleteDomain(id); closeModal('domainDetail'); };
-
-  const dl = daysLeft(d.expiry);
-  const expiryColor = dl < 0 ? 'var(--red)' : dl < 30 ? 'var(--amber)' : 'var(--green)';
-  document.getElementById('detail-body').innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
-      <div class="stat-card"><div class="stat-label">Status</div><div style="margin-top:4px">${statusBadge(d)}</div></div>
-      <div class="stat-card"><div class="stat-label">Days Until Expiry</div><div class="stat-value" style="color:${expiryColor}">${dl < 0 ? 'Expired' : dl}</div></div>
-      <div class="stat-card"><div class="stat-label">Annual Cost</div><div class="stat-value" style="color:var(--teal)">$${(d.cost||0).toFixed(2)}</div></div>
-      <div class="stat-card"><div class="stat-label">Auto-Renew</div><div style="margin-top:4px;font-size:15px;font-weight:600;color:${d.autorenew?'var(--green)':'var(--text3)'}">${d.autorenew?'Enabled':'Disabled'}</div></div>
+      <div style="height:13px"></div>
+      <div class="fg-2">
+        <div class="fg" style="margin-bottom:0"><label>Purchase Date</label><input class="fi" id="f-purchased" type="date"></div>
+        <div class="fg" style="margin-bottom:0"><label>Expiry Date *</label><input class="fi" id="f-expiry" type="date"></div>
+      </div>
+      <div style="height:13px"></div>
+      <div class="fg">
+        <label>DNS Provider <span style="color:var(--text3);font-weight:400">(select manually — not auto-detected)</span></label>
+        <div class="dns-options" id="dns-options">
+          <div class="dns-opt selected" onclick="selectDNS('cloudflare',this)" data-val="cloudflare">
+            <div class="dns-opt-icon" style="background:var(--amberbg);color:var(--amber)"><i class="ti ti-cloud"></i></div>
+            <div><div class="dns-opt-name">Cloudflare CDN</div><div class="dns-opt-sub">CDN + proxy</div></div>
+          </div>
+          <div class="dns-opt" onclick="selectDNS('vps',this)" data-val="vps">
+            <div class="dns-opt-icon" style="background:var(--accentbg);color:var(--accent2)"><i class="ti ti-server"></i></div>
+            <div><div class="dns-opt-name">VPS Hosting</div><div class="dns-opt-sub">Own server NS</div></div>
+          </div>
+          <div class="dns-opt" onclick="selectDNS('registrar',this)" data-val="registrar">
+            <div class="dns-opt-icon" style="background:var(--bg4);color:var(--text3)"><i class="ti ti-building"></i></div>
+            <div><div class="dns-opt-name">Registrar DNS</div><div class="dns-opt-sub">Default NS</div></div>
+          </div>
+          <div class="dns-opt" onclick="selectDNS('other',this)" data-val="other">
+            <div class="dns-opt-icon" style="background:var(--bluebg);color:var(--blue)"><i class="ti ti-dots-circle-horizontal"></i></div>
+            <div><div class="dns-opt-name">Other DNS</div><div class="dns-opt-sub">Custom provider</div></div>
+          </div>
+        </div>
+        <input type="hidden" id="f-dns" value="cloudflare">
+      </div>
+      <div class="fg">
+        <label>Nameservers <span style="color:var(--text3);font-weight:400">(comma separated)</span></label>
+        <input class="fi" id="f-ns" placeholder="ns1.cloudflare.com, ns2.cloudflare.com">
+      </div>
+      <div class="fg-2">
+        <div class="fg" style="margin-bottom:0"><label>Annual Cost (USD)</label><input class="fi" id="f-cost" type="number" step="0.01" placeholder="12.99"></div>
+        <div class="fg" style="margin-bottom:0"><label>IP Address (optional)</label><input class="fi" id="f-ip" placeholder="123.45.67.89"></div>
+      </div>
+      <div style="height:8px"></div>
+      <div class="check-row" onclick="document.getElementById('f-ar').click()">
+        <input type="checkbox" id="f-ar" checked>
+        <label>Auto-Renew Enabled</label>
+      </div>
+      <div class="check-row" onclick="document.getElementById('f-lock').click()">
+        <input type="checkbox" id="f-lock" checked>
+        <label>Domain Lock (Transfer Protection)</label>
+      </div>
+      <div class="fg" style="margin-top:10px"><label>Notes (optional)</label><input class="fi" id="f-notes" placeholder="Any notes about this domain..."></div>
     </div>
-    <table style="width:100%;font-size:13.5px;border-collapse:collapse">
-      <tr><td style="padding:9px 0;color:var(--text3);width:140px">Domain</td><td style="padding:9px 0;font-weight:600;color:var(--accent2)">${d.name}</td></tr>
-      <tr style="border-top:1px solid var(--border)"><td style="padding:9px 0;color:var(--text3)">Registrar</td><td style="padding:9px 0"><span class="tag tag-${d.registrar}">${d.registrar}</span></td></tr>
-      <tr style="border-top:1px solid var(--border)"><td style="padding:9px 0;color:var(--text3)">Purchase Date</td><td style="padding:9px 0">${d.purchased||'—'}</td></tr>
-      <tr style="border-top:1px solid var(--border)"><td style="padding:9px 0;color:var(--text3)">Expiry Date</td><td style="padding:9px 0;color:${expiryColor}">${d.expiry||'—'}</td></tr>
-      <tr style="border-top:1px solid var(--border)"><td style="padding:9px 0;color:var(--text3)">DNS Provider</td><td style="padding:9px 0">${dnsBadge(d.dns)}</td></tr>
-      <tr style="border-top:1px solid var(--border)"><td style="padding:9px 0;color:var(--text3)">Nameservers</td><td style="padding:9px 0;font-size:12px;font-family:monospace;color:var(--text3)">${(d.ns||'—').split(',').map(n=>`<div>${n.trim()}</div>`).join('')}</td></tr>
-    </table>`;
-  openModal('domainDetail');
-}
+    <div id="tab-api" class="hidden">
+      <div class="alert info"><i class="ti ti-info-circle"></i> Fetch domains via API. <strong>DNS will NOT be auto-set</strong> — you must assign it manually after import.</div>
+      <div class="fg"><label>Select Registrar</label>
+        <select class="fi" id="f-api-reg" onchange="checkApiStatus()">
+          <option value="godaddy">GoDaddy</option><option value="namecheap">Namecheap</option><option value="spaceship">Spaceship</option>
+        </select>
+      </div>
+      <div id="api-status" class="fhint" style="margin-bottom:12px"></div>
+      <button class="btn btn-teal" style="width:100%;justify-content:center" onclick="doAPIFetch()"><i class="ti ti-cloud-download"></i> Fetch Domains from API</button>
+      <div id="api-result" style="margin-top:12px"></div>
+    </div>
+  </div>
+  <div class="mf">
+    <button class="btn btn-ghost" onclick="closeModal('addDomain')">Cancel</button>
+    <button class="btn btn-primary" id="saveBtn" onclick="saveDomain()"><i class="ti ti-check"></i> Save Domain</button>
+  </div>
+</div>
+</div>
 
-// ===== HELPERS =====
-function daysLeft(expiry) {
-  if (!expiry) return 9999;
-  return Math.ceil((new Date(expiry) - new Date()) / 86400000);
-}
-function statusBadge(d) {
-  const dl = daysLeft(d.expiry);
-  if (d.status === 'expired' || dl < 0) return '<span class="badge badge-expired"><i class="ti ti-x" style="font-size:10px"></i> Expired</span>';
-  if (dl <= 30) return `<span class="badge badge-expiring"><i class="ti ti-clock" style="font-size:10px"></i> Expiring in ${dl}d</span>`;
-  if (d.status === 'pending') return '<span class="badge badge-pending">Pending</span>';
-  return '<span class="badge badge-active"><i class="ti ti-check" style="font-size:10px"></i> Active</span>';
-}
-function dnsBadge(dns) {
-  if (!dns || dns==='cloudflare') return '<span class="dns-badge dns-cf"><i class="ti ti-cloud" style="font-size:12px"></i> Cloudflare</span>';
-  if (dns==='own') return '<span class="dns-badge dns-own"><i class="ti ti-server" style="font-size:12px"></i> Own Server</span>';
-  return '<span class="dns-badge dns-reg"><i class="ti ti-building" style="font-size:12px"></i> Registrar</span>';
-}
-function formatExpiry(expiry) {
-  if (!expiry) return '—';
-  const dl = daysLeft(expiry);
-  const color = dl < 0 ? 'var(--red)' : dl < 30 ? 'var(--amber)' : 'var(--text2)';
-  return `<span style="color:${color};font-size:13px">${expiry}</span>`;
-}
-function getFilteredDomains() {
-  let list = [...domains];
-  const q = (document.getElementById('domainSearch')||{}).value?.toLowerCase();
-  if (q) list = list.filter(d=>d.name.toLowerCase().includes(q));
-  if (currentFilter !== 'all') {
-    if (currentFilter === 'expiring') list = list.filter(d=>daysLeft(d.expiry)<=30&&daysLeft(d.expiry)>=0);
-    else if (currentFilter === 'active') list = list.filter(d=>d.status==='active'&&daysLeft(d.expiry)>30);
-    else if (currentFilter === 'expired') list = list.filter(d=>d.status==='expired'||daysLeft(d.expiry)<0);
-  }
-  return list;
-}
+<!-- SETTINGS MODAL -->
+<div id="modal-settings" class="overlay hidden">
+<div class="modal wide">
+  <div class="mh">
+    <h3><i class="ti ti-settings" style="color:var(--accent2)"></i> API Keys & Settings</h3>
+    <button class="xbtn" onclick="closeModal('settings')"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="mb">
+    <div class="alert info"><i class="ti ti-lock"></i> API keys are stored only in your browser (localStorage). They never leave your device.</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <div style="width:24px;height:24px;background:var(--greenbg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--green)"><i class="ti ti-building-store"></i></div>
+      <strong style="font-size:13.5px">GoDaddy</strong>
+    </div>
+    <div class="api-box">
+      <div class="step"><div class="step-n">1</div><div>Go to <a href="https://developer.godaddy.com" target="_blank">developer.godaddy.com</a> → Login</div></div>
+      <div class="step"><div class="step-n">2</div><div>Click <strong>API Keys</strong> → <strong>Create New API Key</strong> → Select <strong>Production</strong></div></div>
+      <div class="step"><div class="step-n">3</div><div>Copy <strong>Key</strong> and <strong>Secret</strong> (shown only once)</div></div>
+    </div>
+    <div class="fg-2">
+      <div class="fg" style="margin-bottom:0"><label>API Key</label><input class="fi" id="gd-key" placeholder="godaddy_key"></div>
+      <div class="fg" style="margin-bottom:0"><label>API Secret</label><input class="fi" id="gd-sec" type="password" placeholder="••••••••"></div>
+    </div>
+    <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="testAPI('godaddy')"><i class="ti ti-plug"></i> Test GoDaddy</button>
+    <div class="divider"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <div style="width:24px;height:24px;background:var(--tealbg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--teal)"><i class="ti ti-tag"></i></div>
+      <strong style="font-size:13.5px">Namecheap</strong>
+    </div>
+    <div class="api-box">
+      <div class="step"><div class="step-n">1</div><div>Login → Username (top right) → <strong>Profile</strong></div></div>
+      <div class="step"><div class="step-n">2</div><div>Go to <strong>Tools</strong> tab → <strong>API Access</strong> → Enable it</div></div>
+      <div class="step"><div class="step-n">3</div><div><strong>Important:</strong> Whitelist your IP address — required for all API calls</div></div>
+    </div>
+    <div class="fg-2">
+      <div class="fg" style="margin-bottom:0"><label>Username</label><input class="fi" id="nc-user" placeholder="namecheap_username"></div>
+      <div class="fg" style="margin-bottom:0"><label>API Key</label><input class="fi" id="nc-key" type="password" placeholder="••••••••"></div>
+    </div>
+    <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="testAPI('namecheap')"><i class="ti ti-plug"></i> Test Namecheap</button>
+    <div class="divider"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <div style="width:24px;height:24px;background:var(--accentbg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--accent2)"><i class="ti ti-rocket"></i></div>
+      <strong style="font-size:13.5px">Spaceship</strong>
+    </div>
+    <div class="api-box">
+      <div class="step"><div class="step-n">1</div><div>Login to <strong>Spaceship.com</strong> → Account → <strong>API</strong></div></div>
+      <div class="step"><div class="step-n">2</div><div>Click <strong>Generate API Key</strong> — copy Key and Secret</div></div>
+    </div>
+    <div class="fg-2">
+      <div class="fg" style="margin-bottom:0"><label>API Key</label><input class="fi" id="ss-key" placeholder="spaceship_key"></div>
+      <div class="fg" style="margin-bottom:0"><label>API Secret</label><input class="fi" id="ss-sec" type="password" placeholder="••••••••"></div>
+    </div>
+    <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="testAPI('spaceship')"><i class="ti ti-plug"></i> Test Spaceship</button>
+  </div>
+  <div class="mf">
+    <button class="btn btn-ghost" onclick="closeModal('settings')">Cancel</button>
+    <button class="btn btn-primary" onclick="saveAPIKeys()"><i class="ti ti-device-floppy"></i> Save Keys</button>
+  </div>
+</div>
+</div>
 
-// ===== FILTER & SEARCH =====
-function setFilter(f, el) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  renderAllDomains();
-}
-function filterDomains() { renderAllDomains(); }
-function filterDNS() {
-  const q = document.getElementById('dnsSearch').value.toLowerCase();
-  renderDNS(domains.filter(d=>d.name.includes(q)));
-}
+<!-- DETAIL MODAL -->
+<div id="modal-detail" class="overlay hidden">
+<div class="modal wide">
+  <div class="mh"><h3 id="detail-h3"><i class="ti ti-world" style="color:var(--accent2)"></i> Domain Detail</h3><button class="xbtn" onclick="closeModal('detail')"><i class="ti ti-x"></i></button></div>
+  <div class="mb" id="detail-body"></div>
+  <div class="mf">
+    <button class="btn btn-danger btn-sm" id="det-del"><i class="ti ti-trash"></i> Delete</button>
+    <button class="btn btn-ghost" onclick="closeModal('detail')">Close</button>
+    <button class="btn btn-primary btn-sm" id="det-edit"><i class="ti ti-edit"></i> Edit</button>
+  </div>
+</div>
+</div>
 
-// ===== MODALS =====
-function openModal(name) {
-  document.getElementById('modal-'+name).classList.remove('hidden');
-  if (name === 'settings') loadAPIKeysToForm();
-}
-function closeModal(name) {
-  document.getElementById('modal-'+name).classList.add('hidden');
-}
-function switchTab(tab) {
-  activeTab = tab;
-  document.querySelectorAll('.tab').forEach((t,i)=>{ t.classList.toggle('active', (i===0&&tab==='manual')||(i===1&&tab==='api')); });
-  document.getElementById('tab-manual').classList.toggle('hidden', tab!=='manual');
-  document.getElementById('tab-api').classList.toggle('hidden', tab!=='api');
-}
-
-// ===== SAVE DOMAIN =====
-function saveDomain() {
-  const name = document.getElementById('f-domain').value.trim().toLowerCase();
-  if (!name || !name.includes('.')) { showToast('Enter a valid domain name', 'error'); return; }
-  const d = {
-    id: genId(), name,
-    registrar: document.getElementById('f-registrar').value,
-    status: document.getElementById('f-status').value,
-    purchased: document.getElementById('f-purchased').value,
-    expiry: document.getElementById('f-expiry').value,
-    dns: document.getElementById('f-dns').value,
-    cost: parseFloat(document.getElementById('f-cost').value)||0,
-    ns: document.getElementById('f-ns').value,
-    autorenew: document.getElementById('f-autorenew').checked
-  };
-  domains.push(d);
-  saveDomains();
-  closeModal('addDomain');
-  showToast(name + ' added successfully!', 'success');
-  renderPage(currentPage);
-}
-
-function editDomain(id) {
-  const d = domains.find(x=>x.id===id);
-  if (!d) return;
-  document.getElementById('f-domain').value = d.name;
-  document.getElementById('f-registrar').value = d.registrar;
-  document.getElementById('f-status').value = d.status;
-  document.getElementById('f-purchased').value = d.purchased||'';
-  document.getElementById('f-expiry').value = d.expiry||'';
-  document.getElementById('f-dns').value = d.dns||'cloudflare';
-  document.getElementById('f-cost').value = d.cost||'';
-  document.getElementById('f-ns').value = d.ns||'';
-  document.getElementById('f-autorenew').checked = d.autorenew;
-  // Remove old, add updated on save
-  const origSave = document.querySelector('#modal-addDomain .btn-primary:last-child');
-  origSave.onclick = () => {
-    domains = domains.filter(x=>x.id!==id);
-    saveDomain();
-    origSave.onclick = saveDomain;
-  };
-  openModal('addDomain');
-}
-
-function deleteDomain(id) {
-  if (!confirm('Delete this domain?')) return;
-  domains = domains.filter(x=>x.id!==id);
-  saveDomains();
-  showToast('Domain deleted', 'error');
-  renderPage(currentPage);
-}
-
-// ===== API KEYS =====
-function loadAPIKeysToForm() {
-  document.getElementById('ss-key').value = apiKeys.spaceship_key||'';
-  document.getElementById('ss-secret').value = apiKeys.spaceship_secret||'';
-  document.getElementById('nc-user').value = apiKeys.namecheap_user||'';
-  document.getElementById('nc-key').value = apiKeys.namecheap_key||'';
-  document.getElementById('gd-key').value = apiKeys.godaddy_key||'';
-  document.getElementById('gd-secret').value = apiKeys.godaddy_secret||'';
-}
-function saveAPIKeys() {
-  apiKeys.spaceship_key = document.getElementById('ss-key').value;
-  apiKeys.spaceship_secret = document.getElementById('ss-secret').value;
-  apiKeys.namecheap_user = document.getElementById('nc-user').value;
-  apiKeys.namecheap_key = document.getElementById('nc-key').value;
-  apiKeys.godaddy_key = document.getElementById('gd-key').value;
-  apiKeys.godaddy_secret = document.getElementById('gd-secret').value;
-  localStorage.setItem('dmAPIKeys', JSON.stringify(apiKeys));
-  closeModal('settings');
-  showToast('API keys saved!', 'success');
-  renderPage(currentPage);
-}
-
-async function testAPI(reg) {
-  showToast('Testing '+reg+' API connection...', 'info');
-  // Real API test — GoDaddy is the most accessible
-  if (reg === 'godaddy') {
-    const key = document.getElementById('gd-key').value;
-    const secret = document.getElementById('gd-secret').value;
-    if (!key || !secret) { showToast('Enter GoDaddy API key & secret first', 'error'); return; }
-    try {
-      const r = await fetch('https://api.godaddy.com/v1/domains?limit=1', {
-        headers: { 'Authorization': `sso-key ${key}:${secret}` }
-      });
-      if (r.ok) showToast('GoDaddy API connected!', 'success');
-      else showToast('GoDaddy API error: ' + r.status, 'error');
-    } catch(e) { showToast('Connection failed — check CORS or key', 'error'); }
-  } else if (reg === 'namecheap') {
-    const user = document.getElementById('nc-user').value;
-    const key = document.getElementById('nc-key').value;
-    if (!user || !key) { showToast('Enter Namecheap credentials first', 'error'); return; }
-    showToast('Namecheap API requires IP whitelist. Check console for test URL.', 'info');
-    console.log(`Namecheap test URL: https://api.namecheap.com/xml.response?ApiUser=${user}&ApiKey=${key}&UserName=${user}&Command=namecheap.users.getBalances&ClientIp=YOUR_IP`);
-  } else if (reg === 'spaceship') {
-    const key = document.getElementById('ss-key').value;
-    if (!key) { showToast('Enter Spaceship API key first', 'error'); return; }
-    showToast('Spaceship API: credentials saved. Test via fetch.', 'info');
-  }
-}
-
-function updateApiStatus() {
-  const reg = document.getElementById('f-api-registrar').value;
-  const hasKey = apiKeys[reg+'_key'] || apiKeys[reg+'_api_key'];
-  document.getElementById('api-status-msg').innerHTML = hasKey
-    ? '<span style="color:var(--green)"><i class="ti ti-check"></i> API connected for '+reg+'</span>'
-    : '<span style="color:var(--amber)"><i class="ti ti-alert-triangle"></i> No API key for '+reg+' — <a onclick="openModal(\'settings\')" style="color:var(--accent2);cursor:pointer">Add in Settings</a></span>';
-}
-
-async function fetchFromAPI() {
-  const reg = document.getElementById('f-api-registrar') ? document.getElementById('f-api-registrar').value : 'godaddy';
-  const resultDiv = document.getElementById('api-fetch-result');
-  if (resultDiv) resultDiv.innerHTML = '<div class="loading"><div class="spinner"></div> Fetching from '+reg+'...</div>';
-
-  if (reg === 'godaddy' && apiKeys.godaddy_key && apiKeys.godaddy_secret) {
-    try {
-      const r = await fetch('https://api.godaddy.com/v1/domains?limit=100&statuses=ACTIVE', {
-        headers: { 'Authorization': `sso-key ${apiKeys.godaddy_key}:${apiKeys.godaddy_secret}` }
-      });
-      if (!r.ok) { if (resultDiv) resultDiv.innerHTML = '<div class="alert alert-warning"><i class="ti ti-x"></i> API error: '+r.status+'</div>'; return; }
-      const data = await r.json();
-      let added = 0;
-      data.forEach(d => {
-        if (!domains.find(x=>x.name===d.domain)) {
-          domains.push({
-            id: genId(), name: d.domain, registrar: 'godaddy',
-            status: d.status==='ACTIVE'?'active':'pending',
-            purchased: d.createdAt ? d.createdAt.split('T')[0] : '',
-            expiry: d.expires ? d.expires.split('T')[0] : '',
-            dns: 'registrar', ns: (d.nameServers||[]).join(', '),
-            cost: 0, autorenew: d.renewAuto
-          });
-          added++;
-        }
-      });
-      saveDomains();
-      if (resultDiv) resultDiv.innerHTML = `<div class="alert alert-info"><i class="ti ti-check"></i> Imported ${added} new domains from GoDaddy!</div>`;
-      showToast('Imported '+added+' domains from GoDaddy', 'success');
-      renderPage(currentPage);
-    } catch(e) {
-      if (resultDiv) resultDiv.innerHTML = '<div class="alert alert-warning"><i class="ti ti-alert-triangle"></i> Fetch failed: '+e.message+'</div>';
-    }
-  } else {
-    if (resultDiv) resultDiv.innerHTML = '<div class="alert alert-warning"><i class="ti ti-alert-triangle"></i> No API key for '+reg+'. Save keys in <a onclick="openModal(\'settings\')" style="color:var(--accent2);cursor:pointer">API Settings</a> first.</div>';
-  }
-}
-
-// ===== EXPORT =====
-function exportCSV() {
-  const rows = [['Domain','Registrar','Status','Purchased','Expires','DNS','Nameservers','Auto-Renew','Cost/yr']];
-  domains.forEach(d => rows.push([d.name,d.registrar,d.status,d.purchased||'',d.expiry||'',d.dns||'',d.ns||'',d.autorenew?'Yes':'No',d.cost||0]));
-  const csv = rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = 'domains_'+new Date().toISOString().split('T')[0]+'.csv';
-  a.click();
-  showToast('CSV exported!', 'success');
-}
-
-// ===== REFRESH =====
-function refreshData() {
-  showToast('Refreshing...', 'info');
-  renderPage(currentPage);
-  setTimeout(()=>showToast('Data refreshed', 'success'), 600);
-}
-
-// ===== TOAST =====
-function showToast(msg, type='info') {
-  const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = `toast toast-${type}`;
-  const icons = { success:'ti-check', error:'ti-x', info:'ti-info-circle' };
-  t.innerHTML = `<i class="ti ${icons[type]||'ti-info-circle'}" style="font-size:16px;flex-shrink:0"></i> ${msg}`;
-  c.appendChild(t);
-  setTimeout(()=>t.remove(), 3000);
-}
-
-// Close modals on overlay click
-document.querySelectorAll('.modal-overlay').forEach(el => {
-  el.addEventListener('click', e => { if (e.target === el) el.classList.add('hidden'); });
-});
-
-// ===== INIT =====
-loadSampleData();
-showPage('dashboard');
-</script>
-</body>
-</html>
+<!-- CONFIRM DELETE -->
+<div id="modal-confirmDel" class="overlay hidden">
+<div class="modal" style="max-width:380px">
+  <div class="mh"><h3><i class="ti ti-alert-triangle" style="color:var(--red)"></i> Delete Domain</h3><button class="xbtn" onclick="closeModal('confirmDel')"><i class="ti ti-x"></i></button></div>
+  <div class="mb"><div class="alert warn"><i class="ti ti-alert-triangle"></i> Permanently delete <strong id="del-name"></strong>? This cannot be undone.</div></div>
+  <div class="mf">
+    <button class="btn btn-ghost" onclick="closeModal('confirmDel')">Cancel</button>
+    <button class="btn btn-danger" id="del-confirm-btn"><i class="ti ti-trash"></i> Delete</button>
+  </div>
+</div>
+</div>
